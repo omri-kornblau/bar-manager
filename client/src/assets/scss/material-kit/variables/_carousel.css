@@ -1,0 +1,6 @@
+.carousel.carousel-full-navigation .left {
+  cursor: url("../img/arrow-left.png"), url("../img/arrow-left.cur"), default !important;
+}
+.carousel.carousel-full-navigation .right {
+  cursor: url("../img/arrow-right.png"), url("../img/arrow-right.cur"), default !important;
+}

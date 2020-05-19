@@ -1,18 +1,50 @@
-const express = require("express");
-const mongoose = require("mongoose"); // Connector for MongoDB
-const bodyParser = require("body-parser"); // Let us use requests
+const Express = require("express");
+const Mongoose = require("mongoose");
+const BodyParser = require("body-parser");
+const CookieParser = require("cookie-parser");
+const Logger = require("morgan");
+const Path = require("path");
 
-const app = express();
+const AsyncErrorsHandler = require("./errors/express-async-errors");
+const ErrorsRouter = require("./errors/errors-router");
 
-app.use(bodyParser.json());
+// Import configurations
+const DbConfig = require("./config/db");
+const ServerConfig = require("./config/server");
 
-const db = require("./config/keys").mongoURI;
+// Import models
+require("./models/cookie");
+require("./models/user");
 
-mongoose
-  .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
+AsyncErrorsHandler.patchRouter(ErrorsRouter.route);
+
+// Connect to mongodb
+Mongoose
+  .connect(DbConfig.mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
   .then(() => console.log("MongoDB Connected..."))
   .catch(err => console.log(err));
 
-const port = 5000; // Sets port for server
+// Setup express server
+const app = Express();
+app.use(BodyParser.json());
+app.use(BodyParser.urlencoded({ extended: false }));
+app.use(CookieParser());
 
-app.listen(port, () => console.log(`Server started on port ${port}`));
+app.use("/", require("./routes"));
+
+if (ServerConfig.production) {
+  app.use(Logger("combined"));
+  app.use(Express.static("../client/build"));
+  app.get("*", (req, res) => {
+    res.sendFile(Path.resolve(__dirname, "client", "build", "index.html"));
+  });
+} else {
+  app.use(Logger("dev"));
+}
+
+app.listen(ServerConfig.port, ServerConfig.address, () =>
+  console.log(`Server started on ${ServerConfig.address}:${ServerConfig.port}`)
+);

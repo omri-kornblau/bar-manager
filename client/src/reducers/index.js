@@ -1,10 +1,7 @@
 import { combineReducers } from "redux";
 
-// Exsample:
-// import ExampleReducer from "./ExsampleReducer";
+import NavbarReducer from "./NavbarReducer";
 
-// Turns an object into a single reducing function you can pass to createStore
 export default combineReducers({
-  // Exsample: ExampleReducer,
-  // ...
+  navbar: NavbarReducer
 });
