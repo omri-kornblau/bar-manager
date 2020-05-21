@@ -13,7 +13,13 @@ const DbConfig = require("./config/db");
 const ServerConfig = require("./config/server");
 
 // Import models
+require("./models/client");
 require("./models/cookie");
+require("./models/message");
+require("./models/offer");
+require("./models/oftenSampledRequest");
+require("./models/oldRequest");
+require("./models/request");
 require("./models/user");
 
 AsyncErrorsHandler.patchRouter(ErrorsRouter.route);
