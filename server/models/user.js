@@ -5,7 +5,7 @@ const promisify = require("util").promisify;
 
 const {
   OBJECT_ID_LENGTH,
-  USER_TYPES,
+  USER_TYPES_VALUES,
   USER_MIN_LENGTH,
   USER_MAX_LENGTH,
   PASSWORD_MIN_LENGTH,
@@ -20,7 +20,7 @@ const yupUserFormat = Yup.object().shape({
   email: Yup.string().email(),
   username: Yup.string().min(USER_MIN_LENGTH).max(USER_MAX_LENGTH),
   password: Yup.string().min(PASSWORD_MIN_LENGTH).max(PASSWORD_MAX_LENGTH),
-  type: Yup.mixed().oneOf(USER_TYPES),
+  type: Yup.mixed().oneOf(USER_TYPES_VALUES),
   data: Yup.string().length(OBJECT_ID_LENGTH),
 });
 

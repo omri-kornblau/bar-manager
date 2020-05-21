@@ -1,6 +1,10 @@
+const _ = require("lodash");
+
+const { USER_TYPES } = require("../types");
+
 exports.OBJECT_ID_LENGTH  = 24;
-exports.STATUSES  = ['active'];
-exports.USER_TYPES  = ['client', 'provider'];
+exports.STATUSES  = ["active"];
+exports.USER_TYPES_VALUES  = _.values(USER_TYPES);
 exports.USER_MIN_LENGTH = 3;
 exports.USER_MAX_LENGTH = 20;
 exports.PASSWORD_MIN_LENGTH = 8;

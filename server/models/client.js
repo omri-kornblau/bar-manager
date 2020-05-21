@@ -39,4 +39,5 @@ clientSchema.pre("save", async function () {
 
 const Client = Mongoose.model("Client", clientSchema)
 
+// exports.ClientSchema = clientSchema
 module.exports = Client;
