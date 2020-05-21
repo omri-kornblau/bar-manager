@@ -3,14 +3,14 @@ import {
   Button
 } from "react-bootstrap";
 
-const Entry = props => {
+const Temp = props => {
   return (
     <div>
       <Button color="primary">
-        hello
+        about us
       </Button>
     </div>
   );
 }
 
-export default Entry;
+export default Temp;
