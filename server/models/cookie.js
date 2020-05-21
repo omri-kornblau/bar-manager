@@ -1,13 +1,26 @@
 const Mongoose = require("mongoose");
 const Bcrypt = require("bcrypt");
+const Yup = require("yup");
 const promisify = require("util").promisify;
+
+const {
+  USER_MIN_LENGTH,
+  USER_MAX_LENGTH,
+  HASH_LENGTH,
+  SALT_LENGTH,
+  SALT_ROUNDS
+} = require("./consts");
 
 const hashCompare = promisify(Bcrypt.compare);
 const hash = promisify(Bcrypt.hash);
 
 const Utils = require("../utils");
 
-const saltRounds = 10;
+const yupCookieSchema = Yup.object().shape({
+  username: Yup.string().min(USER_MIN_LENGTH).max(USER_MAX_LENGTH),
+  tokenPassword: Yup.string().length(HASH_LENGTH),
+  salt: Yup.string().length(SALT_LENGTH),
+});
 
 const mongoFormat = {
   username: {
@@ -24,8 +37,9 @@ const mongoFormat = {
 const cookieSchema = new Mongoose.Schema(mongoFormat);
 
 cookieSchema.pre("save", async function () {
-  this.salt = Utils.getRandomPassword(16);
-  this.tokenPassword = await hash(this.tokenPassword + this.salt, saltRounds);
+  this.salt = Utils.getRandomPassword(HASH_LENGTH);
+  this.tokenPassword = await hash(this.tokenPassword + this.salt, SALT_ROUNDS);
+  await yupCookieSchema.validate(this)
 });
 
 cookieSchema.methods.isCorrectCookie = async function (tokenPassword) {
