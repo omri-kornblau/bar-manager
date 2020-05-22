@@ -1,15 +1,16 @@
 import React from "react";
 import {
-  Button
-} from "react-bootstrap";
+  Container,
+  Button,
+} from "@material-ui/core";
 
 const Temp = props => {
   return (
-    <div>
-      <Button color="primary">
-        about us
+    <Container>,
+      <Button variant="contained" color="primary">
+        About us
       </Button>
-    </div>
+    </Container>
   );
 }
 
