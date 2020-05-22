@@ -7,6 +7,7 @@ const theme = createMuiTheme({
       main: purple[800]
     },
   },
+  direction: 'rtl',
 });
 
 export default theme;
