@@ -8,16 +8,18 @@ import {
   IconButton,
   Badge,
   Tabs,
-  Tab
+  Tab,
 } from "@material-ui/core";
+import { Link } from "react-router-dom";
 import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import { NavLink } from "redux-first-router-link";
+
+import useStyles from "./style";
 
 const defaultProps = {
-  Pages: {
+  pages: {
     default: {
       name: "default",
       component: AppBar
@@ -27,26 +29,29 @@ const defaultProps = {
 };
 
 const propTypes = {
-  Pages: PropTypes.object,
-  setPage: PropTypes.func,
+  pages: PropTypes.object,
   pageKey: PropTypes.string,
 };
 
 const AppNavbar = props => {
   const {
-    Pages,
-    pageKey,
-    setPage
+    pages,
+    pageKey
   } = props;
 
   const [tab, setTab] = useState(0);
 
+  const classes = useStyles();
+
   useEffect(() => {
-    setTab(_.indexOf(_.keys(Pages), pageKey));
+    setTab(_.keys(pages).indexOf(pageKey));
   }, [pageKey]);
 
   return (
-    <AppBar position="static">
+    <AppBar
+      className={classes.appBar}
+      position="static"
+      >
       <Toolbar>
         <IconButton edge="start" color="inherit" aria-label="menu">
           <MenuIcon />
@@ -54,14 +59,17 @@ const AppNavbar = props => {
         <Typography className="ml-4 mr-4" variant="h5" color="inherit">
           ביטוח
         </Typography>
-        <Tabs value={tab}>
-          {_.map(Pages, (pageData, key) =>
+        <Tabs
+          value={tab}
+          indicatorColor="primary"
+        >
+          {_.map(pages, (pageData, key) =>
             <Tab
-              className="text-white"
               label={pageData.name}
-              component={NavLink}
-              to={setPage(key)}
+              component={Link}
+              to={`/${key}`}
               key={key}
+              disableRipple
             />
           )}
         </Tabs>

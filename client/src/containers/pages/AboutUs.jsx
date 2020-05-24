@@ -4,14 +4,14 @@ import {
   Button,
 } from "@material-ui/core";
 
-const Home = props => {
+const AboutUs = props => {
   return (
     <Container>
       <Button variant="contained" color="primary">
-        Home
+        About us
       </Button>
     </Container>
   );
 }
 
-export default Home;
+export default AboutUs;
