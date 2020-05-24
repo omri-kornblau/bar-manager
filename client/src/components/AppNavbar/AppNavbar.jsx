@@ -1,19 +1,26 @@
 import _ from "lodash";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
-  Navbar,
-  Nav,
-  Form,
-  FormControl
-} from "react-bootstrap";
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  Badge,
+  Tabs,
+  Tab
+} from "@material-ui/core";
+import MenuIcon from "@material-ui/icons/Menu";
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import MailIcon from '@material-ui/icons/Mail';
+import NotificationsIcon from '@material-ui/icons/Notifications';
 import { NavLink } from "redux-first-router-link";
 
 const defaultProps = {
   Pages: {
     default: {
       name: "default",
-      component: Nav
+      component: AppBar
     }
   },
   pageKey: "default",
@@ -32,25 +39,54 @@ const AppNavbar = props => {
     setPage
   } = props;
 
+  const [tab, setTab] = useState(0);
+
+  useEffect(() => {
+    setTab(_.indexOf(_.keys(Pages), pageKey));
+  }, [pageKey]);
+
   return (
-    <Navbar>
-      <Navbar.Brand href="/main/home">Navbar</Navbar.Brand>
-      <Nav className="mr-auto">
-        {_.map(Pages, (pageData, key) =>
-          <NavLink
-            isActive={() => key === pageKey}
-            className="nav-link"
-            key={key}
-            to={setPage(key)}
+    <AppBar position="static">
+      <Toolbar>
+        <IconButton edge="start" color="inherit" aria-label="menu">
+          <MenuIcon />
+        </IconButton>
+        <Typography className="ml-4 mr-4" variant="h5" color="inherit">
+          ביטוח
+        </Typography>
+        <Tabs value={tab}>
+          {_.map(Pages, (pageData, key) =>
+            <Tab
+              className="text-white"
+              label={pageData.name}
+              component={NavLink}
+              to={setPage(key)}
+              key={key}
+            />
+          )}
+        </Tabs>
+        <div className="mr-auto">
+          <IconButton aria-label="show 4 new mails" color="inherit">
+            <Badge badgeContent={4} color="secondary">
+              <MailIcon />
+            </Badge>
+          </IconButton>
+          <IconButton aria-label="show 17 new notifications" color="inherit">
+            <Badge badgeContent={17} color="secondary">
+              <NotificationsIcon />
+            </Badge>
+          </IconButton>
+          <IconButton
+            edge="end"
+            aria-label="account of current user"
+            aria-haspopup="true"
+            color="inherit"
           >
-            {pageData.name}
-          </NavLink>
-        )}
-      </Nav>
-      <Form inline>
-        <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-      </Form>
-    </Navbar>
+            <AccountCircleIcon />
+          </IconButton>
+        </div>
+      </Toolbar>
+    </AppBar>
   );
 }
 

@@ -3,11 +3,11 @@ import AboutUs from "./AboutUs";
 
 const Pages = {
   home: {
-    name: "home",
+    name: "בית",
     component: Home
   },
   aboutus: {
-    name: "about us",
+    name: "קצת עלינו",
     component: AboutUs
   }
 };
