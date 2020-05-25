@@ -80,12 +80,22 @@ const CostumeTable = props => {
           <TableHead>
             <TableRow>
               {
-                columns.map(column => (
-                  <Fragment key={column.id}>
-                    <CostumeMenu label={column.label}/>
-                    <ColumnResizer style={{padding: '0.5px'}}/>
-                  </Fragment>
-                ))
+                columns.map(column => {
+                  if (column.filter.type === 'text') {
+                    column.filter.data = Array.from(new Set(rows.map(row => row[column.id])));
+                  }
+
+                  return (
+                    <Fragment key={column.id}>
+                      <CostumeMenu
+                        label={column.label}
+                        filterType={column.filter.type}
+                        filterData={column.filter.data}
+                        />
+                      <ColumnResizer style={{padding: '0.5px'}}/>
+                    </Fragment>
+                  )
+                })
               }
               <TableCell/>
             </TableRow>
