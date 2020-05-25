@@ -128,7 +128,6 @@ export default class ColumnResizer extends React.Component {
 
     render() {
         let style = this.props.style;
-        console.log(this.props.style);
         style.userSelect = "none";
 
         if (!this.props.disabled) {

@@ -7,6 +7,7 @@
     "@material-ui/icons": "^4.9.1",
     "connected-react-router": "^6.8.0",
     "history": "^4.10.1",
+    "jss-rtl": "^0.3.0",
     "lodash": "^4.17.15",
     "node-sass": "^4.14.1",
     "react": "^16.12.0",
