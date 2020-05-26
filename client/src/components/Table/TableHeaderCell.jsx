@@ -36,7 +36,10 @@ const StyledMenuItem = withStyles((theme) => ({
 }))(MenuItem);
 
 const TextMenuItems = props => {
-  const { rows } = props
+  const { rows } = props;
+  const [checkboxStatuses,  setCheckbox] = useState(rows.reduce((prev, cur) => (
+    {[cur]: true, ...prev}
+  ), {}));
 
   return (
     <>
@@ -45,17 +48,22 @@ const TextMenuItems = props => {
       </StyledMenuItem>
       {
         rows.map(row => (
-          <StyledMenuItem>
+          <StyledMenuItem
+            key={row}
+            onClick={() => {setCheckbox({
+              ...checkboxStatuses,
+              [row]: !checkboxStatuses[row],
+            })}}>
             <ListItemText align="right" primary={row}/>
             <Checkbox
-                checked={true}
+                checked={checkboxStatuses[row]}
                 color="primary"
               />
           </StyledMenuItem>
         ))
       }
     </>
-  )
+  );
 }
 
 const NumberMenuItems = () => {
@@ -68,25 +76,34 @@ const NumberMenuItems = () => {
         <TextField label="Smaller Then" type="number"/> 
       </StyledMenuItem>
     </>
-  )
+  );
 }
 
 const OptionsMenuItems = props => {
   const { options } = props;
+  const [checkboxStatuses,  setCheckbox] = useState(options.reduce((prev, cur) => (
+    {[cur]: true, ...prev}
+  ), {}));
 
-  return options.map(row => (
-    <StyledMenuItem>
-      <ListItemText align="right" primary={row}/>
+  return options.map(option => (
+    <StyledMenuItem
+      key={option}
+      onClick={() => {setCheckbox({
+        ...checkboxStatuses,
+        [option]: !checkboxStatuses[option],
+      })}}
+    >
+      <ListItemText align="right" primary={option}/>
       <Checkbox
-          checked={true}
+          checked={checkboxStatuses[option]}
           color="primary"
         />
     </StyledMenuItem>
-  ))
+  ));
 }
 
 const MenuItems = props => {
-  const { filterType, filterData } = props
+  const { filterType, filterData } = props;
 
   switch (filterType) {
     case "text": {
@@ -105,7 +122,7 @@ const MenuItems = props => {
 }
 
 const CustomizedTableHeaderCell = props => {
-  const { label, filterType, filterData } = props
+  const { label, filterType, filterData } = props;
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
