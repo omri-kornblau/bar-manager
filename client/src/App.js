@@ -1,24 +1,25 @@
-import React, { Component } from "react";
+import React from "react";
 import { Provider } from "react-redux";
 import { ThemeProvider } from "@material-ui/styles";
+import { ConnectedRouter } from 'connected-react-router'
 
 import "./assets/scss/material-kit.scss";
 
-import MainLayout from "./layouts/Main";
-
-import store from "./store";
+import store, { history }from "./redux/store";
 import theme from "./theme";
 
-class App extends Component {
-  render() {
-    return (
-      <Provider store={store}>
+import Main from "./containers/layouts/Main";
+
+const App = () => {
+  return (
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
         <ThemeProvider theme={theme}>
-          <MainLayout/>
+          <Main/>
         </ThemeProvider>
-      </Provider>
-    );
-  }
+      </ConnectedRouter>
+    </Provider>
+  );
 }
 
 export default App;
