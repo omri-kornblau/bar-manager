@@ -42,7 +42,7 @@ const Sidebar = props => {
   return (
     <Drawer
       variant="permanent"
-      className={closed ? classes.closedDrawer: classes.drawer}
+      className={closed ? classes.closedDrawerPaper: classes.drawerPaper}
       classes={{
         paper: closed ? classes.closedDrawerPaper : classes.drawerPaper,
       }}

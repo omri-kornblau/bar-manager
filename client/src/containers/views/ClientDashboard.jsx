@@ -1,16 +1,16 @@
 import React from "react";
 import {
-  Container,
+  Grid,
   Button,
 } from "@material-ui/core";
 
 const ClientDashboard = props => {
   return (
-    <Container>
+    <Grid container align="flex-start">
       <Button variant="contained" color="primary">
         Dashboard
       </Button>
-    </Container>
+    </Grid>
   );
 }
 

@@ -2,7 +2,8 @@ import _ from "lodash";
 import React from "react";
 import { connect } from "react-redux";
 import {
-  Container
+  Container,
+  Toolbar
 } from "@material-ui/core";
 import {
   Switch,
@@ -15,6 +16,8 @@ import ClientViews from "../views/clientViews";
 import { getView, getClosed } from "../../redux/selectors/sidebar";
 import { setSidebarClosed } from "../../redux/actions/sidebar";
 
+import useStyles from "./style";
+
 import Sidebar from "../../components/Sidebar/Sidebar";
 
 const Home = props => {
@@ -25,6 +28,7 @@ const Home = props => {
   } = props;
 
   const match = useRouteMatch();
+  const classes = useStyles();
   const views = ClientViews;
 
   return (
@@ -35,16 +39,19 @@ const Home = props => {
         viewKey={view}
         views={views}
       />
-      <Container>
-        <Switch>
-          {_.map(views, (viewData, key) =>
-            <Route path={`${match.url}/${key}`}>
-              <viewData.component/>
-            </Route>
-          )}
-          <Redirect to={`${match.url}/${view}`}/>
-        </Switch>
-      </Container>
+      <main className={classes.content}>
+        <Toolbar/>
+        <Container className={classes.container}>
+          <Switch>
+            {_.map(views, (viewData, key) =>
+              <Route path={`${match.url}/${key}`}>
+                <viewData.component/>
+              </Route>
+            )}
+            <Redirect to={`${match.url}/${view}`}/>
+          </Switch>
+        </Container>
+      </main>
     </>
   );
 }

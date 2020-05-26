@@ -11,6 +11,11 @@ import pages from "../pages/pages";
 import { getPage } from "../../redux/selectors/navbar";
 
 import AppNavbar from "../../components/AppNavbar/AppNavbar";
+import {
+  Toolbar,
+  Box,
+  Container
+ } from "@material-ui/core";
 
 const Main = props => {
   const {

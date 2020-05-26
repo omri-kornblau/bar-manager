@@ -52,9 +52,9 @@ const AppNavbar = props => {
 
   return (
     <AppBar
+      position="absolute"
       className={classes.appBar}
-      position="static"
-      >
+    >
       <Toolbar>
         <img width={50} src={gseLogo}/>
         <Typography className="ml-4 mr-4" variant="h6" color="inherit">

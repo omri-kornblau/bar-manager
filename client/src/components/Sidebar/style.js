@@ -10,6 +10,7 @@ export default makeStyles(theme => ({
     width: drawerWidth,
   },
   drawerPaper: {
+    position: "relative",
     width: drawerWidth,
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.common.white,
