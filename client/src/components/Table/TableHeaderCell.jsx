@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, forwardRef } from "react";
 import { withStyles } from '@material-ui/core/styles';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -102,7 +102,7 @@ const OptionsMenuItems = props => {
   ));
 }
 
-const MenuItems = props => {
+const MenuItems = forwardRef((props, ref) => {
   const { filterType, filterData } = props;
 
   switch (filterType) {
@@ -119,7 +119,7 @@ const MenuItems = props => {
       return <NumberMenuItems/>;
     }
   }
-}
+});
 
 const CustomizedTableHeaderCell = props => {
   const { label, filterType, filterData } = props;
