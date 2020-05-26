@@ -9,14 +9,16 @@ import {
   Badge,
   Tabs,
   Tab,
+  useTheme,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 
 import useStyles from "./style";
+
+import gseLogo from "../../assets/img/gse-logo.svg"
 
 const defaultProps = {
   pages: {
@@ -39,6 +41,7 @@ const AppNavbar = props => {
     pageKey
   } = props;
 
+  const theme = useTheme();
   const [tab, setTab] = useState(0);
 
   const classes = useStyles();
@@ -53,11 +56,9 @@ const AppNavbar = props => {
       position="static"
       >
       <Toolbar>
-        <IconButton edge="start" color="inherit" aria-label="menu">
-          <MenuIcon />
-        </IconButton>
-        <Typography className="ml-4 mr-4" variant="h5" color="inherit">
-          ביטוח
+        <img width={50} src={gseLogo}/>
+        <Typography className="ml-4 mr-4" variant="h6" color="inherit">
+          גיזה זינגר אבן
         </Typography>
         <Tabs
           value={tab}
