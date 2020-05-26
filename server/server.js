@@ -19,6 +19,7 @@ require("./models/message");
 require("./models/offer");
 require("./models/oftenSampledRequest");
 require("./models/oldRequest");
+require("./models/provider");
 require("./models/request");
 require("./models/user");
 
@@ -35,8 +36,10 @@ Mongoose
 
 // Setup express server
 const app = Express();
+app.use(BodyParser.urlencoded({
+  extended: false
+}));
 app.use(BodyParser.json());
-app.use(BodyParser.urlencoded({ extended: false }));
 app.use(CookieParser());
 
 app.use("/", require("./routes"));
