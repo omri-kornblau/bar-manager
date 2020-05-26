@@ -15,9 +15,9 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { Typography } from "@material-ui/core";
 import ColumnResizer from "./ColumnResizer";
 
-import CostumeMenu from './TableHeaderCell'
+import CustomMenu from './TableHeaderCell'
 
-function Row(props) {
+const Row = props => {
   const { row, columns } = props;
   const [open, setOpen] = useState(false);
 
@@ -58,16 +58,16 @@ function Row(props) {
   )
 }
 
-const CostumeTable = props => {
+const CustomTable = props => {
   const { rows, columns } = props;
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const handleChangePage = (event, newPage) => {
+  const onPageChange = (event, newPage) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event) => {
+  const onRowsPerPageChange = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
@@ -86,7 +86,7 @@ const CostumeTable = props => {
 
                   return (
                     <Fragment key={column.id}>
-                      <CostumeMenu
+                      <CustomMenu
                         label={column.label}
                         filterType={column.filter.type}
                         filterData={column.filter.data}
@@ -112,11 +112,11 @@ const CostumeTable = props => {
         count={rows.length}
         rowsPerPage={rowsPerPage}
         page={page}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
+        onPageChange={onPageChange}
+        onRowsPerPageChange={onRowsPerPageChange}
         />
     </Paper>
   );
 }
 
-export default CostumeTable;
+export default CustomTable;

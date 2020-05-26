@@ -50,10 +50,10 @@ const TextMenuItems = props => {
         rows.map(row => (
           <StyledMenuItem
             key={row}
-            onClick={() => {setCheckbox({
+            onClick={() => setCheckbox({
               ...checkboxStatuses,
               [row]: !checkboxStatuses[row],
-            })}}>
+            })}>
             <ListItemText align="right" primary={row}/>
             <Checkbox
                 checked={checkboxStatuses[row]}
@@ -88,10 +88,10 @@ const OptionsMenuItems = props => {
   return options.map(option => (
     <StyledMenuItem
       key={option}
-      onClick={() => {setCheckbox({
+      onClick={() => setCheckbox({
         ...checkboxStatuses,
         [option]: !checkboxStatuses[option],
-      })}}
+      })}
     >
       <ListItemText align="right" primary={option}/>
       <Checkbox
@@ -116,7 +116,7 @@ const MenuItems = forwardRef((props, ref) => {
       return <OptionsMenuItems options={filterData}/>;
     }
     default: {
-      return <NumberMenuItems/>;
+      return <TextMenuItems rows={filterData}/>;
     }
   }
 });
@@ -125,25 +125,25 @@ const CustomizedTableHeaderCell = props => {
   const { label, filterType, filterData } = props;
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleClick = (event) => {
+  const onClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const onClose = () => {
     setAnchorEl(null);
   };
 
   return (
     <>
       <TableCell align="right">
-        <FilterListIcon onClick={handleClick} style={{float: "right"}}/>
+        <FilterListIcon onClick={onClick} style={{float: "right"}}/>
         { label }
       </TableCell>
       <StyledMenu
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}
-        onClose={handleClose}
+        onClose={onClose}
       >
         <MenuItems filterType={filterType} filterData={filterData}/>
       </StyledMenu>

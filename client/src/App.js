@@ -1,6 +1,7 @@
 import React from "react";
 import { Provider } from "react-redux";
 import { ThemeProvider, StylesProvider, jssPreset} from "@material-ui/styles";
+import { ConnectedRouter } from 'connected-react-router'
 import { create } from 'jss';
 import rtl from 'jss-rtl';
 
