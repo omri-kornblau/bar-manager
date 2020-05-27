@@ -114,6 +114,8 @@ const CustomTable = props => {
         page={page}
         onPageChange={onPageChange}
         onRowsPerPageChange={onRowsPerPageChange}
+        labelDisplayedRows={({from, to, count}) => `${from}-${to} מתוך ${count}`}
+        labelRowsPerPage='שורות בכל עמוד:'
         />
     </Paper>
   );
