@@ -18,7 +18,7 @@ import ColumnResizer from "./ColumnResizer";
 import CustomMenu from './TableHeaderCell'
 
 const Row = props => {
-  const { row, columns } = props;
+  const { row, columns, isCollapse, isResizer } = props;
   const [open, setOpen] = useState(false);
 
   return (
@@ -31,35 +31,46 @@ const Row = props => {
               <TableCell align="right">
                 { value }
               </TableCell>
-              <ColumnResizer style={{padding: '0.5px'}}/>
+              {
+                isResizer
+                ? <ColumnResizer style={{padding: '0.5px'}}/>
+                : <></>
+              }
             </Fragment>
           )
         })}
-        <TableCell align="left">
-          <IconButton size="small" onClick={() => setOpen(!open)}>
-            { open
-            ? <KeyboardArrowUpIcon/>
-            : <KeyboardArrowDownIcon/> }
-          </IconButton>
-        </TableCell>
+        {
+          isCollapse
+          ? <TableCell align="left">
+              <IconButton size="small" onClick={() => setOpen(!open)}>
+                { open
+                ? <KeyboardArrowUpIcon/>
+                : <KeyboardArrowDownIcon/> }
+              </IconButton>
+            </TableCell>
+          : <></>
+        }
       </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={columns.length * 2 + 1}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box margin={1}>
-              <Typography variant="h6" gutterBottom component="div">
-                Title
-              </Typography>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
+      { isCollapse
+        ? <TableRow>
+            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={columns.length * 2 + 1}>
+              <Collapse in={open} timeout="auto" unmountOnExit>
+                <Box margin={1}>
+                  <Typography variant="h6" gutterBottom component="div">
+                    Title
+                  </Typography>
+                </Box>
+              </Collapse>
+            </TableCell>
+          </TableRow>
+        : <></>
+      }
     </>
   )
 }
 
 const CustomTable = props => {
-  const { rows, columns } = props;
+  const { rows, columns, isFilter, isCollapse } = props;
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -79,29 +90,43 @@ const CustomTable = props => {
           <TableHead>
             <TableRow>
               {
-                columns.map(column => {
+                columns.map((column, index) => {
                   if (column.filter.type === 'text') {
                     column.filter.data = Array.from(new Set(rows.map(row => row[column.id])));
                   }
 
                   return (
                     <Fragment key={column.id}>
-                      <CustomMenu
-                        label={column.label}
-                        filterType={column.filter.type}
-                        filterData={column.filter.data}
-                        />
-                      <ColumnResizer style={{padding: '0.5px'}}/>
+                      {
+                        isFilter
+                        ? <CustomMenu
+                            label={column.label}
+                            filterType={column.filter.type}
+                            filterData={column.filter.data}
+                            />
+                        : <TableCell align="left">
+                            { column.label }
+                          </TableCell>
+                      }
+                      {
+                        index + 1 < columns.length
+                        ? <ColumnResizer style={{padding: '0.5px'}}/>
+                        : <></>
+                      }
                     </Fragment>
                   )
                 })
               }
-              <TableCell/>
+              {
+                isCollapse
+                ? <TableCell/>
+                : <></>
+              }
             </TableRow>
           </TableHead>
           <TableBody>
             {rows.slice(page * rowsPerPage, (page + 1) * rowsPerPage).map((row, index) => (
-              <Row row={row} columns={columns} key={index}/>
+              <Row row={row} columns={columns} key={index} isCollapse={isCollapse} isResizer={index + 1 < columns.length}/>
             ))}
           </TableBody>
         </Table>
