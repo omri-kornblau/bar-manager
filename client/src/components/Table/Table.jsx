@@ -132,13 +132,13 @@ const CustomTable = props => {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[5, 10,25,100]}
+        rowsPerPageOptions={[5,10,25,100]}
         component="div"
         count={rows.length}
         rowsPerPage={rowsPerPage}
         page={page}
-        onPageChange={onPageChange}
-        onRowsPerPageChange={onRowsPerPageChange}
+        onChangePage={onPageChange}
+        onChangeRowsPerPage={onRowsPerPageChange}
         labelDisplayedRows={({from, to, count}) => `${from}-${to} מתוך ${count}`}
         labelRowsPerPage='שורות בכל עמוד:'
         />
