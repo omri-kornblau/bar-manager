@@ -1,5 +1,6 @@
 import ClientDashboard from "./ClientDashboard";
 import ClientActiveRequests from "./ClientActiveRequests";
+import NewRequest from "./NewRequest";
 
 import DashboardIcon from "@material-ui/icons/DashboardRounded";
 import SpeakerNotesIcon from "@material-ui/icons/SpeakerNotesRounded";
@@ -19,7 +20,7 @@ const ClientViews = {
   newrequest: {
     name: "בקשה חדשה",
     icon: AddCircleRoundedIcon,
-    component: ClientDashboard
+    component: NewRequest
   }
 };
 
