@@ -1,78 +1,44 @@
-import React, { useState, Fragment } from "react";
-import Paper from '@material-ui/core/Paper';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import Box from '@material-ui/core/Box';
-import Collapse from '@material-ui/core/Collapse';
-import IconButton from '@material-ui/core/IconButton';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import { Typography } from "@material-ui/core";
+import React, { useRef, Fragment } from "react";
+import PropTypes from "prop-types";
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
+ } from "@material-ui/core";
+
 import ColumnResizer from "./ColumnResizer";
+import TableHeaderCell from "./TableHeaderCell";
+import Row from "./Row";
+import useStyles from "./style";
 
-import CustomMenu from './TableHeaderCell'
+const propTypes = {
+  rows: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object)),
+  columns: PropTypes.arrayOf(PropTypes.objectOf({
+    id: PropTypes.string,
+    label: PropTypes.string,
+  })),
+  isFilter: PropTypes.bool,
+  isCollapse: PropTypes.bool,
+};
 
-const Row = props => {
-  const { row, columns, isCollapse, isResizer } = props;
-  const [open, setOpen] = useState(false);
-
-  return (
-    <>
-      <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-        {columns.map(column => {
-          const value = row[column.id];
-          return (
-            <Fragment key={column.id}>
-              <TableCell align="right">
-                { value }
-              </TableCell>
-              {
-                isResizer
-                ? <ColumnResizer style={{padding: '0.5px'}}/>
-                : <></>
-              }
-            </Fragment>
-          )
-        })}
-        {
-          isCollapse
-          ? <TableCell align="left">
-              <IconButton size="small" onClick={() => setOpen(!open)}>
-                { open
-                ? <KeyboardArrowUpIcon/>
-                : <KeyboardArrowDownIcon/> }
-              </IconButton>
-            </TableCell>
-          : <></>
-        }
-      </TableRow>
-      { isCollapse
-        ? <TableRow>
-            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={columns.length * 2 + 1}>
-              <Collapse in={open} timeout="auto" unmountOnExit>
-                <Box margin={1}>
-                  <Typography variant="h6" gutterBottom component="div">
-                    Title
-                  </Typography>
-                </Box>
-              </Collapse>
-            </TableCell>
-          </TableRow>
-        : <></>
-      }
-    </>
-  )
-}
+const defaultProps = {
+  rows: [[]],
+  columns: [],
+  isFilter: false,
+  isCollapse: false,
+};
 
 const CustomTable = props => {
   const { rows, columns, isFilter, isCollapse } = props;
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const headerRefs = columns.map(() => useRef(null));
 
   const onPageChange = (event, newPage) => {
     setPage(newPage);
@@ -83,50 +49,44 @@ const CustomTable = props => {
     setPage(0);
   };
 
+  const classes = useStyles();
+
   return (
-    <Paper>
-      <TableContainer>
-        <Table stickyHeader>
+    <Paper elevation={3} className={classes.table}>
+      <TableContainer className={classes.table}>
+        <Table stickyHeader className={classes.tableBody} size="small">
           <TableHead>
-            <TableRow>
+            <TableRow className={classes.tableHeader}>
               {
                 columns.map((column, index) => {
-                  if (column.filter.type === 'text') {
-                    column.filter.data = Array.from(new Set(rows.map(row => row[column.id])));
+                  if (isFilter && column.filter.type === 'text') {
+                    column.filter.data = Array.from(
+                      new Set(rows.map(row => row[column.id]))
+                    );
                   }
 
                   return (
                     <Fragment key={column.id}>
-                      {
-                        isFilter
-                        ? <CustomMenu
-                            label={column.label}
-                            filterType={column.filter.type}
-                            filterData={column.filter.data}
-                            />
-                        : <TableCell align="left">
-                            { column.label }
-                          </TableCell>
-                      }
+                      <TableHeaderCell
+                        column={column}
+                        isFilter={isFilter}
+                      />
                       {
                         index + 1 < columns.length
-                        ? <ColumnResizer style={{padding: '0.5px'}}/>
+                        ? <ColumnResizer style={{padding: "0.5px"}}/>
                         : <></>
                       }
                     </Fragment>
                   )
                 })
               }
-              {
-                isCollapse
-                ? <TableCell/>
-                : <></>
-              }
             </TableRow>
           </TableHead>
           <TableBody>
             {rows.slice(page * rowsPerPage, (page + 1) * rowsPerPage).map((row, index) => (
-              <Row row={row} columns={columns} key={index} isCollapse={isCollapse} isResizer={index + 1 < columns.length}/>
+              <Row row={row} columns={columns} key={index} isCollapse={isCollapse} headerRefs={headerRefs}>
+                text
+              </Row>
             ))}
           </TableBody>
         </Table>
@@ -140,10 +100,13 @@ const CustomTable = props => {
         onChangePage={onPageChange}
         onChangeRowsPerPage={onRowsPerPageChange}
         labelDisplayedRows={({from, to, count}) => `${from}-${to} מתוך ${count}`}
-        labelRowsPerPage='שורות בכל עמוד:'
+        labelRowsPerPage="שורות בכל עמוד:"
         />
     </Paper>
   );
 }
+
+CustomTable.propTypes = propTypes;
+CustomTable.defaultProps = defaultProps;
 
 export default CustomTable;

@@ -1,12 +1,95 @@
 import React from "react";
 import {
   Grid,
-  Paper,
   Typography,
   Box,
 } from "@material-ui/core";
 
 import CustomTable from "../../components/Table/Table";
+
+const notificationsColumns = [
+  {
+    id: "message",
+    label: "הודעה",
+    filter: {
+      type: "text"
+    }
+  },
+  {
+    id: "time",
+    label: "זמן",
+    filter: {
+      type: "text"
+    }
+  },
+  {
+    id: "policy",
+    label: "פוליסה",
+    filter: {
+      type: "text"
+    }
+  }
+];
+
+const createNotification = (message, time, policy) => ({message, time, policy});
+
+const notifications = [
+  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
+  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
+  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
+  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
+  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
+  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
+  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
+  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
+  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
+  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
+  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
+  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
+  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
+  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
+  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
+  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
+];
+
+const policiesColumns = [
+  {
+    id: "type",
+    label: "סוג פוליסה"
+  },
+  {
+    id: "price",
+    label: "מחיר",
+  },
+  {
+    id: "startTime",
+    label: "תאריך התחלה",
+  },
+  {
+    id: "endTime",
+    label: "תאריך תפוגה",
+  },
+]
+
+const createPolicies = (type, price, startTime, endTime) => ({type, price, startTime, endTime});
+
+const policies = [
+  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
+  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
+  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
+  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
+  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
+  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
+  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
+  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
+  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
+  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
+  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
+  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
+  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
+  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
+  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
+]
 
 const ClientDashboard = props => {
   return (
@@ -27,17 +110,15 @@ const ClientDashboard = props => {
           <Typography variant="h6" color="inherit" align="center">
             התראות חדשות
           </Typography>
-          <Paper>
-            <CustomTable  rows={[{a:1}, {a:2}]} columns={[{id: 'a', label: 'a', filter: {type: 'text'}}]}/>
-          </Paper>
+          <CustomTable  rows={notifications} columns={notificationsColumns} isFilter={true} isCollapse={true}>
+            text
+          </CustomTable>
         </Grid>
         <Grid item>
           <Typography variant="h6" color="inherit" align="center">
             פוליסות פעילות
           </Typography>
-          <Paper>
-            <CustomTable  rows={[{a:1}, {a:2}]} columns={[{id: 'a', label: 'a', filter: {type: 'text'}}]}/>
-          </Paper>
+          <CustomTable  rows={policies} columns={policiesColumns}/>
         </Grid>
       </Grid>
     </>

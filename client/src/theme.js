@@ -14,7 +14,13 @@ const theme = createMuiTheme({
         active: common.white,
         hover: "rgba(255, 255, 255, 0.7)"
       }
+    },
+    background: {
+      dark: grey[100],
     }
+  },
+  paper: {
+    borderRadius: 10
   },
   typography: {
     fontFamily: [

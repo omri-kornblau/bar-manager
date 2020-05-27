@@ -1,12 +1,15 @@
 import React, { useState, forwardRef } from "react";
-import { withStyles } from '@material-ui/core/styles';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import TableCell from '@material-ui/core/TableCell';
-import TextField from '@material-ui/core/TextField';
-import Checkbox from '@material-ui/core/Checkbox';
-import FilterListIcon from '@material-ui/icons/FilterList';
+import PropTypes from "prop-types";
+import {
+  withStyles,
+  Menu,
+  MenuItem,
+  ListItemText,
+  TableCell,
+  TextField,
+  Checkbox,
+} from "@material-ui/core";
+import FilterListIcon from "@material-ui/icons/FilterList";
 
 const StyledMenu = withStyles({
   paper: {
@@ -18,11 +21,11 @@ const StyledMenu = withStyles({
     getContentAnchorEl={null}
     anchorOrigin={{
       vertical: 'bottom',
-      horizontal: 'right',
+      horizontal: 'left',
     }}
     transformOrigin={{
       vertical: 'top',
-      horizontal: 'right',
+      horizontal: 'left',
     }}
     {...props}
   />
@@ -44,7 +47,7 @@ const TextMenuItems = props => {
   return (
     <>
       <StyledMenuItem>
-        <TextField label="Search"/> 
+        <TextField size="small" label="חיפוש"/> 
       </StyledMenuItem>
       {
         rows.map(row => (
@@ -70,10 +73,10 @@ const NumberMenuItems = () => {
   return (
     <>
       <StyledMenuItem>
-        <TextField label="Bigger Then" type="number"/> 
+        <TextField label="גדול מ" type="number"/> 
       </StyledMenuItem>
       <StyledMenuItem>
-        <TextField label="Smaller Then" type="number"/> 
+        <TextField label="קטן מ" type="number"/> 
       </StyledMenuItem>
     </>
   );
@@ -121,8 +124,8 @@ const MenuItems = forwardRef((props, ref) => {
   }
 });
 
-const CustomizedTableHeaderCell = props => {
-  const { label, filterType, filterData } = props;
+const TableHeaderCell = props => {
+  const { column, isFilter } = props;
   const [anchorEl, setAnchorEl] = useState(null);
 
   const onClick = (event) => {
@@ -135,20 +138,28 @@ const CustomizedTableHeaderCell = props => {
 
   return (
     <>
-      <TableCell align="right">
-        <FilterListIcon onClick={onClick} style={{float: "right"}}/>
-        { label }
+      <TableCell align="left">
+        { column.label }
+        {
+          isFilter
+          ?  <FilterListIcon onClick={onClick} style={{float: "left"}}/>
+          : <></>
+        }
       </TableCell>
-      <StyledMenu
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={onClose}
-      >
-        <MenuItems filterType={filterType} filterData={filterData}/>
-      </StyledMenu>
+      {
+        isFilter
+        ?  <StyledMenu
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={onClose}
+          >
+            <MenuItems filterType={column.filter.type} filterData={column.filter.data}/>
+          </StyledMenu>
+        : <></>
+      }
     </>
   );
 }
 
-export default CustomizedTableHeaderCell;
+export default TableHeaderCell;
