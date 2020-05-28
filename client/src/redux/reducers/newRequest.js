@@ -1,7 +1,7 @@
 import { SET_STEP } from "../actions/newRequest";
 
 const initialState = {
-  step: 2
+  step: 0
 };
 
 const navbarReducer = (state=initialState, action) => {

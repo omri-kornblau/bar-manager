@@ -20,7 +20,7 @@ const Input = props => {
 const propTypes = {
   formStructure: PropTypes.arrayOf(
     PropTypes.arrayOf(
-      PropTypes.objectOf({
+      PropTypes.shape({
         label: PropTypes.string,
         helperText: PropTypes.string,
         defaultValue: PropTypes.string
