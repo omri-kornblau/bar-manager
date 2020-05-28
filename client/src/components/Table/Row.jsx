@@ -11,11 +11,12 @@ import useStyles from "./style";
 
 const propTypes = {
   row: PropTypes.object,
-  columns: PropTypes.arrayOf(PropTypes.objectOf({
+  columns: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,
   })),
   isCollapse: PropTypes.bool,
   headerRefs: PropTypes.array,
+  isRounded: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -26,7 +27,7 @@ const defaultProps = {
 };
 
 const Row = props => {
-  const { row, columns, isCollapse, headerRefs, children } = props;
+  const { row, columns, isCollapse, headerRefs, children, isRounded } = props;
   const [open, setOpen] = useState(false);
 
   const classes = useStyles();
@@ -35,7 +36,7 @@ const Row = props => {
 
   return (
     <>
-      <TableRow hover className={classes.tableRow} onClick={() => setOpen(!open)}>
+      <TableRow hover className={isRounded ? classes.roundedTableRow : null} onClick={() => setOpen(!open)}>
         {columns.map((column, index) => {
           const value = row[column.id];
           return (

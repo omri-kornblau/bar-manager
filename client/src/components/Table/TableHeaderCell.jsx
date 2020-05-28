@@ -96,7 +96,7 @@ const MenuItems = forwardRef((props, ref) => {
 });
 
 const propTypes = {
-  column: PropTypes.objectOf({
+  column: PropTypes.shape({
     label: PropTypes.string,
   }),
   isFilter: PropTypes.bool,

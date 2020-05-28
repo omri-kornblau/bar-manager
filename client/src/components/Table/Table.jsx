@@ -16,13 +16,14 @@ import Row from "./Row";
 import useStyles from "./style";
 
 const propTypes = {
-  rows: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object)),
-  columns: PropTypes.arrayOf(PropTypes.objectOf({
+  rows: PropTypes.arrayOf(PropTypes.object),
+  columns: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,
     label: PropTypes.string,
   })),
   isFilter: PropTypes.bool,
   isCollapse: PropTypes.bool,
+  isRounded: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -33,7 +34,7 @@ const defaultProps = {
 };
 
 const CustomTable = props => {
-  const { rows, columns, isFilter, isCollapse } = props;
+  const { rows, columns, isFilter, isCollapse, isRounded } = props;
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -52,7 +53,7 @@ const CustomTable = props => {
 
   return (
     <Paper elevation={3} className={classes.table}>
-      <TableContainer className={classes.table}>
+      <TableContainer className={`${classes.table} ${isRounded ? classes.roundedTable : ""}`}>
         <Table stickyHeader className={classes.tableBody} size="small">
           <TableHead>
             <TableRow className={classes.tableHeader}>
@@ -67,6 +68,7 @@ const CustomTable = props => {
                   return (
                     <Fragment key={column.id}>
                       <TableHeaderCell
+                        ref={headerRefs[index]}
                         column={column}
                         isFilter={isFilter}
                       />
@@ -83,7 +85,7 @@ const CustomTable = props => {
           </TableHead>
           <TableBody>
             {rows.slice(page * rowsPerPage, (page + 1) * rowsPerPage).map((row, index) => (
-              <Row row={row} columns={columns} key={index} isCollapse={isCollapse} headerRefs={headerRefs}>
+              <Row row={row} columns={columns} key={index} isCollapse={isCollapse} headerRefs={headerRefs} isRounded={isRounded}>
                 text
               </Row>
             ))}

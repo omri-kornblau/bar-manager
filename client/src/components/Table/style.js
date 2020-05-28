@@ -3,6 +3,8 @@ import { makeStyles } from "@material-ui/core/styles";
 export default makeStyles(theme => ({
   table: {
     borderRadius: theme.paper.borderRadius,
+  },
+  roundedTable: {
     "& tr:first-child td": {
       marginTop: "10px",
     },
@@ -31,7 +33,7 @@ export default makeStyles(theme => ({
   menuPaper: {
     border: '1px solid #d3d4d5',
   },
-  tableRow: {
+  roundedTableRow: {
     "& td": {
       backgroundColor: theme.palette.background.dark,
       marginBottom: "5px",

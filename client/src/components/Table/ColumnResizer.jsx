@@ -22,6 +22,8 @@ export default class ColumnResizer extends React.Component {
 
         this.prev = props.prev;
         this.next = props.next;
+        console.log("prev:", this.prev)
+        console.log("next:", this.next)
     }
 
     startDrag() {

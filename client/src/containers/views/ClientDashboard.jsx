@@ -110,7 +110,7 @@ const ClientDashboard = props => {
           <Typography variant="h6" color="inherit" align="center">
             התראות חדשות
           </Typography>
-          <CustomTable  rows={notifications} columns={notificationsColumns} isFilter={true} isCollapse={true}>
+          <CustomTable  rows={notifications} columns={notificationsColumns}>
             text
           </CustomTable>
         </Grid>
@@ -118,7 +118,7 @@ const ClientDashboard = props => {
           <Typography variant="h6" color="inherit" align="center">
             פוליסות פעילות
           </Typography>
-          <CustomTable  rows={policies} columns={policiesColumns}/>
+          <CustomTable  rows={policies} columns={policiesColumns} isRounded={true}/>
         </Grid>
       </Grid>
     </>
