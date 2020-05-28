@@ -2,9 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker,
   KeyboardDatePicker,
-  DatePicker
 } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 

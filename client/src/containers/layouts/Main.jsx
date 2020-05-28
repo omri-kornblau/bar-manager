@@ -11,11 +11,6 @@ import pages from "../pages/pages";
 import { getPage } from "../../redux/selectors/navbar";
 
 import AppNavbar from "../../components/AppNavbar/AppNavbar";
-import {
-  Toolbar,
-  Box,
-  Container
- } from "@material-ui/core";
 
 const Main = props => {
   const {
@@ -30,7 +25,7 @@ const Main = props => {
       />
       <Switch>
         {_.map(pages, (pageData, key) =>
-          <Route path={`/${key}`}>
+          <Route key={key} path={`/${key}`}>
             <pageData.component/>
           </Route>
         )}

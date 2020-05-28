@@ -7,7 +7,7 @@ import rtl from 'jss-rtl';
 
 import "./assets/scss/material-kit.scss";
 
-import store, { history }from "./redux/store";
+import store, { history } from "./redux/store";
 import theme from "./theme";
 
 import Main from "./containers/layouts/Main";

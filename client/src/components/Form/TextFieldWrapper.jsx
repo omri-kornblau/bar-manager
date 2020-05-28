@@ -13,7 +13,7 @@ const defaultProps = {
 }
 
 const TextFieldWrapper = props => {
-  return <TextField {...props}/>
+  return <TextField autoComplete="on" {...props}/>
 }
 
 TextFieldWrapper.propTypes = propTypes;

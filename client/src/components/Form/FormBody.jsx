@@ -51,10 +51,10 @@ const FormBody = props => {
   } = props;
 
   return (
-    formStructure.map(row =>
-      <Grid container spacing={spacing} direction="row">
+    formStructure.map((row, idx) =>
+      <Grid key={idx} container spacing={spacing} direction="row">
         {row.map(field =>
-          <Grid xs item container justify={field.justify || justify}>
+          <Grid key={field.label} xs item container justify={field.justify || justify}>
             <Input
               variant={field.variant || variant}
               margin={margin}

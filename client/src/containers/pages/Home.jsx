@@ -44,7 +44,7 @@ const Home = props => {
         <Container className={classes.container}>
           <Switch>
             {_.map(views, (viewData, key) =>
-              <Route path={`${match.url}/${key}`}>
+              <Route key={key} path={`${match.url}/${key}`}>
                 <viewData.component/>
               </Route>
             )}
