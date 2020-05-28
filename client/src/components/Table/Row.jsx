@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import {
   TableCell,
   TableRow,
-  Box,
   Collapse,
  } from '@material-ui/core';
 
@@ -25,7 +24,6 @@ const defaultProps = {
   isCollapse: false,
   headerRefs: [],
 };
-
 
 const Row = props => {
   const { row, columns, isCollapse, headerRefs, children } = props;

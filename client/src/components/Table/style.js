@@ -11,6 +11,26 @@ export default makeStyles(theme => ({
     borderRadius: theme.paper.borderRadius,
     boxShadow: "0 2px 5px rgba(0, 0, 0, 0.15)"
   },
+  input: {
+    height: 0,
+    fontSize: "12px"
+  },
+  underline: {
+    paddingBottom: 5,
+  },
+  checkbox: {
+    padding: "0px",
+  },
+  itemText: {
+    fontSize: "10px"
+  },
+  menuItem: {
+    color: 'black',
+    minWidth: '150px',
+  },
+  menuPaper: {
+    border: '1px solid #d3d4d5',
+  },
   tableRow: {
     "& td": {
       backgroundColor: theme.palette.background.dark,
