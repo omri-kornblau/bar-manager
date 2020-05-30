@@ -27,7 +27,15 @@ const defaultProps = {
 };
 
 const Row = props => {
-  const { row, columns, isCollapse, headerRefs, children, isRounded } = props;
+  const {
+    row,
+    columns,
+    isCollapse,
+    headerRefs,
+    children,
+    isRounded
+  } = props;
+
   const [open, setOpen] = useState(false);
 
   const classes = useStyles();

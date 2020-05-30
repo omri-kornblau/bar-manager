@@ -1,3 +1,4 @@
+import _ from "lodash";
 import React, { useRef, Fragment } from "react";
 import PropTypes from "prop-types";
 import {
@@ -34,7 +35,14 @@ const defaultProps = {
 };
 
 const CustomTable = props => {
-  const { rows, columns, isFilter, isCollapse, isRounded } = props;
+  const {
+    rows,
+    columns,
+    isFilter,
+    isCollapse,
+    isRounded,
+  } = props;
+
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -44,9 +52,13 @@ const CustomTable = props => {
     setPage(newPage);
   };
 
-  const onRowsPerPageChange = (event) => {
+  const onRowsPerPageChange = event => {
     setRowsPerPage(+event.target.value);
     setPage(0);
+  };
+
+  const renderLabelDisplayedRows = ({from, to, count}) => {
+    return `${from}-${to} מתוך ${count}`;
   };
 
   const classes = useStyles();
@@ -60,9 +72,7 @@ const CustomTable = props => {
               {
                 columns.map((column, index) => {
                   if (isFilter && column.filter.type === 'text') {
-                    column.filter.data = Array.from(
-                      new Set(rows.map(row => row[column.id]))
-                    );
+                    column.filter.data = _.uniq(rows.map(row => row[column.id]));
                   }
 
                   return (
@@ -100,7 +110,7 @@ const CustomTable = props => {
         page={page}
         onChangePage={onPageChange}
         onChangeRowsPerPage={onRowsPerPageChange}
-        labelDisplayedRows={({from, to, count}) => `${from}-${to} מתוך ${count}`}
+        labelDisplayedRows={renderLabelDisplayedRows}
         labelRowsPerPage="שורות בכל עמוד:"
         />
     </Paper>

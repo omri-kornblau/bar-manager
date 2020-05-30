@@ -15,7 +15,7 @@ export default makeStyles(theme => ({
   },
   input: {
     height: 0,
-    fontSize: "12px"
+    fontSize: "0.8rem"
   },
   underline: {
     paddingBottom: 5,

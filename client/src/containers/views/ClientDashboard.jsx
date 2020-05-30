@@ -110,7 +110,7 @@ const ClientDashboard = props => {
           <Typography variant="h6" color="inherit" align="center">
             התראות חדשות
           </Typography>
-          <CustomTable  rows={notifications} columns={notificationsColumns}>
+          <CustomTable  rows={notifications} columns={notificationsColumns} isFilter={true}>
             text
           </CustomTable>
         </Grid>

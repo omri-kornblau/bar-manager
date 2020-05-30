@@ -9,10 +9,13 @@ import {
   StyledMenuItem,
   StyledTextField,
   StyledCheckbox,
-} from "./styled"
+} from "./StyledMUI"
 
 const TextMenuItems = props => {
-  const { rows } = props;
+  const {
+    rows,
+  } = props;
+
   const [checkboxStatuses,  setCheckbox] = useState(rows.reduce((prev, cur) => (
     {[cur]: true, ...prev}
   ), {}));
@@ -55,7 +58,9 @@ const NumberMenuItems = () => {
 }
 
 const OptionsMenuItems = props => {
-  const { options } = props;
+  const {
+    options
+  } = props;
   const [checkboxStatuses,  setCheckbox] = useState(options.reduce((prev, cur) => (
     {[cur]: true, ...prev}
   ), {}));
@@ -77,7 +82,10 @@ const OptionsMenuItems = props => {
 }
 
 const MenuItems = forwardRef((props, ref) => {
-  const { filterType, filterData } = props;
+  const {
+    filterType,
+    filterData,
+  } = props;
 
   switch (filterType) {
     case "text": {
@@ -106,8 +114,11 @@ const defaultProps = {
   isFilter: false,
 };
 
-const TableHeaderCell = props => {
-  const { column, isFilter } = props;
+const TableHeaderCell = forwardRef((props, ref) => {
+  const {
+    column,
+    isFilter,
+  } = props;
   const [anchorEl, setAnchorEl] = useState(null);
 
   const onClick = (event) => {
@@ -120,8 +131,8 @@ const TableHeaderCell = props => {
 
   return (
     <>
-      <TableCell align="left">
-        { column.label }
+      <TableCell align="left" ref={ref}>
+        {column.label}
         {
           isFilter
           ? <FilterListIcon onClick={onClick} style={{float: "left"}}/>
@@ -142,7 +153,7 @@ const TableHeaderCell = props => {
       }
     </>
   );
-}
+});
 
 TableHeaderCell.propTypes = propTypes;
 TableHeaderCell.defaultProps = defaultProps;
