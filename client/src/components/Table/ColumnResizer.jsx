@@ -150,6 +150,8 @@ export default class ColumnResizer extends React.Component {
             style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
         }
 
+        style.padding = '0.5px';
+
         return (
           <td
             ref="ele" 

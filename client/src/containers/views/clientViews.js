@@ -1,4 +1,5 @@
 import ClientDashboard from "./ClientDashboard";
+import ClientActiveRequests from "./ClientActiveRequests";
 
 import DashboardIcon from "@material-ui/icons/DashboardRounded";
 import SpeakerNotesIcon from "@material-ui/icons/SpeakerNotesRounded";
@@ -13,7 +14,7 @@ const ClientViews = {
   activerequests: {
     name: "בקשות פעילות",
     icon: SpeakerNotesIcon,
-    component: ClientDashboard
+    component: ClientActiveRequests
   },
   newrequest: {
     name: "בקשה חדשה",
