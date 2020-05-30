@@ -58,5 +58,8 @@ export default makeStyles(theme => ({
   },
   collapseTableCell: {
     padding: 0,
+  },
+  filterListIcon: {
+    float: "right",
   }
 }))
