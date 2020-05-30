@@ -19,6 +19,9 @@ export default class ColumnResizer extends React.Component {
         this.startPos = 0;
         this.startWidthPrev = 0;
         this.startWidthNext = 0;
+
+        this.prev = props.prev;
+        this.next = props.next;
     }
 
     startDrag() {
@@ -32,7 +35,10 @@ export default class ColumnResizer extends React.Component {
         this.startWidthPrev = 0;
         this.startWidthNext = 0;        
 
-        if (this.refs.ele) {
+        if (this.prev && this.next) {
+            this.startWidthPrev = this.prev.current.clientWidth;
+            this.startWidthNext = this.next.current.clientWidth;
+        } else if (this.refs.ele) {
             let prevSibling = this.refs.ele.previousSibling;
             let nextSibling = this.refs.ele.nextSibling;
 
@@ -80,8 +86,13 @@ export default class ColumnResizer extends React.Component {
             newPrev += offset;
         }
 
-        ele.previousSibling.style.width = newPrev + 'px';
-        ele.nextSibling.style.width = newNext + 'px';
+        if (this.prev && this.next) {
+            this.prev.current.style.width = newPrev + 'px';
+            this.next.current.style.width = newNext + 'px';
+        } else {
+            ele.previousSibling.style.width = newPrev + 'px';
+            ele.nextSibling.style.width = newNext + 'px';
+        }
     }
 
     componentDidMount() {

@@ -1,42 +1,21 @@
 import React, { useState, forwardRef } from "react";
-import { withStyles } from '@material-ui/core/styles';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import TableCell from '@material-ui/core/TableCell';
-import TextField from '@material-ui/core/TextField';
-import Checkbox from '@material-ui/core/Checkbox';
-import FilterListIcon from '@material-ui/icons/FilterList';
-
-const StyledMenu = withStyles({
-  paper: {
-    border: '1px solid #d3d4d5',
-  },
-})((props) => (
-  <Menu
-    elevation={0}
-    getContentAnchorEl={null}
-    anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'right',
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-    {...props}
-  />
-));
-
-const StyledMenuItem = withStyles((theme) => ({
-  root: {
-    color: 'black',
-    minWidth: '150px',
-  },
-}))(MenuItem);
+import PropTypes from "prop-types";
+import {
+  TableCell,
+} from "@material-ui/core";
+import FilterListIcon from "@material-ui/icons/FilterList";
+import {
+  StyledMenu,
+  StyledMenuItem,
+  StyledTextField,
+  StyledCheckbox,
+} from "./StyledMUI"
 
 const TextMenuItems = props => {
-  const { rows } = props;
+  const {
+    rows,
+  } = props;
+
   const [checkboxStatuses,  setCheckbox] = useState(rows.reduce((prev, cur) => (
     {[cur]: true, ...prev}
   ), {}));
@@ -44,7 +23,7 @@ const TextMenuItems = props => {
   return (
     <>
       <StyledMenuItem>
-        <TextField label="Search"/> 
+        <StyledTextField label="חיפוש"/>
       </StyledMenuItem>
       {
         rows.map(row => (
@@ -54,11 +33,10 @@ const TextMenuItems = props => {
               ...checkboxStatuses,
               [row]: !checkboxStatuses[row],
             })}>
-            <ListItemText align="right" primary={row}/>
-            <Checkbox
-                checked={checkboxStatuses[row]}
-                color="primary"
-              />
+            <StyledCheckbox
+              checked={checkboxStatuses[row]}
+              label={row}
+            />
           </StyledMenuItem>
         ))
       }
@@ -70,17 +48,19 @@ const NumberMenuItems = () => {
   return (
     <>
       <StyledMenuItem>
-        <TextField label="Bigger Then" type="number"/> 
+        <StyledTextField label="גדול מ" type="number"/> 
       </StyledMenuItem>
       <StyledMenuItem>
-        <TextField label="Smaller Then" type="number"/> 
+        <StyledTextField label="קטן מ" type="number"/> 
       </StyledMenuItem>
     </>
   );
 }
 
 const OptionsMenuItems = props => {
-  const { options } = props;
+  const {
+    options
+  } = props;
   const [checkboxStatuses,  setCheckbox] = useState(options.reduce((prev, cur) => (
     {[cur]: true, ...prev}
   ), {}));
@@ -93,17 +73,19 @@ const OptionsMenuItems = props => {
         [option]: !checkboxStatuses[option],
       })}
     >
-      <ListItemText align="right" primary={option}/>
-      <Checkbox
-          checked={checkboxStatuses[option]}
-          color="primary"
-        />
+      <StyledCheckbox
+        label={option}
+        checked={checkboxStatuses[option]}
+      />
     </StyledMenuItem>
   ));
 }
 
 const MenuItems = forwardRef((props, ref) => {
-  const { filterType, filterData } = props;
+  const {
+    filterType,
+    filterData,
+  } = props;
 
   switch (filterType) {
     case "text": {
@@ -121,8 +103,22 @@ const MenuItems = forwardRef((props, ref) => {
   }
 });
 
-const CustomizedTableHeaderCell = props => {
-  const { label, filterType, filterData } = props;
+const propTypes = {
+  column: PropTypes.shape({
+    label: PropTypes.string,
+  }),
+  isFilter: PropTypes.bool,
+};
+
+const defaultProps = {
+  isFilter: false,
+};
+
+const TableHeaderCell = forwardRef((props, ref) => {
+  const {
+    column,
+    isFilter,
+  } = props;
   const [anchorEl, setAnchorEl] = useState(null);
 
   const onClick = (event) => {
@@ -135,20 +131,31 @@ const CustomizedTableHeaderCell = props => {
 
   return (
     <>
-      <TableCell align="right">
-        <FilterListIcon onClick={onClick} style={{float: "right"}}/>
-        { label }
+      <TableCell align="left" ref={ref}>
+        {column.label}
+        {
+          isFilter
+          ? <FilterListIcon onClick={onClick} style={{float: "left"}}/>
+          : <></>
+        }
       </TableCell>
-      <StyledMenu
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={onClose}
-      >
-        <MenuItems filterType={filterType} filterData={filterData}/>
-      </StyledMenu>
+      {
+        isFilter
+        ? <StyledMenu
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={onClose}
+          >
+            <MenuItems filterType={column.filter.type} filterData={column.filter.data}/>
+          </StyledMenu>
+        : <></>
+      }
     </>
   );
-}
+});
 
-export default CustomizedTableHeaderCell;
+TableHeaderCell.propTypes = propTypes;
+TableHeaderCell.defaultProps = defaultProps;
+
+export default TableHeaderCell;
