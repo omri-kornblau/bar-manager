@@ -2,8 +2,12 @@ import _ from "lodash";
 import React from "react";
 import {
   Typography,
+  Grid,
   Box,
+  Fab,
 } from "@material-ui/core";
+import AddIcon from '@material-ui/icons/Add';
+import { Link } from "react-router-dom";
 
 import CustomTable from "../../components/Table/Table";
 
@@ -72,10 +76,17 @@ const PolicyExtraInfo = props => {
 const ClientActiveRequests = props => {
   return (
     <>
-      <Typography variant="h5" color="inherit" align="center">
-        בקשות פעילות
-      </Typography>
-      <Box height='5px'/>
+      <Grid container justify="space-between">
+        <Typography variant="h4" color="inherit" align="center">
+          בקשות פעילות
+        </Typography>
+        <Link to="newrequest">
+          <Fab color="primary" size="small">
+            <AddIcon/>
+          </Fab>
+        </Link>
+      </Grid>
+      <Box marginBottom={2}/>
       <CustomTable
         rows={policies}
         columns={policiesColumns}
