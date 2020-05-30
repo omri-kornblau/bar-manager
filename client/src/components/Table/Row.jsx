@@ -60,16 +60,16 @@ const Row = props => {
           )
         })}
       </TableRow>
-      { collapse
-        ? <Collapse in={open} timeout="auto" unmountOnExit>
-            <TableRow>
-              <TableCell colSpan={columns.length}>
-                {cloneElement(collapse, {row})}
-              </TableCell>
-            </TableRow>
-          </Collapse>
-        : <></>
-      }
+      <TableRow style={{ opacity: open ? 1 : 0 }}>
+        <TableCell colSpan={columns.length} className={classes.collapseTableCell}>
+          { collapse
+            ? <Collapse in={open} timeout="auto" unmountOnExit>
+                    {cloneElement(collapse, {row})}
+              </Collapse>
+            : <></>
+          }
+        </TableCell>
+      </TableRow>
     </>
   )
 }

@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
+import { Collapse } from "@material-ui/core";
 
 export default makeStyles(theme => ({
   table: {
@@ -54,5 +55,8 @@ export default makeStyles(theme => ({
     display: "block",
     whiteSpace: "nowrap",
     textOverflow: "clip",
+  },
+  collapseTableCell: {
+    padding: 0,
   }
 }))
