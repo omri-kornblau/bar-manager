@@ -1,15 +1,21 @@
-import React, { useState, forwardRef } from "react";
+import React, { useState, forwardRef, cloneElement } from "react";
 import PropTypes from "prop-types";
 import {
   TableCell,
 } from "@material-ui/core";
 import FilterListIcon from "@material-ui/icons/FilterList";
+
 import {
   StyledMenu,
   StyledMenuItem,
   StyledTextField,
   StyledCheckbox,
 } from "./StyledMUI"
+import useStyles from "./style";
+import {
+  useHover,
+  mergeRefs,
+} from "./utils"
 
 const TextMenuItems = props => {
   const {
@@ -120,6 +126,9 @@ const TableHeaderCell = forwardRef((props, ref) => {
     isFilter,
   } = props;
   const [anchorEl, setAnchorEl] = useState(null);
+  const [hoverRef, isHover] = isFilter ? useHover() : [null, null];
+
+  const classes = useStyles();
 
   const onClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -131,11 +140,11 @@ const TableHeaderCell = forwardRef((props, ref) => {
 
   return (
     <>
-      <TableCell align="left" ref={ref}>
+      <TableCell align="left" ref={mergeRefs(ref, hoverRef)}>
         {column.label}
         {
           isFilter
-          ? <FilterListIcon onClick={onClick} style={{float: "left"}}/>
+          ? <FilterListIcon onClick={onClick} className={classes.filterListIcon} style={{opacity: (isHover || Boolean(anchorEl)) ? 1 : 0}}/>
           : <></>
         }
       </TableCell>

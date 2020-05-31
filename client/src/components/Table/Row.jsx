@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, cloneElement } from "react";
 import PropTypes from "prop-types";
 import {
   TableCell,
@@ -14,7 +14,7 @@ const propTypes = {
   columns: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,
   })),
-  isCollapse: PropTypes.bool,
+  collapse: PropTypes.element,
   headerRefs: PropTypes.array,
   isRounded: PropTypes.bool,
 };
@@ -22,7 +22,7 @@ const propTypes = {
 const defaultProps = {
   row: [],
   columns: [],
-  isCollapse: false,
+  collapse: null,
   headerRefs: [],
 };
 
@@ -30,9 +30,8 @@ const Row = props => {
   const {
     row,
     columns,
-    isCollapse,
+    collapse,
     headerRefs,
-    children,
     isRounded
   } = props;
 
@@ -54,19 +53,23 @@ const Row = props => {
               </CustomTableCell>
               {
                 index + 1 < columns.length
-                ? <ColumnResizer style={{padding: "0.5px"}} prev={headerRefs[index]} next={headerRefs[index+1]}/>
+                ? <ColumnResizer style={{opacity: isRounded ? 0 : 1}} prev={headerRefs[index]} next={headerRefs[index+1]}/>
                 : <></>
               }
             </Fragment>
           )
         })}
       </TableRow>
-      { isCollapse
-        ? <Collapse in={open} timeout="auto" unmountOnExit>
-            {children}
-          </Collapse>
-        : <></>
-      }
+      <TableRow style={{ opacity: open ? 1 : 0 }}>
+        <TableCell colSpan={columns.length} className={classes.collapseTableCell}>
+          { collapse
+            ? <Collapse in={open} timeout="auto" unmountOnExit>
+                    {cloneElement(collapse, {row})}
+              </Collapse>
+            : <></>
+          }
+        </TableCell>
+      </TableRow>
     </>
   )
 }

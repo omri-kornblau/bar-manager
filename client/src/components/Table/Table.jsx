@@ -23,7 +23,7 @@ const propTypes = {
     label: PropTypes.string,
   })),
   isFilter: PropTypes.bool,
-  isCollapse: PropTypes.bool,
+  isCollapse: PropTypes.element,
   isRounded: PropTypes.bool,
 };
 
@@ -31,7 +31,7 @@ const defaultProps = {
   rows: [[]],
   columns: [],
   isFilter: false,
-  isCollapse: false,
+  collapse: null,
 };
 
 const CustomTable = props => {
@@ -39,7 +39,7 @@ const CustomTable = props => {
     rows,
     columns,
     isFilter,
-    isCollapse,
+    collapse,
     isRounded,
   } = props;
 
@@ -95,9 +95,7 @@ const CustomTable = props => {
           </TableHead>
           <TableBody>
             {rows.slice(page * rowsPerPage, (page + 1) * rowsPerPage).map((row, index) => (
-              <Row row={row} columns={columns} key={index} isCollapse={isCollapse} headerRefs={headerRefs} isRounded={isRounded}>
-                text
-              </Row>
+              <Row row={row} columns={columns} key={index} collapse={collapse} headerRefs={headerRefs} isRounded={isRounded}/>
             ))}
           </TableBody>
         </Table>
