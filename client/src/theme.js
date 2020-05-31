@@ -3,6 +3,9 @@ import { purple, grey, common } from '@material-ui/core/colors';
 
 const theme = createMuiTheme({
   direction: 'rtl',
+  shape: {
+    borderRadius: 10
+  },
   palette: {
     primary: {
       main: purple[800]
