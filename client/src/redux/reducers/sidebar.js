@@ -1,5 +1,4 @@
 import {
-  SET_SIDEBAR,
   SET_SIDEBAR_CLOSED
 } from "../actions/sidebar";
 import {

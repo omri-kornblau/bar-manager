@@ -9,7 +9,6 @@ import {
   Badge,
   Tabs,
   Tab,
-  useTheme,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
@@ -41,7 +40,6 @@ const AppNavbar = props => {
     pageKey
   } = props;
 
-  const theme = useTheme();
   const [tab, setTab] = useState(0);
 
   const classes = useStyles();
@@ -56,7 +54,7 @@ const AppNavbar = props => {
       className={classes.appBar}
     >
       <Toolbar>
-        <img width={50} src={gseLogo}/>
+        <img alt="gse-logo" width={50} src={gseLogo}/>
         <Typography className="ml-4 mr-4" variant="h6" color="inherit">
           גיזה זינגר אבן
         </Typography>
