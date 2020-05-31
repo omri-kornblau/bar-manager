@@ -2,7 +2,8 @@ import React from "react";
 import {
   Grid,
   Button,
-  Box
+  Box,
+  Typography
 } from "@material-ui/core";
 
 import FormBody from "../../../components/Form/FormBody";
@@ -37,7 +38,7 @@ const structure =
   ]
 ];
 
-const ChooseInsuranceType = props => {
+const FillDetails = props => {
   const {
     onNext,
     onBack
@@ -71,4 +72,4 @@ const ChooseInsuranceType = props => {
   );
 }
 
-export default ChooseInsuranceType;
+export default FillDetails;

@@ -1,22 +1,32 @@
+import WelcomePage from "./WelcomePage";
 import ChooseInsuranceType from "./ChooseInsuranceType";
 import FillDetails from "./FillDetails";
 import UploadFiles from "./UploadFiles";
 
 const steps = [
   {
+    label: "בחירת בקשה",
+    component: WelcomePage,
+    header: "בחר בקשה:",
+    showInStepper: false
+  },
+  {
     label: "בחירת ביטוח",
     component: ChooseInsuranceType,
-    header: "בחר סוג ביטוח:"
+    header: "בחר סוג ביטוח:",
+    showInStepper: true
   },
   {
     label: "מילוי פרטים",
     component: FillDetails,
-    header: "מלא פרטים:"
+    header: "מלא פרטים:",
+    showInStepper: true
   },
   {
     label: "סיום התהליך",
     component: UploadFiles,
-    header: "מידע אחרון וסיימנו:"
+    header: "מידע אחרון וסיימנו:",
+    showInStepper: true
   }
 ];
 
