@@ -4,10 +4,8 @@ import {
   Container,
   Grid,
   Button,
-  Fab,
   Box,
   Typography,
-  IconButton
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
@@ -66,7 +64,7 @@ const WelcomePage = props => {
 
   return (
     <Container maxWidth="md">
-      <Grid spacing={3} align="center" justify="center">
+      <Grid align="center">
         <Button
           onClick={onNext}
           variant="contained"
@@ -77,7 +75,7 @@ const WelcomePage = props => {
         </Button>
         <Box m={4}/>
         <Typography variant="h6">
-          או המשך עריכת בקשות קודמות:
+          או המשך יצירת בקשות קודמות:
         </Typography>
         <CustomTable
           rows={fakeTableData.rows}

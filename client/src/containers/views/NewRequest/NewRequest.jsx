@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import {
   Paper,
@@ -7,8 +7,7 @@ import {
   Box,
   IconButton,
   TextField,
-  Menu,
-  Grid
+  Menu
 } from "@material-ui/core";
 import SaveIcon from "@material-ui/icons/SaveRounded";
 import CancelIcon from "@material-ui/icons/CancelRounded";
@@ -76,17 +75,15 @@ const NewRequest = props => {
                 open={Boolean(saveAnchorEl)}
                 onClose={() => setSaveAnchorEl(null)}
               >
-                <Grid direction="row" justify="center" alignItems="center">
-                  <Box ml={3} m={1}>
-                    <form onSubmit={_onExit}>
-                      <TextField size="small" variant="outlined" margin="dense" label="שם הבקשה">
-                      </TextField>
-                      <IconButton type="submit" size="medium">
-                        <CheckIcon/>
-                      </IconButton>
-                    </form>
-                  </Box>
-                </Grid>
+                <Box ml={3} mt={1}>
+                  <form onSubmit={_onExit}>
+                    <TextField size="small" variant="outlined" margin="dense" label="שם הבקשה">
+                    </TextField>
+                    <IconButton type="submit" size="medium">
+                      <CheckIcon/>
+                    </IconButton>
+                  </form>
+                </Box>
               </Menu>
               <IconButton size="medium" onClick={e => setSaveAnchorEl(e.currentTarget)}>
                 <SaveIcon/>

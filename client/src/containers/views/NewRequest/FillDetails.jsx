@@ -2,8 +2,7 @@ import React from "react";
 import {
   Grid,
   Button,
-  Box,
-  Typography
+  Box
 } from "@material-ui/core";
 
 import FormBody from "../../../components/Form/FormBody";
