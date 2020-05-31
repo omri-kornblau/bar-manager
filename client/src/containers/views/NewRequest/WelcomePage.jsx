@@ -6,9 +6,11 @@ import {
   Button,
   Fab,
   Box,
-  Typography
+  Typography,
+  IconButton
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
+import EditIcon from "@material-ui/icons/Edit";
 
 import CustomTable from "../../../components/Table/Table";
 
@@ -17,18 +19,22 @@ const propTypes = {
   onBack: PropTypes.func
 }
 
-const createUnsavedData = (type, ctime, mtime, step) => ({ type, ctime, mtime, step });
+const createUnsavedData = (name, type, ctime, mtime, step, action) => ({ name, type, ctime, mtime, step, action });
 
 const date = (new Date()).toISOString();
+const EditButton = () => <EditIcon style={{cursor: "pointer"}} fontSize="small"/>
 
 const fakeTableData = {
   rows: [
-    createUnsavedData("סוג ב'", date, date, "העלאת קבצים"),
-    createUnsavedData("סוג ג'", date, date, "העלאת קבצים"),
-    createUnsavedData("סוג ב'", date, date, "מילוי פרטים"),
-    createUnsavedData("סוג א'", date, date, "העלאת קבצים"),
+    createUnsavedData("הביטוח הראשון שלי", "סוג ב'", date, date, "העלאת קבצים", <EditButton/>),
+    createUnsavedData("הביטוח השני שלי", "סוג ג'", date, date, "מילוי פרטים", <EditButton/>),
+    createUnsavedData("הביטוח השלישי שלי", "סוג ג'", date, date, "מילוי פרטים", <EditButton/>),
   ],
   columns: [
+    {
+      id: "name",
+      label: "שם הבקשה"
+    },
     {
       id: "type",
       label: "סוג ביטוח"
@@ -45,6 +51,10 @@ const fakeTableData = {
     {
       id: "step",
       label: "שלב"
+    },
+    {
+      id: "action",
+      label: ""
     },
   ]
 }
