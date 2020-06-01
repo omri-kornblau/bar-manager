@@ -19,6 +19,8 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import useStyles from "./style";
 
 import gseLogo from "../../assets/img/gse-logo.svg"
+import UserTooltip from "./UserTooltip";
+import LoginTooltip from "./LoginTooltip";
 
 const defaultProps = {
   pages: {
@@ -28,17 +30,20 @@ const defaultProps = {
     }
   },
   pageKey: "default",
+  isLoggedIn: false
 };
 
 const propTypes = {
   pages: PropTypes.object,
   pageKey: PropTypes.string,
+  isLoggedIn: PropTypes.bool
 };
 
 const AppNavbar = props => {
   const {
     pages,
-    pageKey
+    pageKey,
+    isLoggedIn
   } = props;
 
   const [tab, setTab] = useState(0);
@@ -74,14 +79,10 @@ const AppNavbar = props => {
           )}
         </Tabs>
         <div className="mr-auto">
-          <IconButton
-            edge="end"
-            aria-label="account of current user"
-            aria-haspopup="true"
-            color="inherit"
-          >
-            <AccountCircleIcon />
-          </IconButton>
+          { isLoggedIn
+            ? <UserTooltip/>
+            : <LoginTooltip/>
+          }
         </div>
       </Toolbar>
     </AppBar>
