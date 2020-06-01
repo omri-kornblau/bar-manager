@@ -6,6 +6,7 @@ import {
   Button,
   Box,
   Typography,
+  Tooltip
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
@@ -20,7 +21,10 @@ const propTypes = {
 const createUnsavedData = (name, type, ctime, mtime, step, action) => ({ name, type, ctime, mtime, step, action });
 
 const date = (new Date()).toISOString();
-const EditButton = () => <EditIcon style={{cursor: "pointer"}} fontSize="small"/>
+const EditButton = () =>
+  <Tooltip arrow title="המשך ביצירה">
+    <EditIcon style={{cursor: "pointer"}} fontSize="small"/>
+  </Tooltip>
 
 const fakeTableData = {
   rows: [

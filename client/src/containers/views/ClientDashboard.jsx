@@ -3,6 +3,7 @@ import {
   Grid,
   Typography,
   Box,
+  Tooltip
 } from "@material-ui/core";
 
 import CustomTable from "../../components/Table/Table";
@@ -117,19 +118,23 @@ const ClientDashboard = props => {
         </Typography>
       </Grid>
       <Box height={20}/>
-      <Grid container justify="space-evenly" spacing={10} direction="row">
+      <Grid container justify="space-evenly" direction="row">
         <Grid item>
-          <Typography variant="h6" color="inherit" align="center">
-            התראות חדשות
-          </Typography>
+          <Tooltip arrow title="התראות אשר עדיין לא נקראו">
+            <Typography variant="h6" color="inherit" align="center">
+              התראות חדשות
+            </Typography>
+          </Tooltip>
           <CustomTable  rows={notifications} columns={notificationsColumns}>
             text
           </CustomTable>
         </Grid>
         <Grid item>
-          <Typography variant="h6" color="inherit" align="center">
-            פוליסות פעילות
-          </Typography>
+          <Tooltip arrow title="פוליסות שאושרו ונחתמו">
+            <Typography variant="h6" color="inherit" align="center">
+              פוליסות פעילות
+            </Typography>
+          </Tooltip>
           <CustomTable  rows={policies} columns={policiesColumns} isRounded={true} isFilter={true}/>
         </Grid>
       </Grid>

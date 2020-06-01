@@ -5,6 +5,7 @@ import {
   Grid,
   Box,
   Fab,
+  Tooltip
 } from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 import { Link } from "react-router-dom";
@@ -68,7 +69,7 @@ const PolicyExtraInfo = props => {
   } = props;
   console.log(row);
 
-  return _.map(row, (value, key) => 
+  return _.map(row, (value, key) =>
     <h5>{key} - {value}</h5>
   );
 }
@@ -76,14 +77,19 @@ const PolicyExtraInfo = props => {
 const ClientActiveRequests = props => {
   return (
     <>
-      <Grid container justify="space-between">
-        <Typography variant="h4" color="inherit" align="center">
+      <Grid container alignItems="flex-end" justify="space-between">
+        <Typography variant="h4" color="inherit" align="left">
           בקשות פעילות
+        <Typography variant="body2" color="inherit" align="center">
+          כאן מוצגות כל הבקשות אשר עדיין לא אושרו (המשך הסבר...)
+        </Typography>
         </Typography>
         <Link to="newrequest">
-          <Fab color="primary" size="small">
-            <AddIcon/>
-          </Fab>
+          <Tooltip arrow title="צור בקשה חדשה">
+            <Fab color="primary" size="small">
+              <AddIcon/>
+            </Fab>
+          </Tooltip>
         </Link>
       </Grid>
       <Box marginBottom={2}/>
