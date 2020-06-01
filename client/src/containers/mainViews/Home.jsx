@@ -13,7 +13,9 @@ import {
 } from "react-router-dom";
 
 import ClientViews from "./homeViews/homeClientViews";
+import LoggedOutViews from "../views/loggedOutViews";
 import { getView, getClosed } from "../../redux/selectors/sidebar";
+import { getUserLoggedIn } from "../../redux/selectors/user";
 import { setSidebarClosed } from "../../redux/actions/sidebar";
 
 import useStyles from "./style";
@@ -25,21 +27,26 @@ const Home = props => {
   const {
     view,
     getProgressWithView,
+    isLoggedIn
   } = props;
 
   const match = useRouteMatch();
   const classes = useStyles();
-  const views = ClientViews;
+
+  const views = isLoggedIn ? ClientViews : LoggedOutViews;
 
   return (
     <>
       <main className={classes.content}>
         <Box className={classes.cityBackground} height={160}/>
-        <SecondaryNavbar
-          viewKey={view}
-          views={views}
-          getProgress={getProgressWithView}
-        />
+        { isLoggedIn ?
+          <SecondaryNavbar
+            viewKey={view}
+            views={views}
+            getProgress={getProgressWithView}
+          />
+          : ""
+        }
         <Container className={classes.container}>
           <Switch>
             {_.map(views, (viewData, key) =>
