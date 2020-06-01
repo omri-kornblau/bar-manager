@@ -8,6 +8,8 @@ import {
 
 import CustomTable from "../../components/Table/Table";
 
+import skylineBack from "../../assets/img/skyline-back.png";
+
 const notificationsColumns = [
   {
     id: "message",
@@ -138,6 +140,15 @@ const ClientDashboard = props => {
           <CustomTable  rows={policies} columns={policiesColumns} isRounded={true} isFilter={true}/>
         </Grid>
       </Grid>
+      <img style={{
+        opacity: "0.15",
+        width: "100%",
+        height:"50%",
+        position: "fixed",
+        left:"0",
+        bottom: "0",
+        zIndex: "-1"
+      }} src={skylineBack}></img>
     </>
   );
 }

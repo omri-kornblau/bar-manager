@@ -19,6 +19,8 @@ import { setStep } from "../../../redux/actions/newRequest";
 
 import Stepper from "../../../components/Stepper/Stepper";
 
+import newBack from "../../../assets/img/new-back.png"
+
 const getStepperSteps = steps => steps
   .filter(step => step.showInStepper)
   .map(step => step.label)
@@ -101,6 +103,15 @@ const NewRequest = props => {
           </Container>
           : <StepBody/>
         }
+      <img style={{
+        opacity: "0.09",
+        width: "80%",
+        height:"70%",
+        position: "fixed",
+        left:"0",
+        bottom: "40%",
+        zIndex: "-1"
+      }} src={newBack}></img>
     </>
   );
 }
