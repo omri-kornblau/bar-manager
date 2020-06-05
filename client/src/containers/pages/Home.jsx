@@ -3,7 +3,8 @@ import React from "react";
 import { connect } from "react-redux";
 import {
   Container,
-  Toolbar
+  Toolbar,
+  Box
 } from "@material-ui/core";
 import {
   Switch,
@@ -18,13 +19,11 @@ import { setSidebarClosed } from "../../redux/actions/sidebar";
 
 import useStyles from "./style";
 
-import Sidebar from "../../components/Sidebar/Sidebar";
+import SecondaryNavbar from "../../components/SecondaryNavbar/SecondaryNavbar";
 
 const Home = props => {
   const {
-    view,
-    sidebarClosed,
-    setSidebarClosed
+    view
   } = props;
 
   const match = useRouteMatch();
@@ -33,14 +32,12 @@ const Home = props => {
 
   return (
     <>
-      <Sidebar
-        closed={sidebarClosed}
-        onCloseClick={() => setSidebarClosed(!sidebarClosed)}
-        viewKey={view}
-        views={views}
-      />
       <main className={classes.content}>
-        <Toolbar/>
+        <Box className={classes.cityBackground} height={160}/>
+        <SecondaryNavbar
+          viewKey={view}
+          views={views}
+        />
         <Container className={classes.container}>
           <Switch>
             {_.map(views, (viewData, key) =>
