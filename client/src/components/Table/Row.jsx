@@ -1,3 +1,4 @@
+import _ from "lodash";
 import React, { useState, Fragment, cloneElement } from "react";
 import PropTypes from "prop-types";
 import {
@@ -60,16 +61,16 @@ const Row = props => {
           )
         })}
       </TableRow>
-      <TableRow style={{ opacity: open ? 1 : 0 }}>
-        <TableCell colSpan={columns.length} className={classes.collapseTableCell}>
-          { collapse
-            ? <Collapse in={open} timeout="auto" unmountOnExit>
+      { collapse
+        ? <TableRow style={{ opacity: open ? 1 : 0 }}>
+            <TableCell colSpan={columns.length} className={classes.collapseTableCell}>
+                <Collapse in={open} timeout="auto" unmountOnExit>
                     {cloneElement(collapse, {row})}
-              </Collapse>
-            : <></>
-          }
-        </TableCell>
-      </TableRow>
+                </Collapse>
+            </TableCell>
+          </TableRow>
+        : ""
+      }
     </>
   )
 }

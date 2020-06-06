@@ -106,7 +106,7 @@ const policies = [
   createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
 ]
 
-const ClientDashboard = props => {
+const ClientDashboardMainView = props => {
   return (
     <>
       <Grid container alignItems="flex-end">
@@ -119,7 +119,7 @@ const ClientDashboard = props => {
           ביקורך האחרון היה בתאריך 13/05/2020 בשעה 18:26
         </Typography>
       </Grid>
-      <Box height={20}/>
+      <Box height={2}/>
       <Grid container justify="space-evenly" direction="row">
         <Grid item>
           <Tooltip arrow title="התראות אשר עדיין לא נקראו">
@@ -137,7 +137,7 @@ const ClientDashboard = props => {
               פוליסות פעילות
             </Typography>
           </Tooltip>
-          <CustomTable  rows={policies} columns={policiesColumns} isRounded={true} isFilter={true}/>
+          <CustomTable rows={policies} columns={policiesColumns} isRounded={true} isFilter={true}/>
         </Grid>
       </Grid>
       <img style={{
@@ -153,4 +153,4 @@ const ClientDashboard = props => {
   );
 }
 
-export default ClientDashboard;
+export default ClientDashboardMainView;

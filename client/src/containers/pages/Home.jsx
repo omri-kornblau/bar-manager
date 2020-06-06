@@ -20,10 +20,12 @@ import { setSidebarClosed } from "../../redux/actions/sidebar";
 import useStyles from "./style";
 
 import SecondaryNavbar from "../../components/SecondaryNavbar/SecondaryNavbar";
+import { getProgress } from "../../redux/selectors/progressBar";
 
 const Home = props => {
   const {
-    view
+    view,
+    getProgressWithView,
   } = props;
 
   const match = useRouteMatch();
@@ -37,6 +39,7 @@ const Home = props => {
         <SecondaryNavbar
           viewKey={view}
           views={views}
+          getProgress={getProgressWithView}
         />
         <Container className={classes.container}>
           <Switch>
@@ -45,7 +48,7 @@ const Home = props => {
                 <viewData.component/>
               </Route>
             )}
-            <Redirect to={`${match.url}/${view}`}/>
+            <Redirect to={`${match.url}/${view}/${getProgressWithView(view)}`}/>
           </Switch>
         </Container>
       </main>
@@ -55,6 +58,7 @@ const Home = props => {
 
 const mapStateToProps = state => ({
   view: getView(state),
+  getProgressWithView: view => getProgress(state, view),
   sidebarClosed: getClosed(state)
 })
 

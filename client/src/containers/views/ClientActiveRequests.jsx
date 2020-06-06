@@ -84,7 +84,7 @@ const ClientActiveRequests = props => {
           כאן מוצגות כל הבקשות אשר עדיין לא אושרו (המשך הסבר...)
         </Typography>
         </Typography>
-        <Link to="newrequest">
+        <Link to="/home/newrequest">
           <Tooltip arrow title="צור בקשה חדשה">
             <Fab color="primary" size="small">
               <AddIcon/>

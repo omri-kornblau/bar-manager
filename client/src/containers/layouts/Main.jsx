@@ -29,7 +29,7 @@ const Main = props => {
             <pageData.component/>
           </Route>
         )}
-        <Redirect from="/" to="/home/dashboard"/>
+        <Redirect from="/" to="/home/dashboard/edit"/>
       </Switch>
     </>
   );

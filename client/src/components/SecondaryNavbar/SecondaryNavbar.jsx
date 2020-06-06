@@ -23,7 +23,8 @@ const propTypes = {
 const SecondaryNavbar = props => {
   const {
     viewKey,
-    views
+    views,
+    getProgress,
   } = props;
 
   const [tab, setTab] = useState(0);
@@ -57,7 +58,7 @@ const SecondaryNavbar = props => {
           open={!!menuAnchorEl}
           onClose={onCloseNewRequestMenu}
         >
-          <Link to={newRequestKey}>
+          <Link to={`/home/${newRequestKey}`}>
             <MenuItem onClick={onCloseNewRequestMenu}>ביטוח א'</MenuItem>
             <MenuItem onClick={onCloseNewRequestMenu}>ביטוח ב'</MenuItem>
             <MenuItem onClick={onCloseNewRequestMenu}>ביטוח ג'</MenuItem>
@@ -74,7 +75,7 @@ const SecondaryNavbar = props => {
             : <Tab
               label={viewData.name}
               component={Link}
-              to={`${key}`}
+              to={`/home/${key}/${getProgress(key)}`}
               icon={<viewData.icon/>}
               key={key}
             />

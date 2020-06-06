@@ -1,4 +1,4 @@
-import ClientDashboard from "./ClientDashboard";
+import ClientDashboard from "../dashboard/Dashboard";
 import ClientActiveRequests from "./ClientActiveRequests";
 import NewRequest from "./NewRequest/NewRequest";
 
@@ -23,17 +23,17 @@ const ClientViews = {
   typeA: {
     name: "ביטוח א'",
     icon: BusinessIcon,
-    component: ClientActiveRequests
+    component: ClientDashboard
   },
   typeB: {
     name: "ביטוח ב'",
     icon: CommuteIcon,
-    component: ClientActiveRequests
+    component: ClientDashboard
   },
   typeC: {
     name: "ביטוח ג'",
     icon: HealingIcon,
-    component: ClientActiveRequests
+    component: ClientDashboard
   },
 };
 

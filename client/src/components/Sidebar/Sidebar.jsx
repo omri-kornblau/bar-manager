@@ -51,7 +51,7 @@ const Sidebar = props => {
       <div className={classes.drawerContainer}>
         <List>
           {_.map(views, (viewData, key) => (
-            <Link key={key} to={key}>
+            <Link key={key} to={`/home/${key}`}>
               <ListItem className={key === viewKey ? classes.activeSideLink : classes.sideLink} button>
                 <SidebarItem
                   closed={closed}
