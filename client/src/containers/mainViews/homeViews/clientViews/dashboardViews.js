@@ -5,7 +5,7 @@ import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import DoneIcon from '@material-ui/icons/Done';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 
-import MainView from "./Main"
+import MainView from "./dashboardViews/Edit"
 
 const DashboardProgresses = [
   {

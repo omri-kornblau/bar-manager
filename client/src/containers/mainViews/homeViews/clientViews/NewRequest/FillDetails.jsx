@@ -5,7 +5,7 @@ import {
   Box
 } from "@material-ui/core";
 
-import FormBody from "../../../components/Form/FormBody";
+import FormBody from "../../../../../components/Form/FormBody";
 
 const structure =
   [[

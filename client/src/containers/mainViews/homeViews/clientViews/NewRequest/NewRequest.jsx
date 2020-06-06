@@ -14,12 +14,12 @@ import CancelIcon from "@material-ui/icons/CancelRounded";
 import CheckIcon from "@material-ui/icons/Check";
 
 import steps from "./steps";
-import { getStep } from "../../../redux/selectors/newRequest";
-import { setStep } from "../../../redux/actions/newRequest";
+import { getStep } from "../../../../../redux/selectors/newRequest";
+import { setStep } from "../../../../../redux/actions/newRequest";
 
-import Stepper from "../../../components/Stepper/Stepper";
+import Stepper from "../../../../../components/Stepper/Stepper";
 
-import newBack from "../../../assets/img/new-back.png"
+import newBack from "../../../../../assets/img/new-back.png"
 
 const getStepperSteps = steps => steps
   .filter(step => step.showInStepper)

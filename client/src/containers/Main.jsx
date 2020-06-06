@@ -7,10 +7,10 @@ import {
   Redirect
 } from "react-router-dom";
 
-import pages from "../pages/pages";
-import { getPage } from "../../redux/selectors/navbar";
+import pages from "./mainViews";
+import { getPage } from "../redux/selectors/navbar";
 
-import AppNavbar from "../../components/AppNavbar/AppNavbar";
+import AppNavbar from "../components/AppNavbar/AppNavbar";
 
 const Main = props => {
   const {

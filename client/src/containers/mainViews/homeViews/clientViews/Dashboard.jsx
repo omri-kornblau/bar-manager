@@ -10,10 +10,10 @@ import {
   useRouteMatch,
 } from "react-router-dom";
 
-import ProgressBar from "../../components/ProgressNavbar/ProgressNavbar";
-import dashboardProgresses from "./dashboardProgresses";
-import { getProgress } from "../../redux/selectors/progressBar";
-import { getView } from "../../redux/selectors/sidebar";
+import ProgressBar from "../../../../components/ProgressNavbar/ProgressNavbar";
+import dashboardProgresses from "./dashboardViews";
+import { getProgress } from "../../../../redux/selectors/progressBar";
+import { getView } from "../../../../redux/selectors/sidebar";
 
 
 const ClientDashboard = props => {

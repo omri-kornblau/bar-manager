@@ -1,6 +1,5 @@
-import ClientDashboard from "../dashboard/Dashboard";
-import ClientActiveRequests from "./ClientActiveRequests";
-import NewRequest from "./NewRequest/NewRequest";
+import ClientDashboard from "./clientViews/Dashboard";
+import NewRequest from "./clientViews/NewRequest/NewRequest";
 
 import DashboardIcon from "@material-ui/icons/DashboardRounded";
 import SpeakerNotesIcon from "@material-ui/icons/SpeakerNotesRounded";

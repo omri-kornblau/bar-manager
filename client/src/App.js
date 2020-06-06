@@ -10,7 +10,7 @@ import "./assets/scss/material-kit.scss";
 import store, { history } from "./redux/store";
 import theme from "./theme";
 
-import Main from "./containers/layouts/Main";
+import Main from "./containers/Main";
 
 const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
 

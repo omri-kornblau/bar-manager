@@ -6,9 +6,8 @@ import {
   Tooltip
 } from "@material-ui/core";
 
-import CustomTable from "../../components/Table/Table";
-
-import skylineBack from "../../assets/img/skyline-back.png";
+import CustomTable from "../../../../../components/Table/Table";
+import skylineBack from "../../../../../assets/img/skyline-back.png";
 
 const notificationsColumns = [
   {

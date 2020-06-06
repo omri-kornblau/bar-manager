@@ -13,7 +13,7 @@ import {
   Redirect
 } from "react-router-dom";
 
-import ClientViews from "../views/clientViews";
+import ClientViews from "./homeViews/homeClientViews";
 import { getView, getClosed } from "../../redux/selectors/sidebar";
 import { setSidebarClosed } from "../../redux/actions/sidebar";
 

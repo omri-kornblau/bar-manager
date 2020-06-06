@@ -10,7 +10,7 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 import { Link } from "react-router-dom";
 
-import CustomTable from "../../components/Table/Table";
+import CustomTable from "../../../../../../components/Table/Table";
 
 const policiesColumns = [
   {
