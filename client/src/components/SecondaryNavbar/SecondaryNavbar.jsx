@@ -10,6 +10,8 @@ import {
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
+import newRequestViews from "../../containers/mainViews/homeViews/clientViews/newRequestViews";
+
 import useStyle from "./style";
 
 const propTypes = {
@@ -55,11 +57,11 @@ const SecondaryNavbar = props => {
           open={!!menuAnchorEl}
           onClose={onCloseNewRequestMenu}
         >
-          <Link to={`/home/${newRequestKey}`}>
-            <MenuItem onClick={onCloseNewRequestMenu}>ביטוח א'</MenuItem>
-            <MenuItem onClick={onCloseNewRequestMenu}>ביטוח ב'</MenuItem>
-            <MenuItem onClick={onCloseNewRequestMenu}>ביטוח ג'</MenuItem>
-          </Link>
+          {_.map(newRequestViews, viewData =>
+            <Link to={`/home/${newRequestKey}/${viewData.id}`}>
+              <MenuItem onClick={onCloseNewRequestMenu}>{viewData.label} {viewData.icon}</MenuItem>
+            </Link>
+          )}
         </Menu>
         {_.map(views, (viewData, key) =>
           key === newRequestKey ?

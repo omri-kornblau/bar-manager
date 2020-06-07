@@ -1,6 +1,6 @@
 import ClientDashboard from "./clientViews/Dashboard";
 import ClientProgress from "./clientViews/Progress";
-import NewRequest from "./clientViews/NewRequest/NewRequest";
+import NewRequest from "./clientViews/NewRequest";
 
 import DashboardIcon from "@material-ui/icons/DashboardRounded";
 import AddCircleRoundedIcon from "@material-ui/icons/AddCircleRounded";

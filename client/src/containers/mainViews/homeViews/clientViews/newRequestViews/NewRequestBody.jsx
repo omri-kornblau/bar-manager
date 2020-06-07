@@ -13,7 +13,7 @@ import SaveIcon from "@material-ui/icons/SaveRounded";
 import CancelIcon from "@material-ui/icons/CancelRounded";
 import CheckIcon from "@material-ui/icons/Check";
 
-import steps from "./steps";
+import steps from "./NewRequest/steps";
 import { getStep } from "../../../../../redux/selectors/newRequest";
 import { setStep } from "../../../../../redux/actions/newRequest";
 
