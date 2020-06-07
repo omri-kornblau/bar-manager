@@ -5,12 +5,6 @@ import UploadFiles from "./UploadFiles";
 
 const steps = [
   {
-    label: "בחירת בקשה",
-    component: WelcomePage,
-    header: "בחר בקשה:",
-    showInStepper: false
-  },
-  {
     label: "בחירת ביטוח",
     component: ChooseInsuranceType,
     header: "בחר סוג ביטוח:",

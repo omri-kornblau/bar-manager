@@ -2,7 +2,7 @@ import { SET_STEP } from "../actions/newRequest";
 import { LOCATION_CHANGE } from "connected-react-router";
 
 const initialState = {
-  step: 0,
+  step: 1,
   view: "typeA"
 };
 
