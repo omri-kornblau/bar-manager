@@ -74,20 +74,6 @@ const AppNavbar = props => {
           )}
         </Tabs>
         <div className="mr-auto">
-          <Tooltip arrow title="הודעות">
-            <IconButton aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <MailIcon />
-              </Badge>
-            </IconButton>
-          </Tooltip>
-          <Tooltip arrow title="התראות">
-            <IconButton aria-label="show 17 new notifications" color="inherit">
-              <Badge badgeContent={17} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-          </Tooltip>
           <IconButton
             edge="end"
             aria-label="account of current user"
