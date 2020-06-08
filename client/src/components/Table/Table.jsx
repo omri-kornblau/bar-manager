@@ -25,6 +25,7 @@ const propTypes = {
   isFilter: PropTypes.bool,
   isCollapse: PropTypes.element,
   isRounded: PropTypes.bool,
+  isPagination: PropTypes.bool
 };
 
 const defaultProps = {
@@ -32,6 +33,7 @@ const defaultProps = {
   columns: [],
   isFilter: false,
   collapse: null,
+  isPagination: true
 };
 
 const CustomTable = props => {
@@ -41,6 +43,7 @@ const CustomTable = props => {
     isFilter,
     collapse,
     isRounded,
+    isPagination
   } = props;
 
   const [page, setPage] = React.useState(0);
@@ -100,7 +103,8 @@ const CustomTable = props => {
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
+      { isPagination ?
+       <TablePagination
         rowsPerPageOptions={[5,10,25,100]}
         component="div"
         count={rows.length}
@@ -111,6 +115,9 @@ const CustomTable = props => {
         labelDisplayedRows={renderLabelDisplayedRows}
         labelRowsPerPage="שורות בכל עמוד:"
         />
+        : ""
+      }
+
     </Paper>
   );
 }
