@@ -2,6 +2,10 @@ import _ from "lodash";
 import React from "react";
 import { connect } from "react-redux";
 import {
+  Box,
+  Grid
+} from "@material-ui/core";
+import {
   Switch,
   Route,
   useRouteMatch,
@@ -11,6 +15,7 @@ import {
 import { getNewRequestView } from "../../../../redux/selectors/newRequest";
 
 import newRequestViews from "./newRequestViews";
+import DraftsTable from "./newRequestViews/NewRequest/Drafts";
 
 const NewRequest = props => {
   const {
@@ -20,14 +25,24 @@ const NewRequest = props => {
   const match = useRouteMatch();
 
   return (
-    <Switch>
-      {newRequestViews.map(newRequestView =>
-        <Route key={newRequestView.id} path={`${match.url}/${newRequestView.id}`}>
-          <newRequestView.component/>
-        </Route>
-      )}
-      <Redirect to={`${match.url}/${view}`}/>
-    </Switch>
+    <>
+      <Grid container direction="row">
+        <Grid item xs/>
+        <Grid item justify="center" xs="6">
+          <Switch>
+            {newRequestViews.map(newRequestView =>
+              <Route key={newRequestView.id} path={`${match.url}/${newRequestView.id}`}>
+                <newRequestView.component viewLabel={newRequestView.label}/>
+              </Route>
+            )}
+            <Redirect to={`${match.url}/${view}`}/>
+          </Switch>
+        </Grid>
+        <Grid item container alignItems="center" justify="center" xs>
+          <DraftsTable/>
+        </Grid>
+      </Grid>
+    </>
   );
 }
 

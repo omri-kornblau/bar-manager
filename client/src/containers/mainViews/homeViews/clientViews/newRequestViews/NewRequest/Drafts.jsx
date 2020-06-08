@@ -42,54 +42,28 @@ const fakeTableData = {
       label: "סוג ביטוח"
     },
     {
-      id: "ctime",
-      label: "זמן יצירה"
-
-    },
-    {
-      id: "mtime",
-      label: "שינוי אחרון"
-    },
-    {
-      id: "step",
-      label: "שלב"
-    },
-    {
       id: "action",
       label: ""
     },
   ]
 }
 
-const WelcomePage = props => {
-  const {
-    onNext
-  } = props;
-
+const Drafts = props => {
   return (
-    <Container maxWidth="md">
-      <Grid align="center">
-        <Button
-          onClick={onNext}
-          variant="contained"
-          color="primary"
-        >
-          צור בקשה חדשה
-          <AddIcon/>
-        </Button>
-        <Box m={4}/>
-        <Typography variant="h6">
-          או המשך יצירת בקשות קודמות:
-        </Typography>
-        <CustomTable
-          rows={fakeTableData.rows}
-          columns={fakeTableData.columns}
-        />
-      </Grid>
-    </Container>
+    <Box>
+      <Typography align="center" variant="h6">
+        טיוטות
+      </Typography>
+      <Box mb={3}/>
+      <CustomTable
+        rows={fakeTableData.rows}
+        columns={fakeTableData.columns}
+        isPagination={false}
+      />
+    </Box>
   );
 }
 
-WelcomePage.propTypes = propTypes;
+Drafts.propTypes = propTypes;
 
-export default WelcomePage;
+export default Drafts;

@@ -2,7 +2,8 @@ import React from "react";
 import {
   Grid,
   Button,
-  Box
+  Box,
+  InputAdornment
 } from "@material-ui/core";
 
 import FormBody from "../../../../../../components/Form/FormBody";
@@ -12,23 +13,32 @@ const structure =
     {
       label: "תיאור תמציתי של הנכס",
       fullWidth: true,
-      required: true
+      required: true,
+      multiline: true,
+      rows: 2,
+      placeholder: "הכנס תיאור כאן.."
     },
   ],
   [
     {
-      label: "תקופת הביטוח הרצויה (חודשים)",
+      label: "תקופת הביטוח הרצויה",
       type: "number",
       fullWidth: true,
       justify: "center",
-      required: true
+      required: true,
+      InputProps: {
+        endAdornment: <InputAdornment position="end">חודשים</InputAdornment>,
+      }
     },
     {
       label: "פרמיה מקסימלית רצויה",
       fullWidth: false,
       justify: "center",
       type: "number",
-      required: true
+      required: true,
+      InputProps: {
+        endAdornment: <InputAdornment position="end">₪k</InputAdornment>,
+      }
     }
   ],
   [
@@ -61,7 +71,6 @@ const FillDetails = props => {
         <Box m={1}/>
         <Grid item>
           <Button
-            type="submit"
             variant="outlined"
             color="default"
           >
@@ -70,7 +79,6 @@ const FillDetails = props => {
         </Grid>
         <Grid item>
           <Button
-            type="submit"
             variant="outlined"
             color="default"
           >

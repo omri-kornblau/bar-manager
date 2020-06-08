@@ -1,5 +1,5 @@
 import React from "react";
-import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import {
   Paper,
   Container,
@@ -17,13 +17,29 @@ import FillDetails from "./NewRequest/FillDetails";
 
 import newBack from "../../../../../assets/img/new-back.png"
 
+const propTypes = {
+  viewLabel: PropTypes.string
+};
+
 const NewRequest = props => {
+  const {
+    viewLabel
+  } = props;
+
   const [saveAnchorEl, setSaveAnchorEl] = React.useState(null);
 
   return (
     <>
-      <Box mb={3}/>
       <Container maxWidth="sm">
+        <Typography align="center" variant="h5">
+          סוג הביטוח: <Box
+            display="inline"
+            fontWeight="800"
+          >
+            {viewLabel}
+          </Box>
+        </Typography>
+        <Box mb={3}/>
         <Paper elevation={3}>
           <Menu
             id="simple-menu"
@@ -43,9 +59,6 @@ const NewRequest = props => {
           </Menu>
           <IconButton size="medium" onClick={e => setSaveAnchorEl(e.currentTarget)}>
             <SaveIcon/>
-          </IconButton>
-          <IconButton size="medium">
-            <CancelIcon/>
           </IconButton>
           <Box p={5} pt={0}>
             <Typography align="left" variant="h4">
@@ -67,5 +80,7 @@ const NewRequest = props => {
     </>
   );
 }
+
+NewRequest.propTypes = propTypes;
 
 export default NewRequest;
