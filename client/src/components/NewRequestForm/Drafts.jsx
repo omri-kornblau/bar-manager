@@ -11,7 +11,7 @@ import {
 import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
 
-import CustomTable from "../../../../../../components/Table/Table";
+import CustomTable from "../Table/Table";
 
 const propTypes = {
   onNext: PropTypes.func,

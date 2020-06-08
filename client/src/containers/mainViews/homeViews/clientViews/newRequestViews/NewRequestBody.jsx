@@ -10,10 +10,9 @@ import {
   Menu
 } from "@material-ui/core";
 import SaveIcon from "@material-ui/icons/SaveRounded";
-import CancelIcon from "@material-ui/icons/CancelRounded";
 import CheckIcon from "@material-ui/icons/Check";
 
-import FillDetails from "./NewRequest/FillDetails";
+import FillDetails from "../../../../../components/NewRequestForm/DetailsForm";
 
 import newBack from "../../../../../assets/img/new-back.png"
 

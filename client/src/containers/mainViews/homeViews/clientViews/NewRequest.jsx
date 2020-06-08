@@ -15,7 +15,7 @@ import {
 import { getNewRequestView } from "../../../../redux/selectors/newRequest";
 
 import newRequestViews from "./newRequestViews";
-import DraftsTable from "./newRequestViews/NewRequest/Drafts";
+import DraftsTable from "../../../../components/NewRequestForm/Drafts";
 
 const NewRequest = props => {
   const {

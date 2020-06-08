@@ -6,7 +6,7 @@ import {
   InputAdornment
 } from "@material-ui/core";
 
-import FormBody from "../../../../../../components/Form/FormBody";
+import FormBody from "../Form/FormBody";
 
 const structure =
   [[
