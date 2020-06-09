@@ -1,7 +1,6 @@
-export const SET_SIDEBAR = "SET_SIDEBAR";
+export const SET_LOGGED_IN = "SET_LOGGED_IN";
 
-export const setSidebar = view => ({
-  type: SET_SIDEBAR,
-  payload: { view },
-  query: {}
+export const setLoggedIn = dispatch => loggedIn => dispatch({
+  type: SET_LOGGED_IN,
+  payload: { loggedIn }
 });

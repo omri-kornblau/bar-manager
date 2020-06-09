@@ -20,6 +20,8 @@ import ExitIcon from "@material-ui/icons/ExitToApp";
 import LockIcon from "@material-ui/icons/Lock";
 import { Link } from "react-router-dom";
 
+import useStyle from "./style";
+
 const SignupTypeSwitch = props => {
   const {
     isClient,
@@ -54,25 +56,29 @@ const SignupTypeSwitch = props => {
 
 const Signup = props => {
   const [isClient, setIsClient] = useState(true);
+  const classes = useStyle();
 
   return (
-    <Container maxWidth="sm">
-      <Paper elevation={3} >
-        <Box p={4}>
-          <Typography align="center" variant="h4">
-            הרשמה
-          </Typography>
-          <Box mt={2}/>
-          <Typography align="center" varint="body1">
-            סוג המשתמש:
-          </Typography>
-          <Box mt={1}/>
-          <SignupTypeSwitch onChange={setIsClient} isClient={isClient}/>
-          <form>
-          </form>
-        </Box>
-      </Paper>
-    </Container>
+    <main className={classes.container}>
+      <Container className={classes.content} maxWidth="sm">
+        <Toolbar/>
+        <Paper elevation={3} >
+          <Box p={4}>
+            <Typography align="center" variant="h4">
+              הרשמה
+            </Typography>
+            <Box mt={2}/>
+            <Typography align="center" varint="body1">
+              סוג המשתמש:
+            </Typography>
+            <Box mt={1}/>
+            <SignupTypeSwitch onChange={setIsClient} isClient={isClient}/>
+            <form>
+            </form>
+          </Box>
+        </Paper>
+      </Container>
+    </main>
   );
 }
 

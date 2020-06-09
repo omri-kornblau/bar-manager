@@ -23,6 +23,17 @@ import useStyles from "./style";
 import SecondaryNavbar from "../../components/SecondaryNavbar/SecondaryNavbar";
 import { getProgress } from "../../redux/selectors/progressBar";
 
+const ViewsSwitch = ({ views, view, progress, matchUrl }) => (
+  <Switch>
+    {_.map(views, (viewData, key) =>
+      <Route key={key} path={`${matchUrl}/${key}`}>
+        <viewData.component/>
+      </Route>
+    )}
+    <Redirect to={`${matchUrl}/${view}/${progress}`}/>
+  </Switch>
+);
+
 const Home = props => {
   const {
     view,
@@ -38,25 +49,30 @@ const Home = props => {
   return (
     <>
       <main className={classes.content}>
-        <Box className={classes.cityBackground} height={160}/>
         { isLoggedIn ?
-          <SecondaryNavbar
-            viewKey={view}
+          <>
+            <Box className={classes.cityBackground} height={160}/>
+            <SecondaryNavbar
+              viewKey={view}
+              views={views}
+              getProgress={getProgressWithView}
+            />
+            <Container className={classes.container}>
+              <ViewsSwitch
+                views={views}
+                view={view}
+                matchUrl={match.url}
+                progress={getProgressWithView(view)}
+              />
+            </Container>
+          </>
+          : <ViewsSwitch
             views={views}
-            getProgress={getProgressWithView}
+            view={view}
+            matchUrl={match.url}
+            progress={getProgressWithView(view)}
           />
-          : ""
         }
-        <Container className={classes.container}>
-          <Switch>
-            {_.map(views, (viewData, key) =>
-              <Route key={key} path={`${match.url}/${key}`}>
-                <viewData.component/>
-              </Route>
-            )}
-            <Redirect to={`${match.url}/${view}/${getProgressWithView(view)}`}/>
-          </Switch>
-        </Container>
       </main>
     </>
   );

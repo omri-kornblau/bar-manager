@@ -1,6 +1,6 @@
 import {
-  SET_SIDEBAR_CLOSED
-} from "../actions/sidebar";
+  SET_LOGGED_IN
+} from "../actions/user";
 
 const initialUser = {
   data: {
@@ -12,6 +12,12 @@ const initialUser = {
 
 const userReducer = (state=initialUser, action) => {
   switch(action.type) {
+    case SET_LOGGED_IN:
+      return {
+        ...state,
+        isLoggedIn: action.payload.loggedIn
+      }
+
     default:
       return state;
   }
