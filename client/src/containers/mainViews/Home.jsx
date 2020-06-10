@@ -26,7 +26,7 @@ import { getProgress } from "../../redux/selectors/progressBar";
 const ViewsSwitch = ({ views, view, progress, matchUrl }) => (
   <Switch>
     {_.map(views, (viewData, key) =>
-      <Route key={key} path={`${matchUrl}/${key}`}>
+      <Route key={key} path={`/home/${key}`}>
         <viewData.component/>
       </Route>
     )}
