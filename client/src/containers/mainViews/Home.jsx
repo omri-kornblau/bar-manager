@@ -81,7 +81,8 @@ const Home = props => {
 const mapStateToProps = state => ({
   view: getView(state),
   getProgressWithView: view => getProgress(state, view),
-  sidebarClosed: getClosed(state)
+  sidebarClosed: getClosed(state),
+  isLoggedIn: getUserLoggedIn(state)
 })
 
 const mapDispatchToProps = dispatch => ({
