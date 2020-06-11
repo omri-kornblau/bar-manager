@@ -10,7 +10,7 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 import { Link } from "react-router-dom";
 
-import CustomTable from "../../../../../../components/Table/Table";
+import CustomTable from "../../../../../components/Table/Table";
 
 const policiesColumns = [
   {
@@ -79,18 +79,11 @@ const ClientActiveRequests = props => {
     <>
       <Grid container alignItems="flex-end" justify="space-between">
         <Typography variant="h4" color="inherit" align="left">
-          בקשות פעילות
+          בקשות פעילות שמחכות לאישור
         <Typography variant="body2" color="inherit" align="center">
           כאן מוצגות כל הבקשות אשר עדיין לא אושרו (המשך הסבר...)
         </Typography>
         </Typography>
-        <Link to="/home/newrequest">
-          <Tooltip arrow title="צור בקשה חדשה">
-            <Fab color="primary" size="small">
-              <AddIcon/>
-            </Fab>
-          </Tooltip>
-        </Link>
       </Grid>
       <Box marginBottom={2}/>
       <CustomTable

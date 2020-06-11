@@ -8,8 +8,8 @@ import {
   Stepper,
   StepLabel,
   StepConnector,
-  Paper,
 } from "@material-ui/core";
+import AddIcon from '@material-ui/icons/Add';
 
 import useStyles from "./style";
 import { common } from "@material-ui/core/colors";
@@ -51,13 +51,14 @@ const StepIcon = props => {
 const PositionedStepConnector = props => {
   const classes = useStyles();
 
-  return <StepConnector className={classes.stepConnector}/>
+  return props.index > 1 ? <StepConnector className={classes.stepConnector}/> : ""
 }
 
 const ProgressNavbar = props => {
   const {
     step,
     steps,
+    view,
   } = props;
 
 
@@ -65,7 +66,7 @@ const ProgressNavbar = props => {
 
   useEffect(() => {
     const stepIndex = steps.reduce((result, currentStep, index) => {
-      return currentStep.id === step ? index : result
+      return currentStep.id === step ? index + 1 : result
     }, -1);
 
     setStepIndex(stepIndex);
@@ -74,12 +75,18 @@ const ProgressNavbar = props => {
   const classes = useStyles();
 
   return (
-    <Paper>
+    <>
       <Stepper
         alternativeLabel
         activeStep={stepIndex}
         connector={ <PositionedStepConnector/> }
+        className={classes.paper}
       >
+        <Link to={`/home/newrequest/${view}`}>
+          <Fab color="primary" aria-label="add">
+            <AddIcon variant="outlined" />
+          </Fab>
+        </Link>
         {
           steps.map(step => (
             <Step key={step.id}>
@@ -97,7 +104,7 @@ const ProgressNavbar = props => {
           ))
         }
       </Stepper>
-    </Paper>
+    </>
   );
 }
 

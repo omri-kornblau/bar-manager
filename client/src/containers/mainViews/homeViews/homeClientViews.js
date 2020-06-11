@@ -1,8 +1,8 @@
 import ClientDashboard from "./clientViews/Dashboard";
+import ClientProgress from "./clientViews/Progress";
 import NewRequest from "./clientViews/NewRequest/NewRequest";
 
 import DashboardIcon from "@material-ui/icons/DashboardRounded";
-import SpeakerNotesIcon from "@material-ui/icons/SpeakerNotesRounded";
 import AddCircleRoundedIcon from "@material-ui/icons/AddCircleRounded";
 import CommuteIcon from '@material-ui/icons/Commute';
 import HealingIcon from '@material-ui/icons/Healing';
@@ -22,17 +22,17 @@ const ClientViews = {
   typeA: {
     name: "ביטוח א'",
     icon: BusinessIcon,
-    component: ClientDashboard
+    component: ClientProgress
   },
   typeB: {
     name: "ביטוח ב'",
     icon: CommuteIcon,
-    component: ClientDashboard
+    component: ClientProgress
   },
   typeC: {
     name: "ביטוח ג'",
     icon: HealingIcon,
-    component: ClientDashboard
+    component: ClientProgress
   },
 };
 

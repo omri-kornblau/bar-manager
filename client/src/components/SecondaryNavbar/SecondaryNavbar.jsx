@@ -2,15 +2,12 @@ import _ from "lodash";
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
-  Drawer,
-  Divider,
   Toolbar,
   Tabs,
   Tab,
   Menu,
   MenuItem,
 } from "@material-ui/core";
-import AddCircleRoundedIcon from "@material-ui/icons/AddCircleRounded";
 import { Link } from "react-router-dom";
 
 import useStyle from "./style";
