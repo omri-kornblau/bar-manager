@@ -11,7 +11,6 @@ import {
   InputAdornment,
   FormControlLabel,
   Checkbox,
-  Link as MuiLink,
   FormControl
 } from "@material-ui/core";
 import { connect } from "react-redux";
@@ -70,13 +69,6 @@ const Login = props => {
                     )
                   }}
                 />
-                <Typography align="left">
-                  <Link to="/home/forgotpassword">
-                    <MuiLink variant="body2">
-                      שכחתי סיסמה
-                    </MuiLink>
-                  </Link>
-                </Typography>
                 <Box mt={3}>
                   <FormControl>
                     <FormControlLabel
@@ -114,7 +106,7 @@ const Login = props => {
         </Paper>
         <Box mt={3}>
           <Link to="/home/welcome">
-            <Button large fullWidth>
+            <Button size="large" fullWidth>
               חזרה לדף הבית
               <ExitIcon fontSize="small"/>
             </Button>

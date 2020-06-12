@@ -31,7 +31,7 @@ const SecondaryNavbar = props => {
   const classes = useStyle();
 
   useEffect(() => {
-    setTab(_.keys(views).indexOf(viewKey));
+    setTab(Math.max(0, _.keys(views).indexOf(viewKey)));
   }, [viewKey]);
 
   const onNewRequestClick = e => {
@@ -50,19 +50,6 @@ const SecondaryNavbar = props => {
         value={tab}
         indicatorColor="primary"
       >
-        <Menu
-          id="simple-menu"
-          anchorEl={menuAnchorEl}
-          keepMounted
-          open={!!menuAnchorEl}
-          onClose={onCloseNewRequestMenu}
-        >
-          {_.map(newRequestViews, viewData =>
-            <Link to={`/home/${newRequestKey}/${viewData.id}`}>
-              <MenuItem onClick={onCloseNewRequestMenu}>{viewData.label} {viewData.icon}</MenuItem>
-            </Link>
-          )}
-        </Menu>
         {_.map(views, (viewData, key) =>
           key === newRequestKey ?
             <Tab
@@ -80,6 +67,19 @@ const SecondaryNavbar = props => {
             />
         )}
       </Tabs>
+      <Menu
+        id="simple-menu"
+        anchorEl={menuAnchorEl}
+        keepMounted
+        open={!!menuAnchorEl}
+        onClose={onCloseNewRequestMenu}
+      >
+        {_.map(newRequestViews, viewData =>
+          <Link key={viewData.id} to={`/home/${newRequestKey}/${viewData.id}`}>
+            <MenuItem onClick={onCloseNewRequestMenu}>{viewData.label} {viewData.icon}</MenuItem>
+          </Link>
+        )}
+      </Menu>
     </Toolbar>
   );
 }

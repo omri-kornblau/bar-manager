@@ -17,35 +17,35 @@ const DashboardProgresses = [
     id: "edit",
     label: "עריכה",
     icon: <EditIcon/>,
-    color: purple[300],
+    color: purple[600],
     component: EditRequests
   },
   {
     id: "inProgress",
     label: "בתהליך",
     icon: <SearchIcon/>,
-    color: blue[300],
+    color: blue[600],
     component: InProgressRequests
   },
   {
     id: "waitingForApproval",
     label: "מחכה לאישור",
     icon: <HourglassEmptyIcon/>,
-    color: yellow[300],
+    color: yellow[600],
     component: WaitingRequests
   },
   {
     id: "active",
     label: "פעיל",
     icon: <DoneIcon/>,
-    color: green[300],
+    color: green[600],
     component: ActiveRequests
   },
   {
     id: "history",
     label: "היסטוריה",
     icon: <FolderOpenIcon/>,
-    color: grey[300],
+    color: grey[600],
     component: ArchivedRequests
   },
 ];

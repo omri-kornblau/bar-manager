@@ -7,11 +7,13 @@ import {
   Stepper,
   StepLabel,
   StepConnector,
+  Button
 } from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 
 import useStyles from "./style";
 import { common } from "@material-ui/core/colors";
+import { useCallback } from "react";
 
 const defaultProps = {
   steps: [],
@@ -23,10 +25,11 @@ const propTypes = {
     label: PropTypes.string,
     id: PropTypes.string,
     icon: PropTypes.element,
-    color: PropTypes.string 
+    color: PropTypes.string
   })),
   view: PropTypes.string
 };
+
 
 const StepIcon = props => {
   const {
@@ -60,8 +63,17 @@ const ProgressNavbar = props => {
     view,
   } = props;
 
-
   const [stepIndex, setStepIndex] = useState(-1);
+
+  const classes = useStyles();
+
+  const AddRequestButtonStep = useCallback(() =>
+    <Link to={`/home/newrequest/${view}`}>
+      <Fab className={classes.outlinedFab} color="white">
+        <AddIcon/>
+      </Fab>
+    </Link>
+  , [view]);
 
   useEffect(() => {
     const stepIndex = steps.reduce((result, currentStep, index) => {
@@ -80,11 +92,9 @@ const ProgressNavbar = props => {
         className={classes.paper}
       >
         <Step>
-          <Link to={`/home/newrequest/${view}`}>
-            <Fab color="primary">
-              <AddIcon variant="outlined" />
-            </Fab>
-          </Link>
+          <StepLabel
+            StepIconComponent={AddRequestButtonStep}
+          />
         </Step>
         {
           steps.map(step => (

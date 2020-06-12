@@ -1,4 +1,3 @@
-import _ from "lodash";
 import React from "react";
 import { connect } from "react-redux";
 import {
@@ -27,7 +26,7 @@ const NewRequest = props => {
     <>
       <Grid container direction="row">
         <Grid item xs/>
-        <Grid item justify="center" xs="6">
+        <Grid item container justify="center" xs={6}>
           <Switch>
             {newRequestViews.map(newRequestView =>
               <Route key={newRequestView.id} path={`${match.url}/${newRequestView.id}`}>

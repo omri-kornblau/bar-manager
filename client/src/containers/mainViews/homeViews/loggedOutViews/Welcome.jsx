@@ -40,14 +40,14 @@ const Welcome = props => {
             </Typography>
             <Box mt={6}/>
             <Grid container justify="space-evenly" direction="row">
-                <Grid container justify="center" xs>
+                <Grid container item justify="center" xs>
                   <Link to="/home/login">
                     <Button size="large" color="primary" variant="contained">
                       התחבר כמבטח
                     </Button>
                   </Link>
                 </Grid>
-                <Grid container justify="center" xs>
+                <Grid container item justify="center" xs>
                   <Link to="/home/login">
                     <Button size="large" color="primary" variant="contained">
                       התחבר כלקוח

@@ -97,9 +97,16 @@ const CustomTable = props => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.slice(page * rowsPerPage, (page + 1) * rowsPerPage).map((row, index) => (
-              <Row row={row} columns={columns} key={index} collapse={collapse} headerRefs={headerRefs} isRounded={isRounded}/>
-            ))}
+            {rows.slice(page * rowsPerPage, (page + 1) * rowsPerPage).map((row, index) =>
+              <Row
+                row={row}
+                columns={columns}
+                key={index}
+                collapse={collapse}
+                headerRefs={headerRefs}
+                isRounded={isRounded}
+              />
+            )}
           </TableBody>
         </Table>
       </TableContainer>

@@ -14,5 +14,12 @@ export default makeStyles(theme => ({
     left: `calc(-50% + ${iconHeight/2}px)`,
     right: `calc(50% + ${iconHeight/2}px)`,
     position: "absolute",
+  },
+  outlinedFab: {
+    backgroundColor: "white",
+    color: theme.palette.primary.main,
+    border: "solid 1px",
+    borderColor: theme.palette.primary.main,
+    boxShadow: "none"
   }
 }))
