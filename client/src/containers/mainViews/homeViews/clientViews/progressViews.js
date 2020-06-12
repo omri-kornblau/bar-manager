@@ -15,21 +15,21 @@ import ArchivedRequests from "./progressViews/ArchivedRequests";
 const DashboardProgresses = [
   {
     id: "edit",
-    label: "עריכה",
+    label: "מחכה לאישור חתימה",
     icon: <EditIcon/>,
     color: purple[600],
     component: EditRequests
   },
   {
     id: "inProgress",
-    label: "בתהליך",
+    label: "בהליך מכרזי",
     icon: <SearchIcon/>,
     color: blue[600],
     component: InProgressRequests
   },
   {
     id: "waitingForApproval",
-    label: "מחכה לאישור",
+    label: "בתהליך חתימה",
     icon: <HourglassEmptyIcon/>,
     color: yellow[600],
     component: WaitingRequests

@@ -40,19 +40,6 @@ const notifications = [
   createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
   createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
   createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
-  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
-  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
-  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
-  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
-  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
-  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
-  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
-  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
-  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
-  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
-  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
-  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
-  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
 ];
 
 const policiesColumns = [
@@ -91,19 +78,6 @@ const createPolicies = (type, price, startTime, endTime) => ({type, price, start
 const policies = [
   createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
   createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
-  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
-  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
-  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
-  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
-  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
-  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
-  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
-  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
-  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
-  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
-  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
-  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
-  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
 ]
 
 const ClientDashboardMainView = props => {
@@ -130,7 +104,7 @@ const ClientDashboardMainView = props => {
                 התראות חדשות
               </Typography>
             </Tooltip>
-            <CustomTable  rows={notifications} columns={notificationsColumns}>
+            <CustomTable isPagination={false} rows={notifications} columns={notificationsColumns}>
               text
             </CustomTable>
           </Grid>
@@ -140,7 +114,7 @@ const ClientDashboardMainView = props => {
                 פוליסות פעילות
               </Typography>
             </Tooltip>
-            <CustomTable rows={policies} columns={policiesColumns} isRounded={true} isFilter={true}/>
+            <CustomTable isPagination={false} rows={policies} columns={policiesColumns} isRounded={true} isFilter={true}/>
           </Grid>
         </Grid>
         <Grid container justify="space-evenly" direction="row" className={classes.gridRow}>
@@ -150,7 +124,7 @@ const ClientDashboardMainView = props => {
                 פוליסות פעילות
               </Typography>
             </Tooltip>
-            <CustomTable rows={policies} columns={policiesColumns} isRounded={true} isFilter={true}/>
+            <CustomTable isPagination={false} rows={policies} columns={policiesColumns} isRounded={true} isFilter={true}/>
           </Grid>
           <Grid item className={classes.gridColumn}>
             <Tooltip arrow title="פוליסות שאושרו ונחתמו">
@@ -158,7 +132,7 @@ const ClientDashboardMainView = props => {
                 פוליסות פעילות
               </Typography>
             </Tooltip>
-            <CustomTable rows={policies} columns={policiesColumns} isRounded={true} isFilter={true}/>
+            <CustomTable isPagination={false} rows={policies} columns={policiesColumns} isRounded={true} isFilter={true}/>
           </Grid>
         </Grid>
       </Grid>
