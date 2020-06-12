@@ -4,11 +4,7 @@ import {
   Typography,
   Grid,
   Box,
-  Fab,
-  Tooltip
 } from "@material-ui/core";
-import AddIcon from '@material-ui/icons/Add';
-import { Link } from "react-router-dom";
 
 import CustomTable from "../../../../../components/Table/Table";
 
@@ -74,9 +70,9 @@ const PolicyExtraInfo = props => {
   );
 }
 
-const ClientActiveRequests = props => {
+const ClientArchivedRequests = props => {
   return (
-    <>
+    <div style={{paddingBottom: "1px"}}>
       <Grid container alignItems="flex-end" justify="space-between">
         <Typography variant="h4" color="inherit" align="left">
           בקשות ישנות
@@ -93,8 +89,8 @@ const ClientActiveRequests = props => {
         isFilter
         collapse={<PolicyExtraInfo/>}
       />
-    </>
+    </div>
   );
 }
 
-export default ClientActiveRequests;
+export default ClientArchivedRequests;

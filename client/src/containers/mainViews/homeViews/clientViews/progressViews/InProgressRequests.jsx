@@ -70,9 +70,9 @@ const PolicyExtraInfo = props => {
   );
 }
 
-const ClientActiveRequests = props => {
+const ClientInProgressRequests = props => {
   return (
-    <>
+    <div style={{paddingBottom: "1px"}}>
       <Grid container alignItems="flex-end" justify="space-between">
         <Typography variant="h4" color="inherit" align="left">
           בקשות בתהליך
@@ -89,8 +89,8 @@ const ClientActiveRequests = props => {
         isFilter
         collapse={<PolicyExtraInfo/>}
       />
-    </>
+    </div>
   );
 }
 
-export default ClientActiveRequests;
+export default ClientInProgressRequests ;

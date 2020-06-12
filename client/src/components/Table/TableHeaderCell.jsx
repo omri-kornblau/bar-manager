@@ -1,4 +1,4 @@
-import React, { useState, forwardRef, cloneElement } from "react";
+import React, { useState, forwardRef } from "react";
 import PropTypes from "prop-types";
 import {
   TableCell,

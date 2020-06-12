@@ -1,4 +1,3 @@
-import _ from "lodash";
 import { Link } from "react-router-dom";
 import React, { useState, useEffect, cloneElement } from "react";
 import PropTypes from "prop-types";
@@ -14,20 +13,20 @@ import AddIcon from '@material-ui/icons/Add';
 import useStyles from "./style";
 import { common } from "@material-ui/core/colors";
 
-// const defaultProps = {
-//   pages: {
-//     default: {
-//       name: "default",
-//       component: AppBar
-//     }
-//   },
-//   pageKey: "default",
-// };
+const defaultProps = {
+  steps: [],
+};
 
-// const propTypes = {
-//   pages: PropTypes.object,
-//   pageKey: PropTypes.string,
-// };
+const propTypes = {
+  step: PropTypes.string,
+  steps: PropTypes.arrayOf(PropTypes.shape({
+    label: PropTypes.string,
+    id: PropTypes.string,
+    icon: PropTypes.element,
+    color: PropTypes.string 
+  })),
+  view: PropTypes.string
+};
 
 const StepIcon = props => {
   const {
@@ -82,11 +81,13 @@ const ProgressNavbar = props => {
         connector={ <PositionedStepConnector/> }
         className={classes.paper}
       >
-        <Link to={`/home/newrequest/${view}`}>
-          <Fab color="primary" aria-label="add">
-            <AddIcon variant="outlined" />
-          </Fab>
-        </Link>
+        <Step>
+          <Link to={`/home/newrequest/${view}`}>
+            <Fab color="primary">
+              <AddIcon variant="outlined" />
+            </Fab>
+          </Link>
+        </Step>
         {
           steps.map(step => (
             <Step key={step.id}>
@@ -108,7 +109,7 @@ const ProgressNavbar = props => {
   );
 }
 
-// AppNavbar.propTypes = propTypes;
-// AppNavbar.defaultProps = defaultProps;
+ProgressNavbar.propTypes = propTypes;
+ProgressNavbar.defaultProps = defaultProps;
 
 export default ProgressNavbar;

@@ -72,7 +72,7 @@ const PolicyExtraInfo = props => {
 
 const ClientActiveRequests = props => {
   return (
-    <>
+    <div style={{paddingBottom: "1px"}}>
       <Grid container alignItems="flex-end" justify="space-between">
         <Typography variant="h4" color="inherit" align="left">
           בקשות שמחכות לאישור
@@ -89,7 +89,7 @@ const ClientActiveRequests = props => {
         isFilter
         collapse={<PolicyExtraInfo/>}
       />
-    </>
+    </div>
   );
 }
 

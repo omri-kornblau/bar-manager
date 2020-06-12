@@ -1,4 +1,3 @@
-import _ from "lodash";
 import React from "react";
 import { connect } from "react-redux";
 import {
@@ -16,6 +15,7 @@ import ProgressBar from "../../../../components/ProgressNavbar/ProgressNavbar";
 import dashboardProgresses from "./progressViews";
 import { getProgress } from "../../../../redux/selectors/progressBar";
 import { getView } from "../../../../redux/selectors/sidebar";
+import skylineBack from "../../../../assets/img/skyline-back.png";
 
 
 const ClientProgressDashboard = props => {
@@ -45,6 +45,15 @@ const ClientProgressDashboard = props => {
           )}
         </Switch>
       </Container>
+      <img style={{
+        opacity: "0.15",
+        width: "100%",
+        height:"50%",
+        position: "fixed",
+        left:"0",
+        bottom: "0",
+        zIndex: "-1"
+      }} src={skylineBack}></img>
     </Paper>
   );
 }
