@@ -73,13 +73,15 @@ const PolicyExtraInfo = props => {
 const ClientArchivedRequests = props => {
   return (
     <div style={{paddingBottom: "1px"}}>
-      <Grid container alignItems="flex-end" justify="space-between">
-        <Typography variant="h4" color="inherit" align="left">
+      <Grid container justify="center">
+        <Box mb={2} mt={3}>
+          <Typography variant="h4" color="inherit" align="center">
           בקשות ישנות
-        <Typography variant="body2" color="inherit" align="center">
-          כאן מוצגת היסטוריית הבקשות שלך
-        </Typography>
-        </Typography>
+            <Typography variant="body2" color="inherit" align="center">
+              כאן מוצגת היסטוריית הבקשות שלך
+            </Typography>
+          </Typography>
+        </Box>
       </Grid>
       <Box marginBottom={2}/>
       <CustomTable

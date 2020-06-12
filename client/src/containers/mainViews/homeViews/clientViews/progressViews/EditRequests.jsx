@@ -73,13 +73,15 @@ const PolicyExtraInfo = props => {
 const ClientEditRequests = props => {
   return (
     <div style={{paddingBottom: "1px"}}>
-      <Grid container alignItems="flex-end" justify="space-between">
-        <Typography variant="h4" color="inherit" align="left">
-          בקשות פעילות שמחכות לאישור
-        <Typography variant="body2" color="inherit" align="center">
-          כאן מוצגות כל הבקשות אשר עדיין לא אושרו (המשך הסבר...)
-        </Typography>
-        </Typography>
+      <Grid container justify="center">
+        <Box mb={2} mt={3}>
+          <Typography variant="h4" color="inherit" align="center">
+            בקשות פעילות שמחכות לאישור
+            <Typography variant="body2" color="inherit" align="center">
+              כאן מוצגות כל הבקשות אשר עדיין לא אושרו (המשך הסבר...)
+            </Typography>
+          </Typography>
+        </Box>
       </Grid>
       <Box marginBottom={2}/>
       <CustomTable
