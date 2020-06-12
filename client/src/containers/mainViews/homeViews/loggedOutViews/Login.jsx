@@ -82,15 +82,17 @@ const Login = props => {
               </Grid>
             </form>
             <Box mr={4} ml={4} mt={3}>
-              <Button
-                type="submit"
-                fullWidth={true}
-                color="primary"
-                variant="contained"
-                onClick={onLogin}
-              >
-                היכנס
-              </Button>
+              <Link to="/home/dashboard">
+                <Button
+                  type="submit"
+                  fullWidth={true}
+                  color="primary"
+                  variant="contained"
+                  onClick={onLogin}
+                >
+                  היכנס
+                </Button>
+              </Link>
             </Box>
             <Box mt={6}/>
             <Grid container justify="center" direction="row">
