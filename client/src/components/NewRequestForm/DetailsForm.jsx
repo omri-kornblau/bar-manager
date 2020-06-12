@@ -56,7 +56,6 @@ const structure =
 const FillDetails = props => {
   const {
     onNext,
-    onBack
   } = props;
 
   return (

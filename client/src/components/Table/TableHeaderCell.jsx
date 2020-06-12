@@ -54,10 +54,10 @@ const NumberMenuItems = () => {
   return (
     <>
       <StyledMenuItem>
-        <StyledTextField label="גדול מ" type="number"/> 
+        <StyledTextField label="גדול מ" type="number"/>
       </StyledMenuItem>
       <StyledMenuItem>
-        <StyledTextField label="קטן מ" type="number"/> 
+        <StyledTextField label="קטן מ" type="number"/>
       </StyledMenuItem>
     </>
   );

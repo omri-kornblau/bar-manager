@@ -69,9 +69,7 @@ const ProgressNavbar = props => {
     }, -1);
 
     setStepIndex(stepIndex);
-  });
-
-  const classes = useStyles();
+  }, [step]);
 
   return (
     <>

@@ -1,14 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {
-  Container,
-  Grid,
-  Button,
   Box,
   Typography,
   Tooltip
 } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
 
 import CustomTable from "../Table/Table";

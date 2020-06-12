@@ -5,20 +5,9 @@ import {
   Paper,
   Toolbar,
   Typography,
-  TextField,
   Box,
   Grid,
-  InputAdornment,
-  FormControlLabel,
-  Checkbox,
-  Link as MuiLink,
-  FormControl,
-  Fab
 } from "@material-ui/core";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import ExitIcon from "@material-ui/icons/ExitToApp";
-import LockIcon from "@material-ui/icons/Lock";
-import { Link } from "react-router-dom";
 
 import useStyle from "./style";
 

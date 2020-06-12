@@ -2,7 +2,6 @@ import _ from "lodash";
 import React from "react";
 import { connect } from "react-redux";
 import {
-  Box,
   Grid
 } from "@material-ui/core";
 import {
