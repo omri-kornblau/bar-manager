@@ -21,7 +21,7 @@ import LockIcon from "@material-ui/icons/Lock";
 import { Link } from "react-router-dom";
 
 import useStyle from "./style";
-import { setLoggedIn } from "../../redux/actions/user";
+import { setLoggedIn } from "../../../../redux/actions/user";
 
 const Login = props => {
   const {

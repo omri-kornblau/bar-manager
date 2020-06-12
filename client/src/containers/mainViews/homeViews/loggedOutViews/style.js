@@ -1,7 +1,7 @@
 
 import { makeStyles } from "@material-ui/core/styles";
 
-import cityBackground from "../../assets/img/homepage.jpg";
+import cityBackground from "../../../../assets/img/homepage.jpg";
 
 export default makeStyles(theme => ({
   content: {

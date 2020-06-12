@@ -1,6 +1,6 @@
-import Login from "./Login";
-import Signup from "./Signup";
-import Welcome from "./Welcome";
+import Login from "./loggedOutViews/Login";
+import Signup from "./loggedOutViews/Signup";
+import Welcome from "./loggedOutViews/Welcome";
 
 const LoggedOutViews = {
   welcome: {

@@ -13,7 +13,7 @@ import {
 } from "react-router-dom";
 
 import ClientViews from "./homeViews/homeClientViews";
-import LoggedOutViews from "../views/loggedOutViews";
+import LoggedOutViews from "./homeViews/loggedOutViews";
 import { getView, getClosed } from "../../redux/selectors/sidebar";
 import { getUserLoggedIn } from "../../redux/selectors/user";
 import { setSidebarClosed } from "../../redux/actions/sidebar";
