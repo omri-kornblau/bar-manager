@@ -2,16 +2,15 @@ import _ from "lodash";
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
-  Drawer,
-  Divider,
   Toolbar,
   Tabs,
   Tab,
   Menu,
   MenuItem,
 } from "@material-ui/core";
-import AddCircleRoundedIcon from "@material-ui/icons/AddCircleRounded";
 import { Link } from "react-router-dom";
+
+import newRequestViews from "../../containers/mainViews/homeViews/clientViews/newRequestViews";
 
 import useStyle from "./style";
 
@@ -23,7 +22,8 @@ const propTypes = {
 const SecondaryNavbar = props => {
   const {
     viewKey,
-    views
+    views,
+    getProgress,
   } = props;
 
   const [tab, setTab] = useState(0);
@@ -31,7 +31,7 @@ const SecondaryNavbar = props => {
   const classes = useStyle();
 
   useEffect(() => {
-    setTab(_.keys(views).indexOf(viewKey));
+    setTab(Math.max(0, _.keys(views).indexOf(viewKey)));
   }, [viewKey]);
 
   const onNewRequestClick = e => {
@@ -50,19 +50,6 @@ const SecondaryNavbar = props => {
         value={tab}
         indicatorColor="primary"
       >
-        <Menu
-          id="simple-menu"
-          anchorEl={menuAnchorEl}
-          keepMounted
-          open={!!menuAnchorEl}
-          onClose={onCloseNewRequestMenu}
-        >
-          <Link to={newRequestKey}>
-            <MenuItem onClick={onCloseNewRequestMenu}>ביטוח א'</MenuItem>
-            <MenuItem onClick={onCloseNewRequestMenu}>ביטוח ב'</MenuItem>
-            <MenuItem onClick={onCloseNewRequestMenu}>ביטוח ג'</MenuItem>
-          </Link>
-        </Menu>
         {_.map(views, (viewData, key) =>
           key === newRequestKey ?
             <Tab
@@ -74,12 +61,25 @@ const SecondaryNavbar = props => {
             : <Tab
               label={viewData.name}
               component={Link}
-              to={`${key}`}
+              to={`/home/${key}/${getProgress(key)}`}
               icon={<viewData.icon/>}
               key={key}
             />
         )}
       </Tabs>
+      <Menu
+        id="simple-menu"
+        anchorEl={menuAnchorEl}
+        keepMounted
+        open={!!menuAnchorEl}
+        onClose={onCloseNewRequestMenu}
+      >
+        {_.map(newRequestViews, viewData =>
+          <Link key={viewData.id} to={`/home/${newRequestKey}/${viewData.id}`}>
+            <MenuItem onClick={onCloseNewRequestMenu}>{viewData.label} {viewData.icon}</MenuItem>
+          </Link>
+        )}
+      </Menu>
     </Toolbar>
   );
 }

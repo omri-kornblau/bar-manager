@@ -56,6 +56,7 @@ const FormBody = props => {
         {row.map(field =>
           <Grid key={field.label} xs item container justify={field.justify || justify}>
             <Input
+              {...field}
               variant={field.variant || variant}
               margin={margin}
               format={dateFormat}

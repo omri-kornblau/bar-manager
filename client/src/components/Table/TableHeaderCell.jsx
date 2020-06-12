@@ -1,4 +1,4 @@
-import React, { useState, forwardRef, cloneElement } from "react";
+import React, { useState, forwardRef } from "react";
 import PropTypes from "prop-types";
 import {
   TableCell,
@@ -54,10 +54,10 @@ const NumberMenuItems = () => {
   return (
     <>
       <StyledMenuItem>
-        <StyledTextField label="גדול מ" type="number"/> 
+        <StyledTextField label="גדול מ" type="number"/>
       </StyledMenuItem>
       <StyledMenuItem>
-        <StyledTextField label="קטן מ" type="number"/> 
+        <StyledTextField label="קטן מ" type="number"/>
       </StyledMenuItem>
     </>
   );

@@ -49,27 +49,27 @@ const Row = props => {
           return (
             <Fragment key={column.id}>
               <CustomTableCell>
-                { value }
+                {value}
               </CustomTableCell>
               {
                 index + 1 < columns.length
                 ? <ColumnResizer style={{opacity: isRounded ? 0 : 1}} prev={headerRefs[index]} next={headerRefs[index+1]}/>
-                : <></>
+                : null
               }
             </Fragment>
           )
         })}
       </TableRow>
-      <TableRow style={{ opacity: open ? 1 : 0 }}>
-        <TableCell colSpan={columns.length} className={classes.collapseTableCell}>
-          { collapse
-            ? <Collapse in={open} timeout="auto" unmountOnExit>
-                    {cloneElement(collapse, {row})}
-              </Collapse>
-            : <></>
-          }
-        </TableCell>
-      </TableRow>
+      {collapse ?
+        <TableRow style={{ opacity: open ? 1 : 0 }}>
+          <TableCell colSpan={columns.length} className={classes.collapseTableCell}>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              {cloneElement(collapse, {row})}
+            </Collapse>
+          </TableCell>
+        </TableRow>
+        : null
+      }
     </>
   )
 }

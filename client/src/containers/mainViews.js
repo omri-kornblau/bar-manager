@@ -1,5 +1,5 @@
-import Home from "./Home";
-import AboutUs from "./AboutUs";
+import Home from "./mainViews/Home";
+import AboutUs from "./mainViews/AboutUs";
 
 const Pages = {
   home: {

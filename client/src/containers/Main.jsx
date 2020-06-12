@@ -7,14 +7,16 @@ import {
   Redirect
 } from "react-router-dom";
 
-import pages from "../pages/pages";
-import { getPage } from "../../redux/selectors/navbar";
+import pages from "./mainViews";
+import { getPage } from "../redux/selectors/navbar";
+import { getUserLoggedIn } from "../redux/selectors/user";
 
-import AppNavbar from "../../components/AppNavbar/AppNavbar";
+import AppNavbar from "../components/AppNavbar/AppNavbar";
 
 const Main = props => {
   const {
-    page
+    page,
+    isLoggedIn
   } = props;
 
   return (
@@ -22,6 +24,7 @@ const Main = props => {
       <AppNavbar
         pages={pages}
         pageKey={page}
+        isLoggedIn={isLoggedIn}
       />
       <Switch>
         {_.map(pages, (pageData, key) =>
@@ -29,14 +32,15 @@ const Main = props => {
             <pageData.component/>
           </Route>
         )}
-        <Redirect from="/" to="/home/dashboard"/>
+        <Redirect from="/" to="/home"/>
       </Switch>
     </>
   );
 }
 
 const mapStateToProps = state => ({
-  page: getPage(state)
+  page: getPage(state),
+  isLoggedIn: getUserLoggedIn(state)
 })
 
 export default connect(mapStateToProps)(Main);

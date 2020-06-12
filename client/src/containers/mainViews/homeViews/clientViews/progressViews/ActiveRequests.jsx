@@ -4,13 +4,9 @@ import {
   Typography,
   Grid,
   Box,
-  Fab,
-  Tooltip
 } from "@material-ui/core";
-import AddIcon from '@material-ui/icons/Add';
-import { Link } from "react-router-dom";
 
-import CustomTable from "../../components/Table/Table";
+import CustomTable from "../../../../../components/Table/Table";
 
 const policiesColumns = [
   {
@@ -76,21 +72,16 @@ const PolicyExtraInfo = props => {
 
 const ClientActiveRequests = props => {
   return (
-    <>
-      <Grid container alignItems="flex-end" justify="space-between">
-        <Typography variant="h4" color="inherit" align="left">
-          בקשות פעילות
-        <Typography variant="body2" color="inherit" align="center">
-          כאן מוצגות כל הבקשות אשר עדיין לא אושרו (המשך הסבר...)
-        </Typography>
-        </Typography>
-        <Link to="newrequest">
-          <Tooltip arrow title="צור בקשה חדשה">
-            <Fab color="primary" size="small">
-              <AddIcon/>
-            </Fab>
-          </Tooltip>
-        </Link>
+    <div style={{paddingBottom: "1px"}}>
+      <Grid container justify="center">
+        <Box mb={2} mt={3}>
+          <Typography variant="h4" color="inherit" align="center">
+            בקשות פעילות
+            <Typography variant="body2" color="inherit" align="center">
+              כאן מוצגות הבקשות הפעילות
+            </Typography>
+          </Typography>
+        </Box>
       </Grid>
       <Box marginBottom={2}/>
       <CustomTable
@@ -100,7 +91,7 @@ const ClientActiveRequests = props => {
         isFilter
         collapse={<PolicyExtraInfo/>}
       />
-    </>
+    </div>
   );
 }
 

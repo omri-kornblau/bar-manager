@@ -1,9 +1,9 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { Collapse } from "@material-ui/core";
 
 export default makeStyles(theme => ({
   table: {
     borderRadius: theme.paper.borderRadius,
+    marginBottom: "30px",
   },
   roundedTable: {
     "& tr:first-child td": {

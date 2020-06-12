@@ -6,7 +6,7 @@ import {
 } from "connected-react-router"
 
 const initialSidebar = {
-  view: "dashboard",
+  view: "welcome",
   closed: false
 };
 
