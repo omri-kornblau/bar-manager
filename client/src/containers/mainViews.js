@@ -1,31 +1,61 @@
 import Home from "./mainViews/Home";
 import AboutUs from "./mainViews/AboutUs";
 
-const Pages = {
-  home: {
+import AccountCircleOutlinedIcon from "@material-ui/icons/AccountCircleOutlined";
+import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
+import Settings from "./mainViews/Settings";
+
+const Pages = [
+  {
+    id: "home",
     name: "בית",
-    component: Home
+    component: Home,
+    hideFromNavbar: false
   },
-  aboutus: {
+  {
+    id: "aboutus",
     name: "אודות",
-    component: AboutUs
+    component: AboutUs,
+    hideFromNavbar: false
   },
-  lawstuff: {
+  {
+    id: "lawstuff",
     name: "מסמכים משפטיים",
-    component: AboutUs
+    component: AboutUs,
+    hideFromNavbar: false
   },
-  disclaimer: {
+  {
+    id: "disclaimer",
     name: "הגבלת אחריות",
-    component: AboutUs
+    component: AboutUs,
+    hideFromNavbar: false
   },
-  types: {
+  {
+    id: "types",
     name: "סוגי ביטוח מוצעים",
-    component: AboutUs
+    component: AboutUs,
+    hideFromNavbar: false
   },
-  contact: {
+  {
+    id: "contact",
     name: "צור קשר",
-    component: AboutUs
+    component: AboutUs,
+    hideFromNavbar: false
   },
-};
+  {
+    id: "settings",
+    name: "המשתמש שלי",
+    component: Settings,
+    icon: AccountCircleOutlinedIcon,
+    hideFromNavbar: true
+  },
+  {
+    id: "settings",
+    name: "הגדרות",
+    component: Settings,
+    icon: SettingsOutlinedIcon,
+    hideFromNavbar: true
+  },
+];
 
 export default Pages;

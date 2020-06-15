@@ -15,6 +15,20 @@ export default makeStyles(theme => ({
     paddingBottom: theme.spacing(4),
   },
   cityBackground: {
-    backgroundImage: `url(${cityBackground})`
-  }
+    backgroundImage: `url(${cityBackground})`,
+    borderBottom: `solid 5px ` + theme.palette.primary.dark,
+  },
+  pageHeaderContainer: {
+    display: "flex",
+    position: "relative",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  pageHeader: {
+    backgroundColor: theme.palette.primary.dark,
+    color: theme.palette.text.white.active,
+    position: "absolute",
+    padding: "10px 30px 10px 30px",
+    userSelect: "none"
+  },
 }))

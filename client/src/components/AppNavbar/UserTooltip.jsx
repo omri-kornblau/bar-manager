@@ -1,37 +1,63 @@
-import React from "react";
+import _ from "lodash";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import {
-  Tooltip,
   IconButton,
-  Badge
+  Menu,
+  MenuItem,
+  Box,
 } from "@material-ui/core";
-import MailIcon from "@material-ui/icons/Mail";
-import NotificationsIcon from "@material-ui/icons/Notifications";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import { Link } from "react-router-dom";
+
+import useStyle from "./style";
 
 const propTypes = {
-  messagesAmount: PropTypes.number,
-  notificationsAmount: PropTypes.number
+  views: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string,
+    component: PropTypes.func,
+    icon: PropTypes.func
+  })),
+  view: PropTypes.string
 }
 
 const defaultProps = {
-  messagesAmount: 0,
-  notificationsAmount: 0
+  views: [],
+  view: ""
 }
 
 const UserTooltip = props => {
   const {
-    messagesAmount,
-    notificationsAmount
+    views,
+    view
   } = props;
+
+  const [saveAnchorEl, setSaveAnchorEl] = useState(null);
+
+  const classes = useStyle();
 
   return (
     <>
+      <Menu
+        id="simple-menu"
+        anchorEl={saveAnchorEl}
+        open={Boolean(saveAnchorEl)}
+        onClose={() => setSaveAnchorEl(null)}
+      >
+        {_.map(views, viewData =>
+          <Link key={viewData.id} to={`/${viewData.id}`}>
+            <MenuItem className={classes.darkLink}><viewData.icon/><Box mr={1}/>{viewData.name}</MenuItem>
+          </Link>
+        )}
+        <MenuItem>התנתק</MenuItem>
+      </Menu>
       <IconButton
         edge="end"
         aria-label="account of current user"
         aria-haspopup="true"
         color="inherit"
+        onClick={e => setSaveAnchorEl(e.currentTarget)}
       >
         <AccountCircleIcon />
       </IconButton>

@@ -10,5 +10,8 @@ export default makeStyles(theme => ({
     borderTopColor: theme.palette.primary.main,
     borderBottomRightRadius: 0,
     borderBottomLeftRadius: 40,
+  },
+  darkLink: {
+    color: theme.palette.text.primary
   }
 }))
