@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Container,
   Button,
@@ -20,18 +20,39 @@ import LockIcon from "@material-ui/icons/Lock";
 import { Link } from "react-router-dom";
 
 import useStyle from "./style";
-import { setLoggedIn } from "../../../../redux/actions/user";
+import { login as loginThunk } from "../../../../redux/thunks/login";
+import { getLoginErrors } from "../../../../redux/selectors/errors";
 
 const Login = props => {
   const {
-    setLoggedIn
+    login,
+    loginStatus
   } = props;
 
-  const onLogin = useCallback(() => {
-    setLoggedIn(true);
-  }, [setLoggedIn]);
+  const [userDetails, setUserDetails] = useState({
+    username: "",
+    password: "",
+    rememberMe: false
+  });
+
+  const onChange = useCallback(e => {
+    const { name, value } = e.target;
+    setUserDetails({
+      ...userDetails,
+      [name]: value
+    })
+  });
+
+  const onLogin = useCallback(e => {
+    e.preventDefault();
+    login(userDetails.username, userDetails.password)
+  }
+  , [userDetails, login]);
+
 
   const classes = useStyle();
+
+  const errorMessage = loginStatus.error ? "שם משתמש או סיסמה לא נכונים" : "";
 
   return (
     <main className={classes.container}>
@@ -42,12 +63,16 @@ const Login = props => {
             <Typography align="center" variant="h6">
               התחברות
             </Typography>
-            <form>
+            <form onSubmit={onLogin}>
               <Grid container direction="column" align="center" justify="center">
                 <TextField
                   margin="normal"
                   fullWidth
                   label="אימייל או שם משתמש"
+                  name="username"
+                  value={userDetails.username}
+                  onChange={onChange}
+                  error={!!loginStatus.error}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -61,6 +86,10 @@ const Login = props => {
                   type="password"
                   fullWidth
                   label="סיסמה"
+                  name="password"
+                  value={userDetails.password}
+                  onChange={onChange}
+                  error={!!loginStatus.error}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -73,27 +102,33 @@ const Login = props => {
                   <FormControl>
                     <FormControlLabel
                       control={
-                        <Checkbox color="primary" name="checkedC" />
+                        <Checkbox
+                          color="primary"
+                          name="rememberMe"
+                          value={userDetails.rememberMe}
+                          onChange={onChange}
+                        />
                       }
                       label="זכור אותי במכשיר זה"
                     />
                   </FormControl>
                 </Box>
               </Grid>
-            </form>
-            <Box mr={4} ml={4} mt={3}>
-              <Link to="/home/dashboard">
+              <Box mr={4} ml={4} mt={3}>
                 <Button
                   type="submit"
                   fullWidth={true}
                   color="primary"
                   variant="contained"
-                  onClick={onLogin}
                 >
                   היכנס
                 </Button>
-              </Link>
-            </Box>
+                <Box mt={1}/>
+                <Typography color={loginStatus.inProgress ? "" : "secondary"} align="center">
+                  {loginStatus.inProgress ? "טוען.." : errorMessage}
+                </Typography>
+              </Box>
+            </form>
             <Box mt={6}/>
             <Grid container justify="center" direction="row">
               עוד אין לכם חשבון?
@@ -119,8 +154,12 @@ const Login = props => {
   );
 }
 
-const mapDispatchToProps = dispatch => ({
-  setLoggedIn: setLoggedIn(dispatch)
+const mapStateToProps = state => ({
+  loginStatus: getLoginErrors(state)
 })
 
-export default connect(null, mapDispatchToProps)(Login);
+const mapDispatchToProps = dispatch => ({
+  login: loginThunk(dispatch)
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

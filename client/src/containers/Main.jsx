@@ -1,5 +1,5 @@
 import _ from "lodash";
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import {
   Switch,
@@ -10,6 +10,7 @@ import {
 import pages from "./mainViews";
 import { getPage } from "../redux/selectors/navbar";
 import { getUserLoggedIn } from "../redux/selectors/user";
+import { checkToken as checkTokenThunk } from "../redux/thunks/login";
 
 import AppNavbar from "../components/AppNavbar/AppNavbar";
 
@@ -19,8 +20,13 @@ const accountIconPages = _.filter(pages, { hideFromNavbar: true });
 const Main = props => {
   const {
     page,
-    isLoggedIn
+    isLoggedIn,
+    checkToken
   } = props;
+
+  useEffect(() => {
+    checkToken();
+  }, []);
 
   return (
     <>
@@ -47,4 +53,8 @@ const mapStateToProps = state => ({
   isLoggedIn: getUserLoggedIn(state)
 })
 
-export default connect(mapStateToProps)(Main);
+const mapDispatchToProps = dispatch => ({
+  checkToken: checkTokenThunk(dispatch)
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Main);
