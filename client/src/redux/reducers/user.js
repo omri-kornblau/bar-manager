@@ -1,6 +1,7 @@
 import {
-  SET_LOGGED_IN
-} from "../actions/user";
+  LOGIN_SUCCESS,
+  LOGIN_FAILURE
+} from "../actions/login";
 
 const initialUser = {
   data: {
@@ -12,10 +13,20 @@ const initialUser = {
 
 const userReducer = (state=initialUser, action) => {
   switch(action.type) {
-    case SET_LOGGED_IN:
+    case LOGIN_SUCCESS:
       return {
         ...state,
-        isLoggedIn: action.payload.loggedIn
+        data: {
+          name: action.payload.name,
+          type: action.payload.type
+        },
+        isLoggedIn: true
+      }
+
+    case LOGIN_FAILURE:
+      return {
+        ...state,
+        isLoggedIn: false
       }
 
     default:
