@@ -37,7 +37,7 @@ const mongoFormat = {
 const cookieSchema = new Mongoose.Schema(mongoFormat);
 
 cookieSchema.pre("save", async function () {
-  this.salt = Utils.getRandomPassword(HASH_LENGTH);
+  this.salt = Utils.getRandomPassword(SALT_LENGTH);
   this.tokenPassword = await hash(this.tokenPassword + this.salt, SALT_ROUNDS);
   await yupCookieSchema.validate(this)
 });
