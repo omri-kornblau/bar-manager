@@ -13,6 +13,7 @@ router.get("/auth/checktoken", withAuth, AuthRoutes.checkToken);
 router.get("/auth/logout", withAuth, AuthRoutes.logout)
 
 router.post("/client/signup", UserRoutes.signupClient)
+router.get("/client/getall", UserRoutes.getAll)
 
 router.post("/provider/signup", UserRoutes.signupProvider)
 

@@ -22,6 +22,7 @@ require("./models/oldRequest");
 require("./models/provider");
 require("./models/request");
 require("./models/user");
+require("./models/Notification");
 
 AsyncErrorsHandler.patchRouter(ErrorsRouter.route);
 

@@ -4,12 +4,15 @@ const Yup = require("yup");
 const promisify = require("util").promisify;
 
 const {
-  USER_MIN_LENGTH,
-  USER_MAX_LENGTH,
   HASH_LENGTH,
   SALT_LENGTH,
-  SALT_ROUNDS
 } = require("./consts");
+
+const {
+  USER_MIN_LENGTH,
+  USER_MAX_LENGTH,
+  SALT_ROUNDS,
+} = require("../config/auth")
 
 const hashCompare = promisify(Bcrypt.compare);
 const hash = promisify(Bcrypt.hash);
