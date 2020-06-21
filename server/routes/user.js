@@ -33,7 +33,7 @@ exports.signupClient = async (req, res) => {
       email,
       username,
       password,
-      data: createdClient._id,
+      clientId: createdClient._id,
       type: USER_TYPES.client,
     }
 
@@ -65,18 +65,19 @@ const findByIds = async (Model, ids, error) => {
 }
 
 exports.getAll = async (req, res) => {
-  // TODO: achive the username param from the authentication insted of from the url
   const {
     username
-  } = req.query;
+  } = req;
 
+  console.log("username:", username)
   const user = await UserModel.findOne({username});
-  if (user === undefined) {
+  if (user === null) {
     throw Boom.badRequest("User not found");
   }
 
+  console.log(user)
   const client = await ClientModel.findOne({_id: user.clientId});
-  if (client === undefined) {
+  if (client === null) {
     throw Boom.internal("Client not found");
   }
 
@@ -110,7 +111,7 @@ exports.signupProvider = async (req, res) => {
       email,
       username,
       password,
-      data: createdProvider._id,
+      clientId: createdProvider._id,
       type: USER_TYPES.provider,
     }
 

@@ -15,6 +15,10 @@ import {
   logout as logoutThunk
 } from "../redux/thunks/login";
 
+import {
+  getClientData,
+} from "../redux/thunks/client"
+
 import AppNavbar from "../components/AppNavbar/AppNavbar";
 
 const navbarPages = _.filter(pages, { hideFromNavbar: false });
@@ -25,11 +29,13 @@ const Main = props => {
     page,
     isLoggedIn,
     checkToken,
-    logout
+    logout,
+    getClient,
   } = props;
 
   useEffect(() => {
     checkToken();
+    getClient();
   }, []);
 
   return (
@@ -55,12 +61,13 @@ const Main = props => {
 
 const mapStateToProps = state => ({
   page: getPage(state),
-  isLoggedIn: getUserLoggedIn(state)
+  isLoggedIn: getUserLoggedIn(state),
 })
 
 const mapDispatchToProps = dispatch => ({
   checkToken: checkTokenThunk(dispatch),
-  logout: logoutThunk(dispatch)
+  logout: logoutThunk(dispatch),
+  getClient: getClientData(dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);
