@@ -33,7 +33,8 @@ const AppNavbar = props => {
     pages,
     accountIconPages,
     pageKey,
-    isLoggedIn
+    isLoggedIn,
+    logout
   } = props;
 
   const [tab, setTab] = useState(0);
@@ -73,6 +74,7 @@ const AppNavbar = props => {
             ? <UserTooltip
                 views={accountIconPages}
                 view={pageKey}
+                logout={logout}
               />
             : <LoginTooltip/>
           }

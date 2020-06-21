@@ -1,13 +1,15 @@
-import { LOCATION_CHANGE } from "connected-react-router";
+import { push } from "connected-react-router";
 
 import {
   tryLogin,
   loginSuccess,
-  loginFailure
+  loginFailure,
+  logoutSuccess
 } from "../actions/login";
 import {
   postLogin,
-  getCheckToken
+  getCheckToken,
+  getLogout,
 } from "../../api/authentication";
 
 export const login = outerDispatch => (username, password) =>
@@ -16,16 +18,8 @@ export const login = outerDispatch => (username, password) =>
 
     postLogin(username, password)
       .then(res => {
-        dispatch(loginSuccess())
-        dispatch({
-          type: LOCATION_CHANGE,
-          payload: {
-            location: {
-              pathname: "/home/dashboard/edit",
-            },
-            action: "PUSH"
-          },
-        })
+        dispatch(loginSuccess());
+        dispatch(push("/home/dashboard/edit"));
       })
       .catch(err => {
         dispatch(loginFailure(err))
@@ -36,6 +30,15 @@ export const checkToken = outerDispatch => () =>
   outerDispatch(dispatch => {
     getCheckToken()
       .then(res => {
-        dispatch(loginSuccess())
-      })
+        dispatch(loginSuccess());
+      });
+  })
+
+export const logout = outerDispatch => () =>
+  outerDispatch(dispatch => {
+    getLogout()
+      .then(res => {
+        dispatch(logoutSuccess());
+        dispatch(push("/home/welcome"));
+      });
   })

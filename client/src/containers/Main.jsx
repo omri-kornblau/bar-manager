@@ -10,7 +10,10 @@ import {
 import pages from "./mainViews";
 import { getPage } from "../redux/selectors/navbar";
 import { getUserLoggedIn } from "../redux/selectors/user";
-import { checkToken as checkTokenThunk } from "../redux/thunks/login";
+import {
+  checkToken as checkTokenThunk,
+  logout as logoutThunk
+} from "../redux/thunks/login";
 
 import AppNavbar from "../components/AppNavbar/AppNavbar";
 
@@ -21,7 +24,8 @@ const Main = props => {
   const {
     page,
     isLoggedIn,
-    checkToken
+    checkToken,
+    logout
   } = props;
 
   useEffect(() => {
@@ -35,6 +39,7 @@ const Main = props => {
         accountIconPages={accountIconPages}
         pageKey={page}
         isLoggedIn={isLoggedIn}
+        logout={logout}
       />
       <Switch>
         {_.map(pages, pageData =>
@@ -54,7 +59,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  checkToken: checkTokenThunk(dispatch)
+  checkToken: checkTokenThunk(dispatch),
+  logout: logoutThunk(dispatch)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

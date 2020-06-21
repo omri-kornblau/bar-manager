@@ -30,7 +30,8 @@ const defaultProps = {
 const UserTooltip = props => {
   const {
     views,
-    view
+    view,
+    logout
   } = props;
 
   const [saveAnchorEl, setSaveAnchorEl] = useState(null);
@@ -50,7 +51,9 @@ const UserTooltip = props => {
             <MenuItem className={classes.darkLink}><viewData.icon/><Box mr={1}/>{viewData.name}</MenuItem>
           </Link>
         )}
-        <MenuItem>התנתק</MenuItem>
+        <MenuItem onClick={logout}>
+          התנתק
+        </MenuItem>
       </Menu>
       <IconButton
         edge="end"
