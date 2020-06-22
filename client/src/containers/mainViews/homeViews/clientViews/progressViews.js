@@ -32,7 +32,7 @@ const DashboardProgresses = [
   },
   {
     id: "active",
-    label: "פעיל",
+    label: "פוליסות פעילות",
     icon: <DoneIcon/>,
     color: green[600],
     component: TableView,

@@ -91,9 +91,9 @@ const ProgressNavbar = props => {
         className={classes.paper}
       >
         <Step>
-          <StepLabel
-            StepIconComponent={AddRequestButtonStep}
-          />
+          <StepLabel StepIconComponent={AddRequestButtonStep}>
+            הגש בקשה חדשה
+          </StepLabel>
         </Step>
         {
           steps.map(step => (

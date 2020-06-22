@@ -48,7 +48,7 @@ const Drafts = props => {
   return (
     <Box>
       <Typography align="center" variant="h6">
-        טיוטות
+        בקשות שטרם הושלמו
       </Typography>
       <Box mb={3}/>
       <CustomTable
