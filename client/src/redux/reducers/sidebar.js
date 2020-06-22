@@ -20,7 +20,7 @@ const navbarReducer = (state=initialSidebar, action) => {
 
     case LOCATION_CHANGE:
       const { pathname } = action.payload.location;
-      if (pathname.match("^/home/+")) {
+      if (pathname.match("^/home/.*")) {
         return {
           ...state,
           view: pathname.split("/")[2]
