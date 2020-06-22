@@ -7,12 +7,13 @@ import {
   Typography,
   Tabs,
   Tab,
+  Box
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
 import useStyles from "./style";
 
-import gseLogo from "../../assets/img/gse-logo.svg"
+import gseLogoWithText from "../../assets/img/gse-logo-wt.png"
 import UserTooltip from "./UserTooltip";
 import LoginTooltip from "./LoginTooltip";
 
@@ -51,10 +52,10 @@ const AppNavbar = props => {
       className={classes.appBar}
     >
       <Toolbar>
-        <img alt="gse-logo" width={50} src={gseLogo}/>
-        <Typography className="ml-4 mr-4" variant="h6" color="inherit">
-          גיזה זינגר אבן
-        </Typography>
+        <Link to="/">
+          <img alt="gse-logo" width={140} src={gseLogoWithText}/>
+        </Link>
+        <Box ml={2}/>
         <Tabs
           value={tab}
           indicatorColor="primary"
