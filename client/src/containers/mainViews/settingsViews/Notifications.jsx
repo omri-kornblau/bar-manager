@@ -13,8 +13,8 @@ import {
 const AboutUs = props => {
   return (
     <Container>
-      <Typography align="center" variant="h6">
-        {props.viewLabel}
+      <Typography align="center" variant="h5">
+        הגדר התראות
       </Typography>
       <Table>
         <TableHead>
