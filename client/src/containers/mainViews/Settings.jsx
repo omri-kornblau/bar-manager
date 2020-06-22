@@ -21,15 +21,15 @@ import {
 } from "react-router-dom";
 import { useRouteMatch } from "react-router";
 
-import useStyles from "./style";
-
 import views from "./settingsViews";
+import { getSettingsTab } from "../../redux/selectors/settingsTab";
+
+import useStyles from "./style";
 
 const Settings = props => {
   const {
+    settingsTab
   } = props;
-
-  const match = useRouteMatch();
 
   const classes = useStyles();
 
@@ -45,7 +45,7 @@ const Settings = props => {
       </div>
       <Box mt={5}/>
       <Grid container direction="row">
-        <Grid item container direction="column" alignItems="center" xs>
+        <Grid item container direction="column" alignItems="flex-end" xs>
           <Container maxWidth="xs" className={classes.container}/>
           <Typography align="left" variant="h6">
             הגדרות חשבון
@@ -54,7 +54,7 @@ const Settings = props => {
             <Divider/>
             {views.map(view => (
               <Link to={`/settings/${view.id}`}>
-                <ListItem button key={view.id}>
+                <ListItem selected={view.id === settingsTab} button key={view.id}>
                   <ListItemIcon>{view.icon}</ListItemIcon>
                   <ListItemText primary={view.label} />
                 </ListItem>
@@ -69,11 +69,11 @@ const Settings = props => {
               <Box p={3}>
                 <Switch>
                   {views.map(view =>
-                    <Route key={view.id} path={`${match.url}/${view.id}`}>
+                    <Route key={view.id} path={`/settings/${view.id}`}>
                       <view.component viewLabel={view.label}/>
                     </Route>
                   )}
-                  <Redirect to={`${match.url}/${views[0].id}`}/>
+                  <Redirect to={`/settings/${settingsTab}`}/>
                 </Switch>
               </Box>
             </Paper>
@@ -86,6 +86,7 @@ const Settings = props => {
 }
 
 const mapStateToProps = state => ({
+  settingsTab: getSettingsTab(state)
 })
 
 const mapDispatchToProps = dispatch => ({

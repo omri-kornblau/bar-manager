@@ -44,13 +44,6 @@ const Pages = [
   },
   {
     id: "settings",
-    name: "המשתמש שלי",
-    component: Settings,
-    icon: AccountCircleOutlinedIcon,
-    hideFromNavbar: true
-  },
-  {
-    id: "settings",
     name: "הגדרות",
     component: Settings,
     icon: SettingsOutlinedIcon,

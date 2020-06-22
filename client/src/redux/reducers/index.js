@@ -4,6 +4,7 @@ import navbarReducer from "./navbar";
 import sidebarReducer from "./sidebar";
 import newRequestReducer from "./newRequest";
 import progressBarReducer from "./progressBar"
+import settingsTabReducer from "./settingsTab"
 import userReducer from "./user";
 import errorsReducer from "./errors";
 
@@ -12,6 +13,7 @@ export default combineReducers({
   sidebar: sidebarReducer,
   newRequest: newRequestReducer,
   progressBar: progressBarReducer,
+  settingsTab: settingsTabReducer,
   user: userReducer,
   errors: errorsReducer
 });
