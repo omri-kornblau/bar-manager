@@ -17,18 +17,13 @@ import UserTooltip from "./UserTooltip";
 import LoginTooltip from "./LoginTooltip";
 
 const defaultProps = {
-  pages: {
-    default: {
-      name: "default",
-      component: AppBar
-    }
-  },
+  pages: [],
   pageKey: "default",
   isLoggedIn: false
 };
 
 const propTypes = {
-  pages: PropTypes.object,
+  pages: PropTypes.array,
   pageKey: PropTypes.string,
   isLoggedIn: PropTypes.bool
 };
@@ -36,8 +31,10 @@ const propTypes = {
 const AppNavbar = props => {
   const {
     pages,
+    accountIconPages,
     pageKey,
-    isLoggedIn
+    isLoggedIn,
+    logout
   } = props;
 
   const [tab, setTab] = useState(0);
@@ -45,7 +42,7 @@ const AppNavbar = props => {
   const classes = useStyles();
 
   useEffect(() => {
-    setTab(_.keys(pages).indexOf(pageKey));
+    setTab(_.findIndex(pages, { id: pageKey }));
   }, [pageKey]);
 
   return (
@@ -62,19 +59,23 @@ const AppNavbar = props => {
           value={tab}
           indicatorColor="primary"
         >
-          {_.map(pages, (pageData, key) =>
+          {_.map(pages, pageData =>
             <Tab
               label={pageData.name}
               component={Link}
-              to={`/${key}`}
-              key={key}
+              to={`/${pageData.id}`}
+              key={pageData.id}
               disableRipple
             />
           )}
         </Tabs>
         <div className="mr-auto">
           { isLoggedIn
-            ? <UserTooltip/>
+            ? <UserTooltip
+                views={accountIconPages}
+                view={pageKey}
+                logout={logout}
+              />
             : <LoginTooltip/>
           }
         </div>

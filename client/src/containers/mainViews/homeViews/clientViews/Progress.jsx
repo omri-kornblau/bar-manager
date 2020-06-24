@@ -40,7 +40,7 @@ const ClientProgressDashboard = props => {
         <Switch>
           {progresses.map(progress =>
             <Route key={progress.id} path={`${match.url}/${progress.id}`}>
-              {progress.component}
+              <progress.component/>
             </Route>
           )}
         </Switch>

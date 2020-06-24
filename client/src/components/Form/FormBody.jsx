@@ -1,16 +1,20 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {
-  Grid
+  Grid,
 } from "@material-ui/core";
 
 import DatePickerWrapper from "./DatePickerWrapper";
 import TextFieldWrapper from "./TextFieldWrapper";
+import CheckboxWrapper from "./CheckboxWrapper";
 
 const Input = props => {
   switch(props.type) {
     case "date":
       return <DatePickerWrapper {...props}/>
+
+    case "checkbox":
+      return <CheckboxWrapper {...props}/>
 
     default:
       return <TextFieldWrapper {...props}/>
@@ -47,7 +51,8 @@ const FormBody = props => {
     spacing,
     margin,
     dateFormat,
-    justify
+    justify,
+    onChange,
   } = props;
 
   return (
@@ -62,10 +67,11 @@ const FormBody = props => {
               format={dateFormat}
               type={field.type}
               label={field.label}
-              defaultValue={field.defaultValue}
               helperText={field.helperText}
               fullWidth={field.fullWidth}
               required={field.required}
+              defaultValue={field.defaultValue}
+              onChange={onChange}
             />
           </Grid>
         )}

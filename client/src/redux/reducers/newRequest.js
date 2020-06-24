@@ -16,7 +16,7 @@ const newRequestReducer = (state=initialState, action) => {
 
     case LOCATION_CHANGE:
       const { pathname } = action.payload.location;
-      if (pathname.match("^/home/newrequest/.+")) {
+      if (pathname.match("^/home/newrequest/.*")) {
         return {
           ...state,
           view: pathname.split("/")[2]

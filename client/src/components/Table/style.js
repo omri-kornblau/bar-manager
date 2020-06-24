@@ -51,8 +51,12 @@ export default makeStyles(theme => ({
       marginRight: "5px",
     },
   },
-  tabelCell: {
+  roundedTableCell: {
     display: "block",
+    whiteSpace: "nowrap",
+    textOverflow: "clip",
+  },
+  tabelCell: {
     whiteSpace: "nowrap",
     textOverflow: "clip",
   },
@@ -60,6 +64,7 @@ export default makeStyles(theme => ({
     padding: 0,
   },
   filterListIcon: {
-    float: "right",
+    fontSize: "110%",
+    display: "inline"
   }
 }))

@@ -6,47 +6,43 @@ import DoneIcon from '@material-ui/icons/Done';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import { purple, blue, yellow, green, grey } from "@material-ui/core/colors";
 
-import EditRequests from "./progressViews/EditRequests";
-import InProgressRequests from "./progressViews/InProgressRequests";
-import WaitingRequests from "./progressViews/WaitingRequests";
-import ActiveRequests from "./progressViews/ActiveRequests";
-import ArchivedRequests from "./progressViews/ArchivedRequests";
+import TableView from "./progressViews/TableView";
 
 const DashboardProgresses = [
   {
-    id: "edit",
+    id: "waitingForApprovel",
     label: "מחכה לאישור חתימה",
     icon: <EditIcon/>,
     color: purple[600],
-    component: EditRequests
+    component: TableView,
   },
   {
-    id: "inProgress",
+    id: "inTenderProcedure",
     label: "בהליך מכרזי",
     icon: <SearchIcon/>,
     color: blue[600],
-    component: InProgressRequests
+    component: TableView,
   },
   {
-    id: "waitingForApproval",
+    id: "waitingForSign",
     label: "בתהליך חתימה",
     icon: <HourglassEmptyIcon/>,
     color: yellow[600],
-    component: WaitingRequests
+    component: TableView,
   },
   {
     id: "active",
     label: "פעיל",
     icon: <DoneIcon/>,
     color: green[600],
-    component: ActiveRequests
+    component: TableView,
   },
   {
     id: "history",
     label: "היסטוריה",
     icon: <FolderOpenIcon/>,
     color: grey[600],
-    component: ArchivedRequests
+    component: TableView,
   },
 ];
 

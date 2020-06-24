@@ -3,32 +3,69 @@ const Yup = require("yup");
 
 const {
   OBJECT_ID_LENGTH,
-  STATUSES
+  STATUSES,
+  INSURENSE_TYPES,
 } = require("./consts");
 
+const {
+  REQUEST_STATUSES,
+} = require("../types")
+
 const yupRequestSchema = Yup.object().shape({
+  type: Yup.mixed().oneOf(INSURENSE_TYPES),
+  author: Yup.string().length(OBJECT_ID_LENGTH),
+  status: Yup.mixed().oneOf(REQUEST_STATUSES),
+  assetDescription: Yup.string(),
+  companyDescription: Yup.string(),
+  insurenceDuration: Yup.number().positive(),
+  maxPrice: Yup.number().positive(),
+  comments: Yup.string(),
+  createdTime: Yup.date(),
+  startDate: Yup.date(),
+  recivedTime: Yup.date(),
   messages: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
-  author: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
-  expirationDate: Yup.date(),
-  status: Yup.mixed().oneOf(STATUSES),
   offers: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
 });
 
 const mongoFormat = {
-  messages: {
-    type: Array
+  type: {
+    type: String
   },
   author: {
-    type: String
-  },
-  expirationDate: {
-    type: Date
+    type: String,
   },
   status: {
-    type: String
+    type: String,
+  },
+  assetDescription: {
+    type: String,
+  },
+  companyDescription: {
+    type: String,
+  },
+  insurenceDuration: {
+    type: Number,
+  },
+  maxPrice: {
+    type: Number,
+  },
+  comments: {
+    type: String,
+  },
+  createdTime: {
+    type: Date,
+  },
+  startDate: {
+    type: Date,
+  },
+  recivedTime: {
+    type: Date,
+  },
+  messages: {
+    type: Array,
   },
   offers: {
-    type: Array
+    type: Array,
   },
 };
 

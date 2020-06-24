@@ -2,6 +2,9 @@ import React, { useState, forwardRef } from "react";
 import PropTypes from "prop-types";
 import {
   TableCell,
+  Grid,
+  Box,
+  Typography,
 } from "@material-ui/core";
 import FilterListIcon from "@material-ui/icons/FilterList";
 
@@ -141,12 +144,21 @@ const TableHeaderCell = forwardRef((props, ref) => {
   return (
     <>
       <TableCell align="left" ref={mergeRefs(ref, hoverRef)}>
-        {column.label}
-        {
-          isFilter
-          ? <FilterListIcon onClick={onClick} className={classes.filterListIcon} style={{opacity: (isHover || Boolean(anchorEl)) ? 1 : 0}}/>
-          : <></>
-        }
+        <Box display="flex" alignItems="center">
+          <Typography noWrap={true}>
+            {column.label}
+          </Typography>
+          <Box ml={1}/>
+          {
+            isFilter
+            ? <FilterListIcon 
+                onClick={onClick} 
+                className={classes.filterListIcon} 
+                style={{ opacity: (isHover || Boolean(anchorEl)) ? 1 : 0 }}
+              />
+            : <></>
+          }
+        </Box>
       </TableCell>
       {
         isFilter

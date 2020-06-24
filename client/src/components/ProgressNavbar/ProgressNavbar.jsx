@@ -7,7 +7,6 @@ import {
   Stepper,
   StepLabel,
   StepConnector,
-  Button
 } from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 

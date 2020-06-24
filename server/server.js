@@ -22,6 +22,7 @@ require("./models/oldRequest");
 require("./models/provider");
 require("./models/request");
 require("./models/user");
+require("./models/notification");
 
 AsyncErrorsHandler.patchRouter(ErrorsRouter.route);
 
@@ -31,7 +32,7 @@ Mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
-  .then(() => console.log("MongoDB Connected..."))
+  .then(() => console.log("MongoDB Connected"))
   .catch(err => console.log(err));
 
 // Setup express server

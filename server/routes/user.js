@@ -1,4 +1,5 @@
 const Mongoose = require("mongoose");
+const Boom = require("boom");
 
 const UserModel = Mongoose.model("User");
 const ClientModel = Mongoose.model("Client");
@@ -29,7 +30,7 @@ exports.signupClient = async (req, res) => {
       email,
       username,
       password,
-      data: createdClient._id,
+      clientId: createdClient._id,
       type: USER_TYPES.client,
     }
 
@@ -70,7 +71,7 @@ exports.signupProvider = async (req, res) => {
       email,
       username,
       password,
-      data: createdProvider._id,
+      clientId: createdProvider._id,
       type: USER_TYPES.provider,
     }
 

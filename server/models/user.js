@@ -6,12 +6,15 @@ const promisify = require("util").promisify;
 const {
   OBJECT_ID_LENGTH,
   USER_TYPES_VALUES,
+} = require("./consts");
+
+const {
   USER_MIN_LENGTH,
   USER_MAX_LENGTH,
   PASSWORD_MIN_LENGTH,
   PASSWORD_MAX_LENGTH,
   SALT_ROUNDS,
-} = require("./consts");
+} = require("../config/auth")
 
 const hashCompare = promisify(Bcrypt.compare);
 const hash = promisify(Bcrypt.hash);
@@ -21,7 +24,7 @@ const yupUserFormat = Yup.object().shape({
   username: Yup.string().min(USER_MIN_LENGTH).max(USER_MAX_LENGTH),
   password: Yup.string().min(PASSWORD_MIN_LENGTH).max(PASSWORD_MAX_LENGTH),
   type: Yup.mixed().oneOf(USER_TYPES_VALUES),
-  data: Yup.string().length(OBJECT_ID_LENGTH),
+  clientId: Yup.string().length(OBJECT_ID_LENGTH),
 });
 
 const mongoFormat = {
@@ -39,7 +42,7 @@ const mongoFormat = {
   type: {
     type: String
   },
-  data: {
+  clientId: {
     type: String
   },
 }

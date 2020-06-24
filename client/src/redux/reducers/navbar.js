@@ -10,7 +10,7 @@ const navbarReducer = (state=initialNavbar, action) => {
 
     case LOCATION_CHANGE:
       const { pathname } = action.payload.location;
-      if (pathname.match("^/+")) {
+      if (pathname.match("^/.*")) {
         return pathname.split("/")[1];
       }
       return state;
