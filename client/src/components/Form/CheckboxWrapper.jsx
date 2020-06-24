@@ -19,14 +19,16 @@ const CheckboxWrapper = props => {
     setChecked(!checked);
   }
 
-  return  <FormControlLabel
-            control={
-              <Checkbox color="primary" {...{...props, onChange: e=>{}}} onClick={onClick}/>
-            }
-            name={name}
-            label={label}
-            labelPlacement="start"
-            />
+  return  (
+    <FormControlLabel
+      control={
+        <Checkbox color="primary" {...props} onChange={e=>{}} onClick={onClick}/>
+      }
+      name={name}
+      label={label}
+      labelPlacement="start"
+    />
+  );
 }
 
 export default CheckboxWrapper;

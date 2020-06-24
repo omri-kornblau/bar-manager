@@ -1,3 +1,4 @@
+const _ = require("lodash");
 const Mongoose = require("mongoose");
 const Boom = require("boom");
 
@@ -12,18 +13,18 @@ const {
 } = require("../types")
 
 const findByIds = async (Model, ids, error) => {
-  const promises =  ids.map(async _id => (
-    await Model.findById(_id)
+  const promises = ids.map(_id => (
+    Model.findById(_id)
   ));
 
   const res = await Promise.all(promises);
-  if (!res.every(item => item !== null)) {
+  if (!res.some(_.isEmpty)) {
     throw Boom.internal(error);
   }
   return res;
 }
 
-const prepareRequests =  async requests => {
+const prepareRequests = async requests => {
   const promise = requests.map(request => (
     UserModel.findById(request.author)
   ))
@@ -40,12 +41,12 @@ exports.getAll = async (req, res) => {
   } = req;
 
   const user = await UserModel.findOne({username});
-  if (user === null) {
+  if (!user) {
     throw Boom.internal("User not found");
   }
 
   const client = await ClientModel.findById(user.clientId);
-  if (client === null) {
+  if (!client) {
     throw Boom.internal("Client not found");
   }
 
