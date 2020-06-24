@@ -77,7 +77,7 @@ const CustomTable = props => {
           }
         }, {})
       )
-      : (null, null);
+      : [[], () => {}];
 
   const finalRows = useMemo(() => {
     const filteredRows = isFilter ?
