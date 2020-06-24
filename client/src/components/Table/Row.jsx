@@ -39,8 +39,6 @@ const Row = props => {
 
   const classes = useStyles();
 
-  const CustomTableCell = props => <TableCell className={classes.tabelCell} align="left" {...props}/>
-
   return (
     <>
       <TableRow hover className={isRounded ? classes.roundedTableRow : null} onClick={() => setOpen(!open)}>
@@ -48,12 +46,20 @@ const Row = props => {
           const value = row[column.id];
           return (
             <Fragment key={column.id}>
-              <CustomTableCell>
+              <TableCell
+                className={isRounded ? classes.roundedTableCell : classes.tabelCell}
+                align="left"
+                {...props}
+              >
                 {value}
-              </CustomTableCell>
+              </TableCell>
               {
                 index + 1 < columns.length
-                ? <ColumnResizer style={{opacity: isRounded ? 0 : 1}} prev={headerRefs[index]} next={headerRefs[index+1]}/>
+                ? <ColumnResizer
+                    style={{opacity: isRounded ? 0 : 1}}
+                    prev={headerRefs[index]}
+                    next={headerRefs[index+1]}
+                  />
                 : null
               }
             </Fragment>

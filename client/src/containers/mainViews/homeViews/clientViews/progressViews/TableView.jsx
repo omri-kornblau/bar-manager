@@ -46,7 +46,6 @@ const TableView = props => {
       <CustomTable
         rows={progressRequests}
         columns={conf.columns.map(column => columnsTypes[column])}
-        isRounded
         isFilter
       />
     </div>
