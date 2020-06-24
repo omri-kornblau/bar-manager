@@ -3,7 +3,7 @@ export const columnsTypes = {
       id: "index",
       label: "מזהה",
       filter: {
-        type: "number"
+        type: "text"
       }
     },
     type: {

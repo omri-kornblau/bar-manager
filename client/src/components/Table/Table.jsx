@@ -15,6 +15,7 @@ import ColumnResizer from "./ColumnResizer";
 import TableHeaderCell from "./TableHeaderCell";
 import Row from "./Row";
 import useStyles from "./style";
+import { useMemo } from "react";
 
 const propTypes = {
   rows: PropTypes.arrayOf(PropTypes.object),
@@ -50,6 +51,24 @@ const CustomTable = props => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  if (isFilter) {
+    const options = useMemo(() => {
+      columns.reduce((column, pre) => {
+        switch (column.filter.type) {
+          case "text": {
+            const uniqeRows = _.uniq(rows.map(row => row[column.id]));
+            const options = uniqeRows.reduce((prev, cur) => (
+              {[cur]: true, ...prev}
+            ), {});
+
+            return {...pre, [column.id]: options}
+          }
+          case "number": 
+        }
+      }, {})
+    }, rows)
+  }
+
   const headerRefs = columns.map(() => useRef(null));
 
   const onPageChange = (event, newPage) => {
@@ -75,7 +94,7 @@ const CustomTable = props => {
             <TableRow className={classes.tableHeader}>
               {
                 columns.map((column, index) => {
-                  if (isFilter && column.filter.type === 'text') {
+                  if (isFilter && column.filter.type === "text") {
                     column.filter.data = _.uniq(rows.map(row => row[column.id]));
                   }
                   return (

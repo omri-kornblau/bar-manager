@@ -22,10 +22,11 @@ import {
 
 const TextMenuItems = props => {
   const {
-    rows,
+    options,
+    // setCheckbox,
   } = props;
 
-  const [checkboxStatuses,  setCheckbox] = useState(rows.reduce((prev, cur) => (
+  const [checkboxStatuses,  setCheckbox] = useState(options.reduce((prev, cur) => (
     {[cur]: true, ...prev}
   ), {}));
 
@@ -35,16 +36,16 @@ const TextMenuItems = props => {
         <StyledTextField label="חיפוש"/>
       </StyledMenuItem>
       {
-        rows.map(row => (
+        options.map(option => (
           <StyledMenuItem
-            key={row}
+            key={option}
             onClick={() => setCheckbox({
               ...checkboxStatuses,
-              [row]: !checkboxStatuses[row],
+              [option]: !checkboxStatuses[option],
             })}>
             <StyledCheckbox
-              checked={checkboxStatuses[row]}
-              label={row}
+              checked={checkboxStatuses[option]}
+              label={option}
             />
           </StyledMenuItem>
         ))
@@ -98,7 +99,7 @@ const MenuItems = forwardRef((props, ref) => {
 
   switch (filterType) {
     case "text": {
-      return <TextMenuItems rows={filterData}/>;
+      return <TextMenuItems options={filterData}/>;
     }
     case "number": {
       return <NumberMenuItems/>;
@@ -107,7 +108,7 @@ const MenuItems = forwardRef((props, ref) => {
       return <OptionsMenuItems options={filterData}/>;
     }
     default: {
-      return <TextMenuItems rows={filterData}/>;
+      return <TextMenuItems options={filterData}/>;
     }
   }
 });
