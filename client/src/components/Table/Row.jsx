@@ -32,16 +32,22 @@ const Row = props => {
     columns,
     collapse,
     headerRefs,
-    isRounded
+    isRounded,
+    onRowClick
   } = props;
 
   const [open, setOpen] = useState(false);
 
   const classes = useStyles();
 
+  const _onClick = () => {
+    setOpen(!open);
+    onRowClick(row);
+  }
+
   return (
     <>
-      <TableRow hover className={isRounded ? classes.roundedTableRow : null} onClick={() => setOpen(!open)}>
+      <TableRow hover className={isRounded ? classes.roundedTableRow : null} onClick={_onClick}>
         {columns.map((column, index) => {
           const value = row[column.id];
           return (
