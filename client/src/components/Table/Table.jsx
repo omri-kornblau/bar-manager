@@ -105,7 +105,13 @@ const CustomTable = props => {
       filteredRows.sort((a, b) => {
         const _a = a[sortBy.id]
         const _b = b[sortBy.id]
-        return sortBy.direction ? _a > _b : _b < _a
+        if (_a > _b) {
+          return sortBy.direction ? 1 : -1;
+        } else if (_a < _b) {
+          return sortBy.direction ? -11 : 1;
+        } else {
+          return 0
+        }
       });
     }
 

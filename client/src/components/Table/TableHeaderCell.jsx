@@ -183,7 +183,7 @@ const TableHeaderCell = forwardRef((props, ref) => {
     <>
       <TableCell align="left" ref={mergeRefs(ref, hoverRef)}>
         <Box display="flex" alignItems="center">
-          <Typography noWrap={true} onClick={() => setSortBy()}>
+          <Typography noWrap={true} onClick={setSortBy}>
             {column.label}
           </Typography>
           <Box ml={1}/>

@@ -47,6 +47,7 @@ const TableView = props => {
         rows={progressRequests}
         columns={conf.columns.map(column => columnsTypes[column])}
         isFilter
+        isSort
       />
     </div>
   );
