@@ -77,7 +77,6 @@ const CustomTable = props => {
                   if (isFilter && column.filter.type === 'text') {
                     column.filter.data = _.uniq(rows.map(row => row[column.id]));
                   }
-
                   return (
                     <Fragment key={column.id}>
                       <TableHeaderCell

@@ -8,4 +8,5 @@ exports.REQUEST_STATUSES  = [
   "inTenderProcedure",
   "waitingForSign",
   "active",
+  "history",
 ];

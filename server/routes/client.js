@@ -3,7 +3,6 @@ const Boom = require("boom");
 
 const UserModel = Mongoose.model("User");
 const ClientModel = Mongoose.model("Client");
-const ProviderModel = Mongoose.model("Provider");
 const RequestModel = Mongoose.model("Request");
 const OldRequestModel = Mongoose.model("OldRequest");
 const NotificationModel = Mongoose.model("Notification");
@@ -24,14 +23,14 @@ const findByIds = async (Model, ids, error) => {
   return res;
 }
 
-const addAuthorToRequests =  async requests => {
+const prepareRequests =  async requests => {
   const promise = requests.map(request => (
     UserModel.findById(request.author)
   ))
 
   const authors = await Promise.all(promise);
   return requests.map((request, index) => {
-    return {...request._doc, author: authors[index].username};
+    return {...request._doc, author: authors[index].username, index: index+1};
   }); 
 }
 
@@ -50,8 +49,8 @@ exports.getAll = async (req, res) => {
     throw Boom.internal("Client not found");
   }
 
-  const requests = await addAuthorToRequests(await findByIds(RequestModel, client.requests, "Request not found"));
-  const oldRequests = await addAuthorToRequests(await findByIds(OldRequestModel, client.oldRequests, "Old request not found"));
+  const requests = await prepareRequests(await findByIds(RequestModel, client.requests, "Request not found"));
+  const oldRequests = await prepareRequests(await findByIds(OldRequestModel, client.oldRequests, "Old request not found"));
   const notifications = await findByIds(NotificationModel, client.unreadNotifictions, "Unread notification not found");
 
   res.send({requests, oldRequests, notifications});
