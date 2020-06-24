@@ -43,7 +43,8 @@ const CustomTable = props => {
     isFilter,
     collapse,
     isRounded,
-    isPagination
+    isPagination,
+    onRowClick,
   } = props;
 
   const [page, setPage] = React.useState(0);
@@ -104,6 +105,7 @@ const CustomTable = props => {
                 collapse={collapse}
                 headerRefs={headerRefs}
                 isRounded={isRounded}
+                onRowClick={onRowClick}
               />
             )}
           </TableBody>
