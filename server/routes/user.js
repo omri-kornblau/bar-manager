@@ -4,9 +4,6 @@ const Boom = require("boom");
 const UserModel = Mongoose.model("User");
 const ClientModel = Mongoose.model("Client");
 const ProviderModel = Mongoose.model("Provider");
-const RequestModel = Mongoose.model("Request");
-const OldRequestModel = Mongoose.model("OldRequest");
-const NotificationModel = Mongoose.model("Notification");
 
 const { USER_TYPES } = require("../types");
 
@@ -49,43 +46,6 @@ exports.signupClient = async (req, res) => {
   }
 
   res.send(status);
-}
-
-const findByIds = async (Model, ids, error) => {
-  console.log(ids)
-  const promises =  ids.map(async _id => (
-    await Model.findById(_id)
-  ));
-
-  const res = await Promise.all(promises);
-  if (!res.every(item => item !== null)) {
-    throw Boom.internal(error);
-  }
-  return res;
-}
-
-exports.getAll = async (req, res) => {
-  const {
-    username
-  } = req;
-
-  console.log("username:", username)
-  const user = await UserModel.findOne({username});
-  if (user === null) {
-    throw Boom.badRequest("User not found");
-  }
-
-  console.log(user)
-  const client = await ClientModel.findOne({_id: user.clientId});
-  if (client === null) {
-    throw Boom.internal("Client not found");
-  }
-
-  const requests = await findByIds(RequestModel, client.requests, "Request not found");
-  const oldRequests = await findByIds(OldRequestModel, client.oldRequests, "Old request not found");
-  const notifications = await findByIds(NotificationModel, client.unreadNotifictions, "Unread notification not found");
-
-  res.send({requests, oldRequests, notifications});
 }
 
 exports.signupProvider = async (req, res) => {

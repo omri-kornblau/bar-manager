@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import {
   Paper,
@@ -22,10 +22,11 @@ const propTypes = {
 
 const NewRequest = props => {
   const {
-    viewLabel
+    viewLabel,
+    view,
   } = props;
 
-  const [saveAnchorEl, setSaveAnchorEl] = React.useState(null);
+  const [saveAnchorEl, setSaveAnchorEl] = useState(null);
 
   return (
     <>
@@ -63,7 +64,7 @@ const NewRequest = props => {
             <Typography align="left" variant="h4">
               מלא פרטים:
             </Typography>
-            <FillDetails/>
+            <FillDetails insurenceType={view}/>
           </Box>
         </Paper>
       </Container>

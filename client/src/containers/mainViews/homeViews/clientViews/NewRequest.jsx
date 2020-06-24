@@ -30,7 +30,7 @@ const NewRequest = props => {
           <Switch>
             {newRequestViews.map(newRequestView =>
               <Route key={newRequestView.id} path={`${match.url}/${newRequestView.id}`}>
-                <newRequestView.component viewLabel={newRequestView.label}/>
+                <newRequestView.component viewLabel={newRequestView.label} view={newRequestView.id}/>
               </Route>
             )}
             <Redirect to={`${match.url}/${view}`}/>

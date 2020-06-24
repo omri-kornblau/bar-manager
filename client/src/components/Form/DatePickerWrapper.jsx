@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import { useState } from "react";
 
 const propTypes = {
   label: PropTypes.string,
@@ -18,8 +19,16 @@ const defaultProps = {
 const DatePickerWrapper = props => {
   const {
     label,
-    format
+    format,
+    onChange,
+    name,
   } = props;
+  
+  const [date, setDate] = useState(new Date());
+  const _onChange =  date => {
+    setDate(date);
+    return onChange({target: {value: date, name: name}});
+  }
 
   return <MuiPickersUtilsProvider utils={DateFnsUtils}>
     <KeyboardDatePicker
@@ -32,6 +41,8 @@ const DatePickerWrapper = props => {
       KeyboardButtonProps={{
         'aria-label': 'change date',
       }}
+      onChange={_onChange}
+      value={date}
     />
   </MuiPickersUtilsProvider>
 }

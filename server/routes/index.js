@@ -5,6 +5,7 @@ const withAuth = require("../middleware/auth").withAuth;
 // Imports routes
 const AuthRoutes = require("./auth");
 const UserRoutes = require("./user");
+const ClientRoutes = require("./client");
 
 const router = Express.Router();
 
@@ -13,7 +14,8 @@ router.get("/auth/checktoken", withAuth, AuthRoutes.checkToken);
 router.get("/auth/logout", withAuth, AuthRoutes.logout)
 
 router.post("/client/signup", UserRoutes.signupClient)
-router.get("/client/get", withAuth, UserRoutes.getAll)
+router.get("/client/get", withAuth, ClientRoutes.getAll)
+router.post("/client/newrequest", withAuth, ClientRoutes.newRequest)
 
 router.post("/provider/signup", UserRoutes.signupProvider)
 
