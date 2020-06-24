@@ -1,3 +1,4 @@
+import _ from "lodash";
 import React, { useState, forwardRef } from "react";
 import PropTypes from "prop-types";
 import {
@@ -23,29 +24,34 @@ import {
 const TextMenuItems = props => {
   const {
     options,
-    // setCheckbox,
+    setOptions,
   } = props;
-
-  const [checkboxStatuses,  setCheckbox] = useState(options.reduce((prev, cur) => (
-    {[cur]: true, ...prev}
-  ), {}));
 
   return (
     <>
       <StyledMenuItem>
-        <StyledTextField label="חיפוש"/>
+        <StyledTextField
+          label="חיפוש"
+          value={options.search}
+          onChange={e => {
+            setOptions({...options, search: e.target.value})
+          }}/>
       </StyledMenuItem>
       {
-        options.map(option => (
+        _.map(options.options, (value, key) => (
           <StyledMenuItem
-            key={option}
-            onClick={() => setCheckbox({
-              ...checkboxStatuses,
-              [option]: !checkboxStatuses[option],
-            })}>
+            key={key}
+            onClick={() => setOptions({
+              ...options, 
+              options: {
+                ...options.options, 
+                [key]: !value
+              }
+            })}
+          >
             <StyledCheckbox
-              checked={checkboxStatuses[option]}
-              label={option}
+              checked={value}
+              label={key}
             />
           </StyledMenuItem>
         ))
@@ -54,14 +60,40 @@ const TextMenuItems = props => {
   );
 }
 
-const NumberMenuItems = () => {
+const NumberMenuItems = props => {
+  const {
+    options,
+    setOptions
+  } = props;
+
+  const onChange = e => {
+    const {
+      name,
+      value,
+    } = e.target;
+
+    setOptions({...options, [name]: value});
+  }
+
   return (
     <>
       <StyledMenuItem>
-        <StyledTextField label="גדול מ" type="number"/>
+        <StyledTextField
+          label="גדול מ"
+          type="number"
+          name="min"
+          value={options.min}
+          onChange={onChange}
+        />
       </StyledMenuItem>
       <StyledMenuItem>
-        <StyledTextField label="קטן מ" type="number"/>
+        <StyledTextField
+          label="קטן מ"
+          type="number"
+          name="max"
+          value={options.max}
+          onChange={onChange}
+        />
       </StyledMenuItem>
     </>
   );
@@ -94,21 +126,22 @@ const OptionsMenuItems = props => {
 const MenuItems = forwardRef((props, ref) => {
   const {
     filterType,
-    filterData,
+    options,
+    setOptions,
   } = props;
 
   switch (filterType) {
     case "text": {
-      return <TextMenuItems options={filterData}/>;
+      return <TextMenuItems options={options} setOptions={setOptions}/>;
     }
     case "number": {
-      return <NumberMenuItems/>;
+      return <NumberMenuItems options={options} setOptions={setOptions}/>;
     }
     case "options": {
-      return <OptionsMenuItems options={filterData}/>;
+      return <OptionsMenuItems options={options} setOptions={setOptions}/>;
     }
     default: {
-      return <TextMenuItems options={filterData}/>;
+      return <TextMenuItems options={options} setOptions={setOptions}/>;
     }
   }
 });
@@ -128,7 +161,11 @@ const TableHeaderCell = forwardRef((props, ref) => {
   const {
     column,
     isFilter,
+    options,
+    setOptions,
+    setSortBy,
   } = props;
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [hoverRef, isHover] = isFilter ? useHover() : [null, null];
 
@@ -146,7 +183,7 @@ const TableHeaderCell = forwardRef((props, ref) => {
     <>
       <TableCell align="left" ref={mergeRefs(ref, hoverRef)}>
         <Box display="flex" alignItems="center">
-          <Typography noWrap={true}>
+          <Typography noWrap={true} onClick={() => setSortBy()}>
             {column.label}
           </Typography>
           <Box ml={1}/>
@@ -169,7 +206,11 @@ const TableHeaderCell = forwardRef((props, ref) => {
             open={Boolean(anchorEl)}
             onClose={onClose}
           >
-            <MenuItems filterType={column.filter.type} filterData={column.filter.data}/>
+            <MenuItems
+              filterType={column.filter.type}
+              options={options}
+              setOptions={setOptions}
+            />
           </StyledMenu>
         : <></>
       }

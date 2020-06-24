@@ -39,7 +39,6 @@ const StyledMenuItem = props => {
 
 const StyledTextField = props => {
   const [isFocues, setFocus] = useState(false);
-  const [inputText, setText] = useState("");
 
   const classes = useStyles();
 
@@ -57,10 +56,9 @@ const StyledTextField = props => {
       }}
       InputLabelProps={{
         style: {
-          transform: (isFocues || inputText.length > 0) ? "translate(0, 0px) scale(0.75)" : "translate(0, 10px) scale(1)"
+          transform: (isFocues || (props.value && props.value.length > 0)) ? "translate(0, 0px) scale(0.75)" : "translate(0, 10px) scale(1)"
         }
       }}
-      onChange={(e) => setText(e.target.value)}
       onFocus={() => setFocus(true)}
       onBlur={() => setFocus(false)}
     /> 

@@ -16,6 +16,7 @@ import TableHeaderCell from "./TableHeaderCell";
 import Row from "./Row";
 import useStyles from "./style";
 import { useMemo } from "react";
+import { useState } from "react";
 
 const propTypes = {
   rows: PropTypes.arrayOf(PropTypes.object),
@@ -46,28 +47,70 @@ const CustomTable = props => {
     isRounded,
     isPagination,
     onRowClick,
+    isSort,
   } = props;
 
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [sortBy, setSortBy] = useState({id: "", direction: true});
+  const [options, setOptions] = isFilter
+    ? useState(
+        columns.reduce((pre, column) => {
+          switch (column.filter.type) {
+            case "text":
+              const uniqeRows = _.uniq(rows.map(row => row[column.id]));
+              const options = uniqeRows.reduce((prev, cur) => (
+                {[cur]: true, ...prev}
+              ), {});
 
-  if (isFilter) {
-    const options = useMemo(() => {
-      columns.reduce((column, pre) => {
-        switch (column.filter.type) {
-          case "text": {
-            const uniqeRows = _.uniq(rows.map(row => row[column.id]));
-            const options = uniqeRows.reduce((prev, cur) => (
-              {[cur]: true, ...prev}
-            ), {});
+              return {...pre, [column.id]: {options, search: ""}};
 
-            return {...pre, [column.id]: options}
+            case "number":
+              return {...pre, [column.id]: {min: null, max: null}};
+
+            case "date":
+              return {...pre, [column.id]: {min: null, max: null}};
+
+            case "bool":
+              return {...pre, [column.id]: null};
+
           }
-          case "number": 
-        }
-      }, {})
-    }, rows)
-  }
+        }, {})
+      )
+      : (null, null);
+
+  const finalRows = useMemo(() => {
+    const filteredRows = isFilter ?
+      rows.filter(row => (
+          columns.every(column => {
+            const value = row[column.id];
+            const currentOptions = options[column.id];
+
+            switch (column.filter.type) {
+              case "text":
+                return value.toString().includes(currentOptions.search) && !!currentOptions.options[value];
+
+              case "number":
+                const { min, max } = currentOptions;
+                return (min === null || min < value) && (max === null || max > value);
+
+              case "bool":
+                return currentOptions === null || currentOptions === value;
+            }
+          })
+      ))
+      : rows;
+
+    if (isSort && sortBy.id !== "") {
+      filteredRows.sort((a, b) => {
+        const _a = a[sortBy.id]
+        const _b = b[sortBy.id]
+        return sortBy.direction ? _a > _b : _b < _a
+      });
+    }
+
+    return filteredRows;
+  }, [options, isFilter, isSort, sortBy]);
 
   const headerRefs = columns.map(() => useRef(null));
 
@@ -94,15 +137,19 @@ const CustomTable = props => {
             <TableRow className={classes.tableHeader}>
               {
                 columns.map((column, index) => {
-                  if (isFilter && column.filter.type === "text") {
-                    column.filter.data = _.uniq(rows.map(row => row[column.id]));
-                  }
                   return (
                     <Fragment key={column.id}>
                       <TableHeaderCell
                         ref={headerRefs[index]}
                         column={column}
                         isFilter={isFilter}
+                        options={options[column.id]}
+                        setOptions={newOptions => setOptions({...options, [column.id]: newOptions})}
+                        setSortBy={() => setSortBy(
+                          sortBy.id === column.id ?
+                          {...sortBy, direction: !sortBy.direction}
+                          : {id: column.id, direction: true}
+                        )}
                       />
                       {
                         index + 1 < columns.length
@@ -116,7 +163,7 @@ const CustomTable = props => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.slice(page * rowsPerPage, (page + 1) * rowsPerPage).map((row, index) =>
+            {finalRows.slice(page * rowsPerPage, (page + 1) * rowsPerPage).map((row, index) =>
               <Row
                 row={row}
                 columns={columns}
