@@ -17,7 +17,8 @@ const yupRequestSchema = Yup.object().shape({
   status: Yup.mixed().oneOf(REQUEST_STATUSES),
   assetDescription: Yup.string(),
   companyDescription: Yup.string(),
-  insurenceDuration: Yup.number().positive(),
+  insuranceDuration: Yup.number().positive(),
+  isCurrentlyInsured: Yup.boolean(),
   maxPrice: Yup.number().positive(),
   comments: Yup.string(),
   createdTime: Yup.date(),
@@ -43,7 +44,7 @@ const mongoFormat = {
   companyDescription: {
     type: String,
   },
-  insurenceDuration: {
+  insuranceDuration: {
     type: Number,
   },
   maxPrice: {
@@ -67,6 +68,9 @@ const mongoFormat = {
   offers: {
     type: Array,
   },
+  isCurrentlyInsured: {
+    type: Boolean
+  }
 };
 
 const requestScheme = new Mongoose.Schema(mongoFormat);

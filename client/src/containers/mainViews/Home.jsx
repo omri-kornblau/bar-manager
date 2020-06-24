@@ -1,5 +1,5 @@
 import _ from "lodash";
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import {
   Container,
@@ -63,8 +63,8 @@ const Home = props => {
             />
             {
               isLoading
-              ? <Box 
-                  display="flex" 
+              ? <Box
+                  display="flex"
                   height="65%"
                   alignItems="center"
                   justifyContent="center"
@@ -80,7 +80,7 @@ const Home = props => {
                   />
                 </Container>
             }
-            
+
           </>
           : <ViewsSwitch
             views={views}

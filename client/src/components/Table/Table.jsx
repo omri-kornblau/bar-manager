@@ -42,7 +42,8 @@ const defaultProps = {
   columns: [],
   isFilter: false,
   collapse: null,
-  isPagination: true
+  isPagination: true,
+  onRowClick: _.noop
 };
 
 const initOptions = (columns, rows) => {

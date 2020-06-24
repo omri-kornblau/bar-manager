@@ -1,9 +1,15 @@
-import { 
+import {
   GET_CLIENT,
   GET_CLIENT_FINISH,
  } from "../actions/main";
 
-const initialState = {};
+const initialState = {
+  client: {
+    requests: [],
+    oldRequests: [],
+    notifcations: [],
+  }
+};
 
 const mainReducer = (state=initialState, action) => {
   switch(action.type) {

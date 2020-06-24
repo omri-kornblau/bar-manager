@@ -9,7 +9,7 @@ const initialUser = {
     name: "",
     type: ""
   },
-  isLoggedIn: false
+  isLoggedIn: true
 };
 
 const userReducer = (state=initialUser, action) => {

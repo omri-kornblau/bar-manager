@@ -30,9 +30,10 @@ const prepareRequests = async requests => {
   ))
 
   const authors = await Promise.all(promise);
+
   return requests.map((request, index) => {
     return {...request._doc, author: authors[index].username, index: index+1};
-  }); 
+  });
 }
 
 exports.getAll = async (req, res) => {
@@ -66,7 +67,7 @@ exports.newRequest = async (req, res) => {
     type,
     assetDescription,
     companyDescription,
-    insurenceDuration,
+    insuranceDuration,
     maxPrice,
     comments,
     isCurrentlyInsured,
@@ -83,11 +84,11 @@ exports.newRequest = async (req, res) => {
     status: REQUEST_STATUSES[0],
     assetDescription,
     companyDescription,
-    insurenceDuration,
+    insuranceDuration,
     maxPrice,
     comments,
-    isCurrentlyInsured: !!isCurrentlyInsured,
-    createdTime: undefined,
+    isCurrentlyInsured,
+    createdTime: new Date(),
     startDate: undefined,
     recivedTime: undefined,
     messages: [],

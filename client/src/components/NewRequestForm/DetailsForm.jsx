@@ -37,7 +37,7 @@ const structure =
     {
       label: "תקופת הביטוח הרצויה",
       type: "number",
-      name: "insurenceDuration",
+      name: "insuranceDuration",
       fullWidth: true,
       justify: "center",
       required: true,

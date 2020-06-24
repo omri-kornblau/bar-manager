@@ -29,7 +29,9 @@ export const newRequest = outerDispatch => (request, insurenseType) => {
 
     newRequestApi(request)
       .then(res => {
+        //TODO: fix this redirect
         dispatch(push(`/home/${insurenseType}/inProgress`));
+        getClientData(dispatch)();
       })
       .catch(err => {
         console.error(err)
