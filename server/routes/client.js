@@ -18,7 +18,7 @@ const findByIds = async (Model, ids, error) => {
   ));
 
   const res = await Promise.all(promises);
-  if (!res.some(_.isEmpty)) {
+  if (res.some(_.isEmpty)) {
     throw Boom.internal(error);
   }
   return res;
