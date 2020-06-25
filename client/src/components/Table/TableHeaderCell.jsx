@@ -27,6 +27,14 @@ const TextMenuItems = props => {
     setOptions,
   } = props;
 
+  const _setOptions = newOptions => {
+    setOptions({
+      ...newOptions,
+      isActive: newOptions.search !== ""
+      || _.some(newOptions.options, value => !value),
+    });
+  }
+
   return (
     <>
       <StyledMenuItem>
@@ -34,20 +42,22 @@ const TextMenuItems = props => {
           label="חיפוש"
           value={options.search}
           onChange={e => {
-            setOptions({...options, search: e.target.value})
+            _setOptions({...options, search: e.target.value});
           }}/>
       </StyledMenuItem>
       {
         _.map(options.options, (value, key) => (
           <StyledMenuItem
             key={key}
-            onClick={() => setOptions({
-              ...options, 
-              options: {
-                ...options.options, 
-                [key]: !value
-              }
-            })}
+            onClick={() =>
+              _setOptions({
+                ...options, 
+                options: {
+                  ...options.options, 
+                  [key]: !value
+                }
+              })
+            }
           >
             <StyledCheckbox
               checked={value}
@@ -72,7 +82,8 @@ const NumberMenuItems = props => {
       value,
     } = e.target;
 
-    setOptions({...options, [name]: value});
+    const tempOptions = {...options, [name]: value};
+    setOptions({...tempOptions, isActive: tempOptions.min !== "" || tempOptions.max !== ""});
   }
 
   return (
@@ -192,7 +203,7 @@ const TableHeaderCell = forwardRef((props, ref) => {
             ? <FilterListIcon 
                 onClick={onClick} 
                 className={classes.filterListIcon} 
-                style={{ opacity: (isHover || Boolean(anchorEl)) ? 1 : 0 }}
+                style={{ opacity: (isHover || Boolean(anchorEl)) || options.isActive ? 1 : 0 }}
               />
             : <></>
           }

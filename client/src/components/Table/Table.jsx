@@ -1,5 +1,10 @@
 import _ from "lodash";
-import React, { useRef, Fragment } from "react";
+import React, {
+  useMemo,
+  useState,
+  useRef,
+  Fragment
+} from "react";
 import PropTypes from "prop-types";
 import {
   Paper,
@@ -13,10 +18,9 @@ import {
 
 import ColumnResizer from "./ColumnResizer";
 import TableHeaderCell from "./TableHeaderCell";
+import TablePaginationActions from "./PagnitionActions";
 import Row from "./Row";
 import useStyles from "./style";
-import { useMemo } from "react";
-import { useState } from "react";
 
 const propTypes = {
   rows: PropTypes.arrayOf(PropTypes.object),
@@ -38,6 +42,30 @@ const defaultProps = {
   isPagination: true
 };
 
+const initOptions = (columns, rows) => {
+  return columns.reduce((pre, column) => {
+    switch (column.filter.type) {
+      case "text":
+        const uniqeRows = _.uniq(rows.map(row => row[column.id]));
+        const options = uniqeRows.reduce((prev, cur) => (
+          {[cur]: true, ...prev}
+        ), {});
+
+        return {...pre, [column.id]: {options, search: "", isActive: false}};
+
+      case "number":
+        return {...pre, [column.id]: {min: "", max: "", isActive: false}};
+
+      case "date":
+        return {...pre, [column.id]: {min: "", max: "", isActive: false}};
+
+      case "bool":
+        return {...pre, [column.id]: {value: null, isActive: false}};
+
+    }
+  }, {})
+}
+
 const CustomTable = props => {
   const {
     rows,
@@ -54,29 +82,7 @@ const CustomTable = props => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [sortBy, setSortBy] = useState({id: "", direction: true});
   const [options, setOptions] = isFilter
-    ? useState(
-        columns.reduce((pre, column) => {
-          switch (column.filter.type) {
-            case "text":
-              const uniqeRows = _.uniq(rows.map(row => row[column.id]));
-              const options = uniqeRows.reduce((prev, cur) => (
-                {[cur]: true, ...prev}
-              ), {});
-
-              return {...pre, [column.id]: {options, search: ""}};
-
-            case "number":
-              return {...pre, [column.id]: {min: null, max: null}};
-
-            case "date":
-              return {...pre, [column.id]: {min: null, max: null}};
-
-            case "bool":
-              return {...pre, [column.id]: null};
-
-          }
-        }, {})
-      )
+    ? useState(initOptions(columns, rows))
       : [[], () => {}];
 
   const finalRows = useMemo(() => {
@@ -92,10 +98,10 @@ const CustomTable = props => {
 
               case "number":
                 const { min, max } = currentOptions;
-                return (min === null || min < value) && (max === null || max > value);
+                return (min === "" || min < value) && (max === "" || max > value);
 
               case "bool":
-                return currentOptions === null || currentOptions === value;
+                return currentOptions.value === null || currentOptions.value === value;
             }
           })
       ))
@@ -187,13 +193,21 @@ const CustomTable = props => {
        <TablePagination
         rowsPerPageOptions={[5,10,25,100]}
         component="div"
-        count={rows.length}
+        count={finalRows.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onChangePage={onPageChange}
         onChangeRowsPerPage={onRowsPerPageChange}
         labelDisplayedRows={renderLabelDisplayedRows}
         labelRowsPerPage="שורות בכל עמוד:"
+        ActionsComponent={props =>
+          <TablePaginationActions
+            {...props}
+            onClear={() => setOptions(initOptions(columns, rows))}
+            isClear={isFilter}
+            isClearDisabled={_.every(options, value => !value.isActive)}
+          />
+        }
         />
         : ""
       }
