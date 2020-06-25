@@ -70,6 +70,9 @@ const mongoFormat = {
   },
   isCurrentlyInsured: {
     type: Boolean
+  },
+  index: {
+    type: Number
   }
 };
 

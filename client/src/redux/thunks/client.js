@@ -1,40 +1,68 @@
 import { push } from "connected-react-router";
+
 import {
-  getClient as getClientAction,
-  getClientFinish as getClientFinishAction,
-  sendingNewRequest,
-} from "../actions/main";
+  tryGetClient,
+  getClientSuccess,
+  getClientFailure,
+  tryCreateRequest,
+  createRequestSuccess,
+  createRequestFailure,
+  tryUpdateRequest,
+  updateRequestSuccess,
+  updateRequestFailure,
+} from "../actions/request";
 import {
-  getClient as getClientApi,
-  newRequest as newRequestApi,
+  getClient,
+  postCreateRequest,
+  postUpdateRequest,
 } from "../../api/client"
+import { getCreateRequestLoading } from "../selectors/request";
+
+import store from "../store";
 
 export const getClientData = outerDispatch => () => {
   outerDispatch(dispatch => {
-    dispatch(getClientAction);
+    dispatch(tryGetClient);
 
-    getClientApi()
+    getClient()
       .then(res => {
-        dispatch(getClientFinishAction(res.data))
+        dispatch(getClientSuccess(res.data))
       })
       .catch(err => {
-        console.error(err)
+        getClientFailure(err)
       })
   })
 }
 
-export const newRequest = outerDispatch => (request, insurenseType) => {
+export const createRequest = outerDispatch => request => {
   outerDispatch(dispatch => {
-    dispatch(sendingNewRequest);
+    if (getCreateRequestLoading(store.getState())) {
+      return;
+    }
 
-    newRequestApi(request)
+    dispatch(tryCreateRequest);
+
+    postCreateRequest(request)
       .then(res => {
-        //TODO: fix this redirect
-        dispatch(push(`/home/${insurenseType}/inProgress`));
+        const { type, status, index } = res.data;
+        dispatch(push(`/home/${type}/${status}?or=${index}`));
         getClientData(dispatch)();
       })
       .catch(err => {
-        console.error(err)
+        createRequestFailure(err);
+      })
+  })
+}
+
+export const updateRequest = outerDispatch => updatedRequest => {
+  outerDispatch(dispatch => {
+    dispatch(tryUpdateRequest);
+
+    postUpdateRequest(updatedRequest)
+      .then(res => {
+        updateRequestSuccess();
+      }).catch(err => {
+        updateRequestFailure(err);
       })
   })
 }

@@ -10,7 +10,7 @@ import TableView from "./progressViews/TableView";
 
 const DashboardProgresses = [
   {
-    id: "waitingForApprovel",
+    id: "waitingForApproval",
     label: "מחכה לאישור חתימה",
     icon: <EditIcon/>,
     color: purple[600],

@@ -32,7 +32,7 @@ const prepareRequests = async requests => {
   const authors = await Promise.all(promise);
 
   return requests.map((request, index) => {
-    return {...request._doc, author: authors[index].username, index: index+1};
+    return {...request._doc, author: authors[index].username};
   });
 }
 
@@ -58,52 +58,49 @@ exports.getAll = async (req, res) => {
   res.send({requests, oldRequests, notifications});
 }
 
-exports.newRequest = async (req, res) => {
+exports.createRequest = async (req, res) => {
   const {
     username
   } = req;
 
-  const {
-    type,
-    assetDescription,
-    companyDescription,
-    insuranceDuration,
-    maxPrice,
-    comments,
-    isCurrentlyInsured,
-  } = req.body;
-
-  const user = await UserModel.findOne({username});
-  if (user === null) {
+  const user = await UserModel.findOne({ username });
+  if (_.isNil(user)) {
     throw Boom.internal("User not found");
   }
 
+  const client = await ClientModel.findOne({ _id: user.clientId });
+  if (_.isNil(client)) {
+    throw Boom.internal("Client not found");
+  }
+
   const createdRequest = await RequestModel.create({
-    type,
     author: user._id,
     status: REQUEST_STATUSES[0],
-    assetDescription,
-    companyDescription,
-    insuranceDuration,
-    maxPrice,
-    comments,
-    isCurrentlyInsured,
     createdTime: new Date(),
     startDate: undefined,
     recivedTime: undefined,
     messages: [],
     offers: [],
+    index: client.requests.length + client.oldRequests.length,
+    ...req.body
   });
 
-  if (createdRequest === null) {
+  if (_.isNil(createdRequest)) {
     throw Boom.internal("Failed creating request");
   }
 
-  const updatedClient = await ClientModel.updateOne({_id: user.clientId}, {$push: {requests: createdRequest._id}});
-  if (updatedClient.n === 0) {
+  const updateRes = await ClientModel.updateOne(
+    { _id: user.clientId }, { $push: { requests: createdRequest._id } }
+  );
+
+  if (updateRes.n === 0) {
     await RequestModel.deleteOne({_id: createdRequest._id});
     throw Boom.internal("Failed updating client");
   }
 
+  res.status(200).send(createdRequest);
+}
+
+exports.updateRequest = async (req, res) => {
   res.sendStatus(200);
 }

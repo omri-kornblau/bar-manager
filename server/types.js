@@ -4,7 +4,7 @@ exports.USER_TYPES = {
 }
 
 exports.REQUEST_STATUSES  = [
-  "waitingForApprovel",
+  "waitingForApproval",
   "inTenderProcedure",
   "waitingForSign",
   "active",

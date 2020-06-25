@@ -49,16 +49,14 @@ const MessagesBox = props => {
     <Box>
       <Paper variant="elevated" elevation={2}>
         {_.isEmpty(messages) ?
-          <Typography align="center" variant="h6">
+          <Typography align="center" variant="subtitle1">
             לא התקבלו הודעות
           </Typography>
           :
           <List>
             {messages.map(message =>
               <>
-                <Message
-                  {...message}
-                />
+                <Message {...message} />
                 <Divider/>
               </>
             )}

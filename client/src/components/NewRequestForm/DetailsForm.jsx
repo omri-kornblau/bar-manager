@@ -9,7 +9,7 @@ import {
 
 import FormBody from "../Form/FormBody";
 import {
-  newRequest,
+  createRequest as createRequestThunk,
 } from "../../redux/thunks/client"
 
 const structure =
@@ -78,7 +78,7 @@ const structure =
 
 const FillDetails = props => {
   const {
-    onSubmit,
+    createRequest,
     insurenceType,
   } = props;
 
@@ -93,13 +93,13 @@ const FillDetails = props => {
     setForm({...form, [name]: value});
   }
 
-  const _onSubmit = useCallback(e => {
+  const onSubmit = useCallback(e => {
     e.preventDefault();
-    onSubmit({...form, type: insurenceType});
+    createRequest({...form, type: insurenceType});
   }, [form]);
 
   return (
-    <form onSubmit={_onSubmit}>
+    <form onSubmit={onSubmit}>
       <FormBody
         formStructure={structure}
         spacing={3}
@@ -132,7 +132,6 @@ const FillDetails = props => {
           type="submit"
           variant="contained"
           color="primary"
-          onClick={_onSubmit}
         >
           שלח בקשה
         </Button>
@@ -141,13 +140,8 @@ const FillDetails = props => {
   );
 }
 
-const mapStateToProps = state => ({
-})
-
 const mapDispatchToProps = dispatch => ({
-  onSubmit: request => {
-    newRequest(dispatch)(request);
-  },
+  createRequest: createRequestThunk(dispatch)
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(FillDetails);
+export default connect(null, mapDispatchToProps)(FillDetails);

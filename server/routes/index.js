@@ -15,7 +15,8 @@ router.get("/auth/logout", withAuth, AuthRoutes.logout)
 
 router.post("/client/signup", UserRoutes.signupClient)
 router.get("/client/get", withAuth, ClientRoutes.getAll)
-router.post("/client/newrequest", withAuth, ClientRoutes.newRequest)
+router.post("/client/newrequest", withAuth, ClientRoutes.createRequest)
+router.post("/client/updaterequest", withAuth, ClientRoutes.updateRequest)
 
 router.post("/provider/signup", UserRoutes.signupProvider)
 

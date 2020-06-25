@@ -24,7 +24,7 @@ import useStyles from "./style";
 
 import SecondaryNavbar from "../../components/SecondaryNavbar/SecondaryNavbar";
 import { getProgress } from "../../redux/selectors/progressBar";
-import { getLoading } from "../../redux/selectors/main";
+import { getLoading } from "../../redux/selectors/request";
 
 const ViewsSwitch = ({ views, view, progress, matchUrl }) => (
   <Switch>
