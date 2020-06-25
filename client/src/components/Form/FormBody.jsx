@@ -8,6 +8,7 @@ import {
 import DatePickerWrapper from "./DatePickerWrapper";
 import TextFieldWrapper from "./TextFieldWrapper";
 import CheckboxWrapper from "./CheckboxWrapper";
+import FileUploadWrapper from "./FileUploadWrapper";
 
 const Input = props => {
   switch(props.type) {
@@ -16,6 +17,9 @@ const Input = props => {
 
     case "checkbox":
       return <CheckboxWrapper {...props}/>
+
+    case "file":
+      return <FileUploadWrapper {...props}/>
 
     default:
       return <TextFieldWrapper {...props}/>

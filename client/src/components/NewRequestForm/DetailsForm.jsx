@@ -73,7 +73,22 @@ const structure =
       rows: 2,
       placeholder: "הכנס הערות כאן..."
     },
-  ],
+  ],[
+    {
+      label: "העלה פוליסה",
+      name: "policy",
+      type: "file",
+      justify: "center",
+    },
+  ],[
+    {
+      label: "קבצים נוספים",
+      name: "files",
+      type: "file",
+      justify: "center",
+      multiple: true,
+    },
+  ]
 ];
 
 const FillDetails = props => {
@@ -106,27 +121,7 @@ const FillDetails = props => {
         margin="dense"
         onChange={onChange}
       />
-      <Box mt={5}/>
-      <Grid spacing={3} container direction="column" align="center">
-        <Box m={1}/>
-        <Grid item>
-          <Button
-            variant="outlined"
-            color="default"
-          >
-            העלה פוליסה
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button
-            variant="outlined"
-            color="default"
-          >
-            העלה קבצים נוספים
-          </Button>
-        </Grid>
-      </Grid>
-      <Box mt={7}/>
+      <Box mt={2}/>
       <Grid container justify="center">
         <Button
           type="submit"
