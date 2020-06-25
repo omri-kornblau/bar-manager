@@ -84,9 +84,7 @@ const CustomTable = props => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [sortBy, setSortBy] = useState({id: "", direction: true});
-  const [options, setOptions] = isFilter
-    ? useState(initOptions(columns, rows))
-      : [[], () => {}];
+  const [options, setOptions] = useState(isFilter ? initOptions(columns, rows) : []);
 
   const finalRows = useMemo(() => {
     const filteredRows = isFilter ?
@@ -104,7 +102,7 @@ const CustomTable = props => {
                 return (min === "" || min < value) && (max === "" || max > value);
 
               case "bool":
-                return currentOptions.value === null || currentOptions.value === value;
+                return _.isNil(currentOptions.value) || currentOptions.value === value;
             }
           })
       ))
@@ -117,7 +115,7 @@ const CustomTable = props => {
         if (_a > _b) {
           return sortBy.direction ? 1 : -1;
         } else if (_a < _b) {
-          return sortBy.direction ? -11 : 1;
+          return sortBy.direction ? -1 : 1;
         } else {
           return 0
         }
@@ -197,23 +195,23 @@ const CustomTable = props => {
       </TableContainer>
       { isPagination ?
        <TablePagination
-        rowsPerPageOptions={[5,10,25,100]}
-        component="div"
-        count={finalRows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onChangePage={onPageChange}
-        onChangeRowsPerPage={onRowsPerPageChange}
-        labelDisplayedRows={renderLabelDisplayedRows}
-        labelRowsPerPage="שורות בכל עמוד:"
-        ActionsComponent={props =>
-          <TablePaginationActions
-            {...props}
-            onClear={() => setOptions(initOptions(columns, rows))}
-            isClear={isFilter}
-            isClearDisabled={_.every(options, value => !value.isActive)}
-          />
-        }
+          rowsPerPageOptions={[5,10,25,100]}
+          component="div"
+          count={finalRows.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onChangePage={onPageChange}
+          onChangeRowsPerPage={onRowsPerPageChange}
+          labelDisplayedRows={renderLabelDisplayedRows}
+          labelRowsPerPage="שורות בכל עמוד:"
+          ActionsComponent={props =>
+            <TablePaginationActions
+              {...props}
+              onClear={() => setOptions(initOptions(columns, rows))}
+              isClear={isFilter}
+              isClearDisabled={_.every(options, value => !value.isActive)}
+            />
+          }
         />
         : ""
       }
