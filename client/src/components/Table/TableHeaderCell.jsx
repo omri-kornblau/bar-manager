@@ -3,11 +3,14 @@ import React, { useState, forwardRef } from "react";
 import PropTypes from "prop-types";
 import {
   TableCell,
-  Grid,
   Box,
   Typography,
 } from "@material-ui/core";
-import FilterListIcon from "@material-ui/icons/FilterList";
+import {
+  FilterList as FilterListIcon,
+  ArrowDropDown as ArrowDropDownIcon,
+  ArrowDropUp as ArrowDropUpIcon,
+} from '@material-ui/icons';
 
 import {
   StyledMenu,
@@ -20,6 +23,9 @@ import {
   useHover,
   mergeRefs,
 } from "./utils"
+import {
+  SORT_OPTIONS,
+} from "./consts";
 
 const TextMenuItems = props => {
   const {
@@ -42,6 +48,7 @@ const TextMenuItems = props => {
           label="חיפוש"
           value={options.search}
           onChange={e => {
+            e.preventDefault()
             _setOptions({...options, search: e.target.value});
           }}/>
       </StyledMenuItem>
@@ -175,6 +182,7 @@ const TableHeaderCell = forwardRef((props, ref) => {
     options,
     setOptions,
     setSortBy,
+    sortDirection,
   } = props;
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -197,6 +205,13 @@ const TableHeaderCell = forwardRef((props, ref) => {
           <Typography noWrap={true} onClick={setSortBy}>
             {column.label}
           </Typography>
+          {
+            sortDirection === SORT_OPTIONS.NONE
+            ? <></>
+            : sortDirection === SORT_OPTIONS.UP
+              ? <ArrowDropUpIcon/>
+              : <ArrowDropDownIcon/>
+          }
           <Box ml={1}/>
           {
             isFilter

@@ -21,6 +21,9 @@ import TableHeaderCell from "./TableHeaderCell";
 import TablePaginationActions from "./PagnitionActions";
 import Row from "./Row";
 import useStyles from "./style";
+import {
+  SORT_OPTIONS,
+} from "./consts";
 
 const propTypes = {
   rows: PropTypes.arrayOf(PropTypes.object),
@@ -162,6 +165,9 @@ const CustomTable = props => {
                           {...sortBy, direction: !sortBy.direction}
                           : {id: column.id, direction: true}
                         )}
+                        sortDirection={sortBy.id === column.id ? 
+                          sortBy.direction ? SORT_OPTIONS.UP : SORT_OPTIONS.DOWN
+                          : SORT_OPTIONS.NONE}
                       />
                       {
                         index + 1 < columns.length
