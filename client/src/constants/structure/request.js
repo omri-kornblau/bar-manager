@@ -97,6 +97,12 @@ export const tableHeaders = {
         type: "text"
       }
     },
+    actions: {
+      id: "actions",
+      label: "פעולות",
+      filter: false,
+      sort: false,
+    },
 }
 
 export const progressBar = {
@@ -104,6 +110,7 @@ export const progressBar = {
     label: "בקשות המחכות לאישור מורשה חתימה",
     description: "",
     chosenHeaders: ["index", "maxPrice"],
+    actions: [{element: <EditIcon/>, onClick: () => console.log("EDIT")}],
   },
   inTenderProcedure: {
     label: "פוליסות בהליך מכרזי",

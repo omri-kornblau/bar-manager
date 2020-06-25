@@ -83,7 +83,7 @@ const structure =
   ],[
     {
       label: "קבצים נוספים",
-      name: "files",
+      name: "extraFiles",
       type: "file",
       justify: "center",
       multiple: true,

@@ -8,7 +8,15 @@ const RequestModel = Mongoose.model("Request");
 const OldRequestModel = Mongoose.model("OldRequest");
 const NotificationModel = Mongoose.model("Notification");
 
-const yupRequestSchema = require("../models/request").yupRequestSchema;
+const { yupRequestSchema } = require("../models/request");
+const { internals } = require("../models/attachment");
+
+const {
+  writerFile,
+  findByIds,
+  prepareRequests,
+  getClient,
+} = require("./utils");
 
 const {
   REQUEST_STATUSES,
@@ -18,44 +26,12 @@ const {
   STATUS_UPDATE_ALLOWED_FIELDS
 } = require("../config/consts");
 
-const findByIds = async (Model, ids, error) => {
-  const promises = ids.map(_id => (
-    Model.findById(_id)
-  ));
-
-  const res = await Promise.all(promises);
-  if (res.some(_.isEmpty)) {
-    throw Boom.internal(error);
-  }
-  return res;
-}
-
-const prepareRequests = async requests => {
-  const promise = requests.map(request => (
-    UserModel.findById(request.author)
-  ))
-
-  const authors = await Promise.all(promise);
-
-  return requests.map((request, index) => {
-    return {...request._doc, author: authors[index].username};
-  });
-}
-
 exports.getAll = async (req, res) => {
   const {
     username
   } = req;
 
-  const user = await UserModel.findOne({username});
-  if (!user) {
-    throw Boom.internal("User not found");
-  }
-
-  const client = await ClientModel.findById(user.clientId);
-  if (!client) {
-    throw Boom.internal("Client not found");
-  }
+  const client = await getClient(username);
 
   const requests = await prepareRequests(await findByIds(RequestModel, client.requests, "Request not found"));
   const oldRequests = await prepareRequests(await findByIds(OldRequestModel, client.oldRequests, "Old request not found"));
@@ -69,6 +45,13 @@ exports.createRequest = async (req, res) => {
     username
   } = req;
 
+  const {
+    policy,
+    extraFiles,
+  } = req.body;
+  
+  const { Attachment } = internals;
+
   const user = await UserModel.findOne({ username });
   if (_.isNil(user)) {
     throw Boom.internal("User not found");
@@ -78,6 +61,19 @@ exports.createRequest = async (req, res) => {
   if (_.isNil(client)) {
     throw Boom.internal("Client not found");
   }
+
+  if (!_.isArray(policy) || policy.length != 1) {
+    throw Boom.badRequest("policy must be list of 1 item");
+  }
+
+  if (!_.isArray(extraFiles)) {
+    throw Boom.badRequest("extraFiles must be list");
+  }
+
+  req.body.policy = await writerFile(Attachment, policy[0]);
+  req.body.extraFiles = await Promise.all(extraFiles.map(file => 
+    writerFile(Attachment, file)
+  ));
 
   const createdRequest = await RequestModel.create({
     author: user._id,
@@ -132,4 +128,32 @@ exports.updateRequest = async (req, res) => {
   }
 
   res.sendStatus(204);
+}
+
+exports.downloadFiles = async (req, res) => {
+  const {
+    username
+  } =  req;
+
+  const {
+    _id,
+  } = req.body;
+  const { Attachment } = internals;
+
+  const client = await getClient(username);
+
+  if (!client.requests.includes(_id) && !client.oldRequests.includes(_id)) {
+    throw Boom.badRequest("_id not belong to client");
+  }
+
+  const request = await RequestModel.findById(_id);
+  if (request === null) {
+    throw Boom.internal("Request not found")
+  }
+  
+  const files = Promise.all(request.extraFiles.map(fileId =>
+    Attachment.read({_id: fileId})
+  ));
+  console.log(files);
+  res.sendStatus(200);
 }

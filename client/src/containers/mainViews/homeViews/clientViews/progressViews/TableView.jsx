@@ -45,7 +45,8 @@ const TableView = props => {
   const progressRequests = useMemo(() => (
     requests
       .filter(request => request.status === progress && request.type === type)
-  ), [requests, progress]);
+      .map(request => ({...request, ...(conf.extraRows ? conf.extraRows : {})}))
+  ), [requests, progress, conf.extraRows]);
 
   const onOpenRequest = useCallback(requestData => {
     pushUrl(stringifyUrl({ url, query: { ...query, or: requestData.index }}));
@@ -84,10 +85,10 @@ const TableView = props => {
       <Box mb={2}/>
       <CustomTable
         rows={progressRequests}
-        columns={chosenHeaders.map(column => tableHeaders[column])}
-        onRowClick={onOpenRequest}
-        isFilter
-        isSort
+        columns={[...chosenHeaders.map(column => columnsTypes[column]), ...(conf.extraColumns ? conf.extraColumns : [])]}
+        filter
+        sort
+        onRowClick={e => console.log("ROW", e)}
       />
       <Modal
         open={isModalOpen}

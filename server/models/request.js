@@ -23,6 +23,8 @@ const yupRequestSchema = Yup.object().shape({
   createdTime: Yup.date(),
   startDate: Yup.date(),
   recivedTime: Yup.date(),
+  policy: Yup.string().length(OBJECT_ID_LENGTH),
+  extraFiles: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   messages: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   offers: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
 });
@@ -60,6 +62,12 @@ const mongoFormat = {
   },
   recivedTime: {
     type: Date,
+  },
+  policy: {
+    type: String,
+  },
+  extraFiles: {
+    type: Array
   },
   messages: {
     type: Array,

@@ -168,17 +168,17 @@ const propTypes = {
   column: PropTypes.shape({
     label: PropTypes.string,
   }),
-  isFilter: PropTypes.bool,
+  filter: PropTypes.bool,
 };
 
 const defaultProps = {
-  isFilter: false,
+  filter: false,
 };
 
 const TableHeaderCell = forwardRef((props, ref) => {
   const {
     column,
-    isFilter,
+    filter,
     options,
     setOptions,
     setSortBy,
@@ -186,7 +186,7 @@ const TableHeaderCell = forwardRef((props, ref) => {
   } = props;
 
   const [anchorEl, setAnchorEl] = useState(null);
-  const [hoverRef, isHover] = isFilter ? useHover() : [null, null];
+  const [hoverRef, isHover] = filter ? useHover() : [null, null];
 
   const classes = useStyles();
 
@@ -197,7 +197,7 @@ const TableHeaderCell = forwardRef((props, ref) => {
   const onClose = () => {
     setAnchorEl(null);
   };
-
+  
   return (
     <>
       <TableCell align="left" ref={mergeRefs(ref, hoverRef)}>
@@ -214,7 +214,7 @@ const TableHeaderCell = forwardRef((props, ref) => {
           }
           <Box ml={1}/>
           {
-            isFilter
+            filter && column.filter !== false
             ? <FilterListIcon 
                 onClick={onClick} 
                 className={classes.filterListIcon} 
@@ -225,7 +225,7 @@ const TableHeaderCell = forwardRef((props, ref) => {
         </Box>
       </TableCell>
       {
-        isFilter
+        filter && !_.isNil(column.filter)
         ? <StyledMenu
             anchorEl={anchorEl}
             keepMounted

@@ -31,24 +31,29 @@ const propTypes = {
     id: PropTypes.string,
     label: PropTypes.string,
   })),
-  isFilter: PropTypes.bool,
-  isCollapse: PropTypes.element,
-  isRounded: PropTypes.bool,
-  isPagination: PropTypes.bool
+  filter: PropTypes.bool,
+  collapse: PropTypes.element,
+  rounded: PropTypes.bool,
+  pagination: PropTypes.bool
 };
 
 const defaultProps = {
   rows: [[]],
   columns: [],
-  isFilter: false,
+  filter: false,
   collapse: null,
-  isPagination: true,
-  onRowClick: _.noop
+  pagination: true,
+  onRowClick: _.noop,
 };
 
 const initOptions = (columns, rows) => {
   return columns.reduce((pre, column) => {
-    switch (column.filter.type) {
+    if (column.filter === false) {
+      return {...pre, [column.id]: {isActive: false}};
+    }
+
+    switch (_.isNil(column.filter) ? "" : column.filter.type) {
+      case "":
       case "text":
         const uniqeRows = _.uniq(rows.map(row => row[column.id]));
         const options = uniqeRows.reduce((prev, cur) => (
@@ -74,27 +79,31 @@ const CustomTable = props => {
   const {
     rows,
     columns,
-    isFilter,
+    filter,
     collapse,
-    isRounded,
-    isPagination,
+    rounded,
+    pagination,
     onRowClick,
-    isSort,
+    sort,
   } = props;
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [sortBy, setSortBy] = useState({id: "", direction: true});
-  const [options, setOptions] = useState(isFilter ? initOptions(columns, rows) : []);
+  const [options, setOptions] = useState(filter ? initOptions(columns, rows) : []);
 
   const finalRows = useMemo(() => {
-    const filteredRows = isFilter ?
+    const filteredRows = filter ?
       rows.filter(row => (
           columns.every(column => {
             const value = row[column.id];
             const currentOptions = options[column.id];
+            if (column.filter === false) {
+              return true;
+            }
 
-            switch (column.filter.type) {
+            switch (_.isNil(column.filter) ? "" : column.filter.type) {
+              case "":
               case "text":
                 return value.toString().includes(currentOptions.search) && !!currentOptions.options[value];
 
@@ -109,7 +118,7 @@ const CustomTable = props => {
       ))
       : rows;
 
-    if (isSort && sortBy.id !== "") {
+    if (sort && sortBy.id !== "") {
       filteredRows.sort((a, b) => {
         const _a = a[sortBy.id]
         const _b = b[sortBy.id]
@@ -124,7 +133,7 @@ const CustomTable = props => {
     }
 
     return filteredRows;
-  }, [options, isFilter, isSort, sortBy]);
+  }, [options, filter, sort, sortBy]);
 
   const headerRefs = columns.map(() => useRef(null));
 
@@ -145,7 +154,7 @@ const CustomTable = props => {
 
   return (
     <Paper elevation={3} className={classes.table}>
-      <TableContainer className={`${classes.table} ${isRounded ? classes.roundedTable : ""}`}>
+      <TableContainer className={`${classes.table} ${rounded ? classes.roundedTable : ""}`}>
         <Table stickyHeader className={classes.tableBody} size="small">
           <TableHead>
             <TableRow className={classes.tableHeader}>
@@ -156,17 +165,23 @@ const CustomTable = props => {
                       <TableHeaderCell
                         ref={headerRefs[index]}
                         column={column}
-                        isFilter={isFilter}
+                        filter={filter}
                         options={options[column.id]}
                         setOptions={newOptions => setOptions({...options, [column.id]: newOptions})}
-                        setSortBy={() => setSortBy(
-                          sortBy.id === column.id ?
-                          {...sortBy, direction: !sortBy.direction}
-                          : {id: column.id, direction: true}
-                        )}
-                        sortDirection={sortBy.id === column.id ? 
-                          sortBy.direction ? SORT_OPTIONS.UP : SORT_OPTIONS.DOWN
-                          : SORT_OPTIONS.NONE}
+                        setSortBy={
+                          column.sort === false
+                          ? () => {}
+                          : () => setSortBy(
+                              sortBy.id === column.id ?
+                              {...sortBy, direction: !sortBy.direction}
+                              : {id: column.id, direction: true}
+                            )
+                        }
+                        sortDirection={
+                          sortBy.id === column.id && column.sort !== false
+                          ? sortBy.direction ? SORT_OPTIONS.UP : SORT_OPTIONS.DOWN
+                          : SORT_OPTIONS.NONE
+                        }
                       />
                       {
                         index + 1 < columns.length
@@ -187,14 +202,14 @@ const CustomTable = props => {
                 key={index}
                 collapse={collapse}
                 headerRefs={headerRefs}
-                isRounded={isRounded}
+                rounded={rounded}
                 onRowClick={onRowClick}
               />
             )}
           </TableBody>
         </Table>
       </TableContainer>
-      { isPagination ?
+      { pagination ?
        <TablePagination
           rowsPerPageOptions={[5,10,25,100]}
           component="div"
@@ -209,14 +224,13 @@ const CustomTable = props => {
             <TablePaginationActions
               {...props}
               onClear={() => setOptions(initOptions(columns, rows))}
-              isClear={isFilter}
-              isClearDisabled={_.every(options, value => !value.isActive)}
+              clear={filter}
+              clearDisabled={_.every(options, value => !value.isActive)}
             />
           }
         />
-        : ""
+        : <></>
       }
-
     </Paper>
   );
 }

@@ -23,6 +23,7 @@ require("./models/provider");
 require("./models/request");
 require("./models/user");
 require("./models/notification");
+const { createAttachment  } = require("./models/attachment");
 
 AsyncErrorsHandler.patchRouter(ErrorsRouter.route);
 
@@ -32,12 +33,18 @@ Mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
-  .then(() => console.log("MongoDB Connected"))
+  .then(() => {
+    console.log("MongoDB Connected");
+    createAttachment();
+    console.log("MongoDB-GridFS connected")
+  })
   .catch(err => console.log(err));
+
 
 // Setup express server
 const app = Express();
 
+app.use(BodyParser({limit: '100mb'}));
 app.use(BodyParser.urlencoded({
   extended: false
 }));
