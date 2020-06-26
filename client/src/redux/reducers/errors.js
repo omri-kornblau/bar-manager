@@ -82,7 +82,7 @@ const userReducer = (state=initialState, action) => {
     reduceFetch('login', TRY_LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE),
     reduceFetch('getClient', TRY_GET_CLIENT, GET_CLIENT_SUCCESS, GET_CLIENT_FAILURE),
     reduceFetch('createRequest', TRY_CREATE_REQUEST, CREATE_REQUEST_SUCCESS, CREATE_REQUEST_FAILURE),
-    reduceFetch('createRequest', TRY_UPDATE_REQUEST, UPDATE_REQUEST_SUCCESS, UPDATE_REQUEST_FAILURE),
+    reduceFetch('updateRequest', TRY_UPDATE_REQUEST, UPDATE_REQUEST_SUCCESS, UPDATE_REQUEST_FAILURE),
   ]
 
   return fetchReducers.reduce((currentState, reducer) =>

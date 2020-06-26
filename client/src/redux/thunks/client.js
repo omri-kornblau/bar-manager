@@ -29,7 +29,7 @@ export const getClientData = outerDispatch => () => {
         dispatch(getClientSuccess(res.data));
       })
       .catch(err => {
-        dispatch(getClientFailure(err));
+        dispatch(getClientFailure(err.response));
       })
   })
 }
@@ -50,7 +50,7 @@ export const createRequest = outerDispatch => request => {
         getClientData(dispatch)();
       })
       .catch(err => {
-        dispatch(createRequestFailure(err));
+        dispatch(createRequestFailure(err.response));
       })
   })
 }
@@ -67,7 +67,7 @@ export const updateRequest = outerDispatch => updatedRequest => {
         getClientData(dispatch)();
         dispatch(push(`/home/${type}/${status}?or=${index}&em=false`));
       }).catch(err => {
-        dispatch(updateRequestFailure(err));
+        dispatch(updateRequestFailure(err.response));
       })
   })
 }

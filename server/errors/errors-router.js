@@ -1,3 +1,5 @@
+const Boom = require("boom");
+
 const errorRoutes = [
   {
     condition: err => err.isBoom,
@@ -6,12 +8,12 @@ const errorRoutes = [
   {
     condition: err => err.name === "ValidationError",
     handler: (res, err) => {
-      res.status(400).send(err);
+      res.status(400).send(Boom.badRequest(err));
     }
   },
   {
     condition: err => err.name === "MongoError" && err.code === 11000,
-    handler: (res, err) => res.status(400).send(err)
+    handler: (res, err) => res.status(400).send(Boom.badRequest(err))
   }
 ];
 
