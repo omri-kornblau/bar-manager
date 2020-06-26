@@ -37,7 +37,12 @@ const TableView = props => {
     updateRequest
   } = props;
 
-  const { label, description, chosenHeaders } = progressBar[progress];
+  const {
+    label,
+    description,
+    chosenHeaders,
+    actions,
+  } = progressBar[progress];
 
   const isModalOpen = !!openedRequestIdx;
   const { query, pathname: url } = location;
@@ -84,10 +89,11 @@ const TableView = props => {
       <Box mb={2}/>
       <CustomTable
         rows={progressRequests}
-        columns={[...chosenHeaders.map(column => columnsTypes[column]), ...(conf.actions ? [columnsTypes.actions] : [])]}
+        columns={[...chosenHeaders.map(column => tableHeaders[column]), ...(actions ? [tableHeaders.actions] : [])]}
         filter
         sort
-        actions={conf.actions}
+        actions={actions}
+        onRowClick={onOpenRequest}
       />
       <Modal
         open={isModalOpen}

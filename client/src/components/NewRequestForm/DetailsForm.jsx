@@ -121,7 +121,7 @@ const FillDetails = props => {
         margin="dense"
         onChange={onChange}
       />
-      <Box mt={2}/>
+      <Box mt={3}/>
       <Grid container justify="center">
         <Button
           type="submit"

@@ -24,7 +24,7 @@ exports.prepareRequests = async requests => {
 
   const authors = await Promise.all(promise);
   return requests.map((request, index) => {
-    return {...request._doc, author: authors[index].username, index: index+1};
+    return {...request._doc, author: authors[index].username};
   }); 
 }
 

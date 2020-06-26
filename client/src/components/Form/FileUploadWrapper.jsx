@@ -56,7 +56,7 @@ const FileUploadWrapper = props => {
   return  (
     <Grid container justify="center" direction="column">
       <Grid item container justify="center">
-        <Button variant="contained" component="label">
+        <Button variant="outlined" component="label">
           {label}
           <input
             {...props}

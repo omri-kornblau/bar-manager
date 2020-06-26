@@ -14,5 +14,3 @@ export const labels = {
   startDate: "זמן התחלה",
   recivedTime: "זמן קבלה"
 }
-
-// TODO: add - export const formLabels = {

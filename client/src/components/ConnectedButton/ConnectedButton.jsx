@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import {
   Button,
 } from '@material-ui/core';
+import useStyles from "./style";
 
 const ConnectedButton = props => {
   const {
@@ -10,12 +11,20 @@ const ConnectedButton = props => {
     action,
     dispatch,
     actionParams,
+    className,
   } = props;
 
+  const classes = useStyles();
+
   return (
-    <Button variant="contained" color="primary" size="small" onClick={() => {
-      action(dispatch, actionParams)
-    }}>
+    <Button
+      variant="contained"
+      size="small"
+      className={classes[className]}
+      onClick={() => {
+        action(dispatch, actionParams)
+      }}
+    >
       {label}
     </Button>
   )

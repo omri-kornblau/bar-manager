@@ -4,12 +4,16 @@ import {
 } from "@material-ui/core"
 
 import { labels } from "../hebrew/request";
+
+import ConnectedButton from "../../components/ConnectedButton/ConnectedButton";
+
 import {
   formatYesNo,
   formatTimeStampRTL,
   formatShekel,
-  formatMonths
+  formatMonths,
 } from "../../helpers/formats";
+
 
 export const tableHeaders = {
     index: {
@@ -110,7 +114,10 @@ export const progressBar = {
     label: "בקשות המחכות לאישור מורשה חתימה",
     description: "",
     chosenHeaders: ["index", "maxPrice"],
-    actions: [{element: <EditIcon/>, onClick: () => console.log("EDIT")}],
+    actions: [
+      <ConnectedButton label="אשר" action={(_, row) => console.log("ACCEPT", row)} className="success"/>,
+      <ConnectedButton label="בטל" action={(_, row) => console.log("CANCEL", row)} className="failed"/>,
+    ],
   },
   inTenderProcedure: {
     label: "פוליסות בהליך מכרזי",
