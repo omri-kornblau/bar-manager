@@ -1,7 +1,7 @@
 const Mongoose = require("mongoose");
 const Yup = require("yup");
 
-const { OBJECT_ID_LENGTH } = require("./consts");
+const { OBJECT_ID_LENGTH } = require("../config/consts");
 
 const yupMessageSchema = Yup.object().shape({
     body: Yup.string(),

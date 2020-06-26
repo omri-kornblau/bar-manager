@@ -5,7 +5,7 @@ const UserModel = Mongoose.model("User");
 const ClientModel = Mongoose.model("Client");
 const ProviderModel = Mongoose.model("Provider");
 
-const { USER_TYPES } = require("../types");
+const { USER_TYPES } = require("../config/types");
 
 exports.signupClient = async (req, res) => {
   const {

@@ -10,7 +10,7 @@ const NotificationModel = Mongoose.model("Notification");
 
 const {
   REQUEST_STATUSES,
-} = require("../types")
+} = require("../config/types")
 
 const findByIds = async (Model, ids, error) => {
   const promises = ids.map(_id => (

@@ -3,13 +3,12 @@ const Yup = require("yup");
 
 const {
   OBJECT_ID_LENGTH,
-  STATUSES,
-  INSURENSE_TYPES,
-} = require("./consts");
+} = require("../config/consts");
 
 const {
   REQUEST_STATUSES,
-} = require("../types")
+  INSURENSE_TYPES,
+} = require("../config/types")
 
 const yupRequestSchema = Yup.object().shape({
   type: Yup.mixed().oneOf(INSURENSE_TYPES),
