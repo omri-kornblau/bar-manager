@@ -17,10 +17,14 @@ import {
 } from "../../constants/structure/request"
 import MessagesBox from "./MessagesBox";
 import FormBody from "../Form/FormBody";
+import { applyFormat } from "../../helpers/formats";
 
 const DataList = ({ data }) => (
-  _.map(modalChosenHeaders, key => {
-    if (_.isNil(data[key])) {
+  modalChosenHeaders.map(headStruct => {
+    const { id, formatter } = headStruct;
+    const value = data[id];
+
+    if (_.isNil(value)) {
       return <></>
     }
 
@@ -28,11 +32,11 @@ const DataList = ({ data }) => (
       <Grid container alignItems="center" justify="flex-start">
         <Typography variant="subtitle1">
           <Box fontWeight="900" mr={2}>
-            {!!labels[key] ? labels[key] : key}:
+            {!!labels[id] ? labels[id] : id}:
           </Box>
         </Typography>
         <Typography align="left" variant="body2">
-          {data[key]}
+          {applyFormat(value, formatter)}
         </Typography>
       </Grid>
     );

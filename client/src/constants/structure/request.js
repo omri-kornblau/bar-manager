@@ -4,6 +4,12 @@ import {
 } from "@material-ui/core"
 
 import { labels } from "../hebrew/request";
+import {
+  formatYesNo,
+  formatTimeStampRTL,
+  formatShekel,
+  formatMonths
+} from "../../helpers/formats";
 
 export const tableHeaders = {
     index: {
@@ -122,16 +128,40 @@ export const progressBar = {
 }
 
 export const modalChosenHeaders = [
-  "type",
-  "createdTime",
-  "startDate",
-  "recivedTime",
-  "maxPrice",
-  "insuranceDuration",
-  "companyDescription",
-  "assetDescription",
-  "isCurrentlyInsured",
-  "comments",
+  {
+    id: "type"
+  },
+  {
+    id: "createdTime",
+    formatter: formatTimeStampRTL
+  },
+  {
+    id: "startDate"
+  },
+  {
+    id: "recivedTime"
+  },
+  {
+    id: "maxPrice",
+    formatter: formatShekel
+  },
+  {
+    id: "insuranceDuration",
+    formatter: formatMonths
+  },
+  {
+    id: "companyDescription"
+  },
+  {
+    id: "assetDescription"
+  },
+  {
+    id: "isCurrentlyInsured",
+    formatter: formatYesNo
+  },
+  {
+    id: "comments"
+  }
 ]
 
 export const modalEditFormStructure = [
