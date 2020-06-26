@@ -4,6 +4,8 @@ import {
   TableCell,
   TableRow,
   Collapse,
+  Box,
+  Grid,
  } from '@material-ui/core';
 
 import ColumnResizer from "./ColumnResizer";
@@ -63,7 +65,17 @@ const Row = props => {
               >
                 {
                   column.id === "actions"
-                  ? actions.map(action => cloneElement(action.element, {onClick: () => {action.onClick(row)}}))
+                  ? 
+                  <Grid container>
+                    {
+                      actions.map(action =>
+                        <>
+                          {cloneElement(action, {actionParams: row})}
+                          <Box ml={1}/>
+                        </>
+                      )
+                    }
+                  </Grid>
                   : value
                 }
               </TableCell>

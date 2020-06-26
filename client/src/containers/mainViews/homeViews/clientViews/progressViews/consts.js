@@ -1,5 +1,9 @@
 import React from "react";
-import EditIcon from '@material-ui/icons/Edit';
+import {
+  Button,
+} from "@material-ui/core";
+import ConnectedButton from "../../../../../components/ConnectedButton/ConnectedButton";
+
 export const columnsTypes = {
     index: {
       id: "index",
@@ -96,6 +100,10 @@ export const progressConf = {
     label: "בקשות המחכות לאישור מורשה חתימה",
     description: "",
     columns: ["index", "maxPrice"],
+    actions: [
+      <ConnectedButton label="אשר" action={(_, row) => console.log("Accept", row)}/>,
+      <ConnectedButton label="דחה" action={(_, row) => console.log("Cancel", row)}/>,
+    ]
   },
   inTenderProcedure: {
     label: "פוליסות בהליך מכרזי",
