@@ -96,7 +96,6 @@ export const progressConf = {
     label: "בקשות המחכות לאישור מורשה חתימה",
     description: "",
     columns: ["index", "maxPrice"],
-    actions: [{element: <EditIcon/>, onClick: row => console.log("EDIT", row)}],
   },
   inTenderProcedure: {
     label: "פוליסות בהליך מכרזי",

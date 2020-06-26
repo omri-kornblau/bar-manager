@@ -87,7 +87,6 @@ const TableView = props => {
         columns={[...chosenHeaders.map(column => columnsTypes[column]), ...(conf.actions ? [columnsTypes.actions] : [])]}
         filter
         sort
-        onRowClick={e => console.log("ROW", e)}
         actions={conf.actions}
       />
       <Modal
