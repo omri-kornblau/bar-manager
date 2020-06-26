@@ -22,14 +22,14 @@ import store from "../store";
 
 export const getClientData = outerDispatch => () => {
   outerDispatch(dispatch => {
-    dispatch(tryGetClient);
+    dispatch(tryGetClient());
 
     getClient()
       .then(res => {
-        dispatch(getClientSuccess(res.data))
+        dispatch(getClientSuccess(res.data));
       })
       .catch(err => {
-        getClientFailure(err)
+        dispatch(getClientFailure(err));
       })
   })
 }
@@ -40,16 +40,17 @@ export const createRequest = outerDispatch => request => {
       return;
     }
 
-    dispatch(tryCreateRequest);
+    dispatch(tryCreateRequest());
 
     postCreateRequest(request)
       .then(res => {
         const { type, status, index } = res.data;
         dispatch(push(`/home/${type}/${status}?or=${index}`));
+        dispatch(createRequestSuccess());
         getClientData(dispatch)();
       })
       .catch(err => {
-        createRequestFailure(err);
+        dispatch(createRequestFailure(err));
       })
   })
 }
@@ -58,15 +59,15 @@ export const updateRequest = outerDispatch => updatedRequest => {
   const { type, status, index } = updatedRequest;
 
   outerDispatch(dispatch => {
-    dispatch(tryUpdateRequest);
+    dispatch(tryUpdateRequest());
 
     postUpdateRequest(updatedRequest)
       .then(res => {
-        updateRequestSuccess();
+        dispatch(updateRequestSuccess());
         getClientData(dispatch)();
         dispatch(push(`/home/${type}/${status}?or=${index}&em=false`));
       }).catch(err => {
-        updateRequestFailure(err);
+        dispatch(updateRequestFailure(err));
       })
   })
 }

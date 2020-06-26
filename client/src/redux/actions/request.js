@@ -10,7 +10,7 @@ export const TRY_UPDATE_REQUEST = "TRY_UPDATE_REQUEST";
 export const UPDATE_REQUEST_SUCCESS = "UPDATE_REQUEST_SUCCESS";
 export const UPDATE_REQUEST_FAILURE = "UPDATE_REQUEST_FAILURE";
 
-export const tryGetClient = ({
+export const tryGetClient = () => ({
   type: TRY_GET_CLIENT,
 });
 
@@ -24,7 +24,7 @@ export const getClientFailure = err => ({
   payload: err,
 });
 
-export const tryCreateRequest = ({
+export const tryCreateRequest = () => ({
   type: TRY_CREATE_REQUEST,
 });
 
@@ -38,7 +38,7 @@ export const createRequestFailure = err => ({
   payload: err,
 });
 
-export const tryUpdateRequest = ({
+export const tryUpdateRequest = () => ({
   type: TRY_UPDATE_REQUEST,
 });
 
