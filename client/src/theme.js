@@ -1,5 +1,5 @@
 import { createMuiTheme } from "@material-ui/core";
-import { purple, grey, common } from '@material-ui/core/colors';
+import { purple, grey, common, green, red } from '@material-ui/core/colors';
 
 const theme = createMuiTheme({
   direction: 'rtl',
@@ -9,6 +9,14 @@ const theme = createMuiTheme({
   palette: {
     primary: {
       main: purple[800]
+    },
+    success: {
+      main: green[600],
+      darker: green[800],
+    },
+    failed: {
+      main: red[600],
+      darker: red[800],
     },
     text: {
       primary: grey[800],

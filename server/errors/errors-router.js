@@ -1,10 +1,10 @@
 const errorRoutes = [
   {
     condition: err => err.isBoom,
-    handler: (res, err) => res.status(err.output.statusCode).send(err)
+    handler: (res, err) => { res.status(err.output.statusCode).send(err); }
   },
   {
-    condition: err => err.isJoi,
+    condition: err => err.name === "ValidationError",
     handler: (res, err) => {
       res.status(400).send(err);
     }

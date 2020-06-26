@@ -4,6 +4,8 @@ import {
   TableCell,
   TableRow,
   Collapse,
+  Box,
+  Grid,
  } from '@material-ui/core';
 
 import ColumnResizer from "./ColumnResizer";
@@ -16,7 +18,7 @@ const propTypes = {
   })),
   collapse: PropTypes.element,
   headerRefs: PropTypes.array,
-  isRounded: PropTypes.bool,
+  rounded: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -32,37 +34,55 @@ const Row = props => {
     columns,
     collapse,
     headerRefs,
-    isRounded,
-    onRowClick
+    rounded,
+    onRowClick,
+    actions,
   } = props;
 
   const [open, setOpen] = useState(false);
 
   const classes = useStyles();
 
-  const _onClick = () => {
+  const _onClick = (func) => {
     setOpen(!open);
-    onRowClick(row);
+    if (typeof(func) === "function") {
+      func(row);
+    }
   }
 
   return (
     <>
-      <TableRow hover className={isRounded ? classes.roundedTableRow : null} onClick={_onClick}>
+      <TableRow hover className={rounded ? classes.roundedTableRow : null}>
         {columns.map((column, index) => {
           const value = row[column.id];
           return (
             <Fragment key={column.id}>
               <TableCell
-                className={isRounded ? classes.roundedTableCell : classes.tabelCell}
+                className={rounded ? classes.roundedTableCell : classes.tabelCell}
                 align="left"
+                onClick={() => column.id === "actions" ? _onClick(() => {}) : _onClick(onRowClick)}
                 {...props}
               >
-                {value}
+                {
+                  column.id === "actions"
+                  ? 
+                  <Grid container>
+                    {
+                      actions.map(action =>
+                        <>
+                          {cloneElement(action, {actionParams: row})}
+                          <Box ml={1}/>
+                        </>
+                      )
+                    }
+                  </Grid>
+                  : value
+                }
               </TableCell>
               {
                 index + 1 < columns.length
                 ? <ColumnResizer
-                    style={{opacity: isRounded ? 0 : 1}}
+                    style={{opacity: rounded ? 0 : 1}}
                     prev={headerRefs[index]}
                     next={headerRefs[index+1]}
                   />

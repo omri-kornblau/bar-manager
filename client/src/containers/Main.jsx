@@ -20,6 +20,7 @@ import {
 } from "../redux/thunks/client"
 
 import AppNavbar from "../components/AppNavbar/AppNavbar";
+import { getLocation } from "connected-react-router";
 
 const navbarPages = _.filter(pages, { hideFromNavbar: false });
 const accountIconPages = _.filter(pages, { hideFromNavbar: true });
@@ -31,10 +32,13 @@ const Main = props => {
     checkToken,
     logout,
     getClient,
+    location
   } = props;
 
+  const { pathname, search, hash } = location;
+
   useEffect(() => {
-    checkToken();
+    checkToken(`${pathname}${search}${hash}`);
     getClient();
   }, []);
 
@@ -62,6 +66,7 @@ const Main = props => {
 const mapStateToProps = state => ({
   page: getPage(state),
   isLoggedIn: getUserLoggedIn(state),
+  location: getLocation(state)
 })
 
 const mapDispatchToProps = dispatch => ({

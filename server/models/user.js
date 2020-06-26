@@ -6,15 +6,12 @@ const promisify = require("util").promisify;
 const {
   OBJECT_ID_LENGTH,
   USER_TYPES_VALUES,
-} = require("./consts");
-
-const {
   USER_MIN_LENGTH,
   USER_MAX_LENGTH,
   PASSWORD_MIN_LENGTH,
   PASSWORD_MAX_LENGTH,
   SALT_ROUNDS,
-} = require("../config/auth")
+} = require("../config/consts");
 
 const hashCompare = promisify(Bcrypt.compare);
 const hash = promisify(Bcrypt.hash);

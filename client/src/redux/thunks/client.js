@@ -1,38 +1,73 @@
 import { push } from "connected-react-router";
+
 import {
-  getClient as getClientAction,
-  getClientFinish as getClientFinishAction,
-  sendingNewRequest,
-} from "../actions/main";
+  tryGetClient,
+  getClientSuccess,
+  getClientFailure,
+  tryCreateRequest,
+  createRequestSuccess,
+  createRequestFailure,
+  tryUpdateRequest,
+  updateRequestSuccess,
+  updateRequestFailure,
+} from "../actions/request";
 import {
-  getClient as getClientApi,
-  newRequest as newRequestApi,
+  getClient,
+  postCreateRequest,
+  postUpdateRequest,
 } from "../../api/client"
+import { getCreateRequestLoading } from "../selectors/request";
+
+import store from "../store";
 
 export const getClientData = outerDispatch => () => {
   outerDispatch(dispatch => {
-    dispatch(getClientAction);
+    dispatch(tryGetClient());
 
-    getClientApi()
+    getClient()
       .then(res => {
-        dispatch(getClientFinishAction(res.data))
+        dispatch(getClientSuccess(res.data));
       })
       .catch(err => {
-        console.error(err)
+        dispatch(getClientFailure(err));
       })
   })
 }
 
-export const newRequest = outerDispatch => (request, insurenseType) => {
+export const createRequest = outerDispatch => request => {
   outerDispatch(dispatch => {
-    dispatch(sendingNewRequest);
+    if (getCreateRequestLoading(store.getState())) {
+      return;
+    }
 
-    newRequestApi(request)
+    dispatch(tryCreateRequest());
+
+    postCreateRequest(request)
       .then(res => {
-        dispatch(push(`/home/${insurenseType}/inProgress`));
+        const { type, status, index } = res.data;
+        dispatch(push(`/home/${type}/${status}?or=${index}`));
+        dispatch(createRequestSuccess());
+        getClientData(dispatch)();
       })
       .catch(err => {
-        console.error(err)
+        dispatch(createRequestFailure(err));
+      })
+  })
+}
+
+export const updateRequest = outerDispatch => updatedRequest => {
+  const { type, status, index } = updatedRequest;
+
+  outerDispatch(dispatch => {
+    dispatch(tryUpdateRequest());
+
+    postUpdateRequest(updatedRequest)
+      .then(res => {
+        dispatch(updateRequestSuccess());
+        getClientData(dispatch)();
+        dispatch(push(`/home/${type}/${status}?or=${index}&em=false`));
+      }).catch(err => {
+        dispatch(updateRequestFailure(err));
       })
   })
 }

@@ -1,5 +1,5 @@
 import _ from "lodash";
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import {
   Container,
@@ -24,7 +24,7 @@ import useStyles from "./style";
 
 import SecondaryNavbar from "../../components/SecondaryNavbar/SecondaryNavbar";
 import { getProgress } from "../../redux/selectors/progressBar";
-import { getLoading } from "../../redux/selectors/main";
+import { getLoading } from "../../redux/selectors/request";
 
 const ViewsSwitch = ({ views, view, progress, matchUrl }) => (
   <Switch>
@@ -63,8 +63,8 @@ const Home = props => {
             />
             {
               isLoading
-              ? <Box 
-                  display="flex" 
+              ? <Box
+                  display="flex"
                   height="65%"
                   alignItems="center"
                   justifyContent="center"
@@ -80,7 +80,7 @@ const Home = props => {
                   />
                 </Container>
             }
-            
+
           </>
           : <ViewsSwitch
             views={views}

@@ -1,6 +1,8 @@
 import React from "react";
 import {
-  useTheme, Grid, Typography, Button,
+  useTheme,
+  Grid,
+  Button,
 } from "@material-ui/core";
 
 import IconButton from '@material-ui/core/IconButton';
@@ -14,9 +16,9 @@ const TablePaginationActions = props => {
     page,
     rowsPerPage,
     onChangePage,
-    isClearDisabled,
+    clearDisabled,
     onClear,
-    isClear,
+    clear,
   } = props;
 
   const handleBackButtonClick = e => {
@@ -40,10 +42,10 @@ const TablePaginationActions = props => {
         {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
       </IconButton>
       {
-        isClear ?
+        clear ?
         <Button
           onClick={onClear}
-          disabled={isClearDisabled}
+          disabled={clearDisabled}
           aria-label="next page"
         >
             נקה סינונים

@@ -5,7 +5,7 @@ const UserModel = Mongoose.model("User");
 const ClientModel = Mongoose.model("Client");
 const ProviderModel = Mongoose.model("Provider");
 
-const { USER_TYPES } = require("../types");
+const { USER_TYPES } = require("../config/types");
 
 exports.signupClient = async (req, res) => {
   const {
@@ -15,7 +15,7 @@ exports.signupClient = async (req, res) => {
   } = req.body;
 
   let createdClient = undefined;
-  let status = 200;
+
   try {
     const emptyClient = {
       unreadNotifictions: [],
@@ -36,16 +36,14 @@ exports.signupClient = async (req, res) => {
 
     await UserModel.create(user);
   } catch (err) {
-    console.error(err);
-
     if (createdClient != undefined) {
       await ClientModel.deleteOne(createdClient);
     }
 
-    status = 400;
+    throw err;
   }
 
-  res.send(status);
+  res.sendStatus(200);
 }
 
 exports.signupProvider = async (req, res) => {
@@ -56,7 +54,6 @@ exports.signupProvider = async (req, res) => {
   } = req.body;
 
   let createdProvider = undefined;
-  let status = 200;
   try {
     const emptyProvider = {
       unreadNotifictions: [],
@@ -77,14 +74,12 @@ exports.signupProvider = async (req, res) => {
 
     await UserModel.create(user);
   } catch (err) {
-    console.error(err);
-
     if (createdProvider != undefined) {
       await ProviderModel.deleteOne(createdProvider);
     }
 
-    status = 500;
+    throw err;
   }
 
-  res.send(status);
+  res.sendStatus(200);
 }

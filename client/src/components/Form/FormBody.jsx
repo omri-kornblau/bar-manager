@@ -1,3 +1,4 @@
+import _ from "lodash";
 import React from "react";
 import PropTypes from "prop-types";
 import {
@@ -7,6 +8,7 @@ import {
 import DatePickerWrapper from "./DatePickerWrapper";
 import TextFieldWrapper from "./TextFieldWrapper";
 import CheckboxWrapper from "./CheckboxWrapper";
+import FileUploadWrapper from "./FileUploadWrapper";
 
 const Input = props => {
   switch(props.type) {
@@ -15,6 +17,9 @@ const Input = props => {
 
     case "checkbox":
       return <CheckboxWrapper {...props}/>
+
+    case "file":
+      return <FileUploadWrapper {...props}/>
 
     default:
       return <TextFieldWrapper {...props}/>
@@ -35,13 +40,17 @@ const propTypes = {
   spacing: PropTypes.number,
   margin: PropTypes.oneOf(["dense", "none", "normal"]),
   dateFormat: PropTypes.string,
-  justify: PropTypes.oneOf(["flex-start", "flex-end", "center"])
+  justify: PropTypes.oneOf(["flex-start", "flex-end", "center"]),
+  values: PropTypes.object,
+  onChange: PropTypes.func
 }
 
 const defaultProps = {
   formStructure: [[]],
   dateFormat: "MM/dd/yyyy",
-  justify: "flex-start"
+  justify: "flex-start",
+  values: {},
+  onChange: _.noop
 }
 
 const FormBody = props => {
@@ -52,6 +61,7 @@ const FormBody = props => {
     margin,
     dateFormat,
     justify,
+    values,
     onChange,
   } = props;
 
@@ -71,7 +81,8 @@ const FormBody = props => {
               fullWidth={field.fullWidth}
               required={field.required}
               defaultValue={field.defaultValue}
-              onChange={onChange}
+              onChange={field.onChange || onChange}
+              value={field.value || values[field.name || ""]}
             />
           </Grid>
         )}

@@ -34,7 +34,7 @@ const ClientProgressDashboard = props => {
         step={getProgressWithView(view)}
         baseUrl={match.url}
         view={view}
-      /> 
+      />
       <Divider/>
       <Container>
         <Switch>

@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 export default makeStyles(theme => ({
   table: {
     borderRadius: theme.paper.borderRadius,
-    marginBottom: "30px",
+    marginBottom: "5px",
   },
   roundedTable: {
     "& tr:first-child td": {

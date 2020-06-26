@@ -9,7 +9,7 @@ import {
 
 import FormBody from "../Form/FormBody";
 import {
-  newRequest,
+  createRequest as createRequestThunk,
 } from "../../redux/thunks/client"
 
 const structure =
@@ -37,7 +37,7 @@ const structure =
     {
       label: "תקופת הביטוח הרצויה",
       type: "number",
-      name: "insurenceDuration",
+      name: "insuranceDuration",
       fullWidth: true,
       justify: "center",
       required: true,
@@ -73,12 +73,27 @@ const structure =
       rows: 2,
       placeholder: "הכנס הערות כאן..."
     },
-  ],
+  ],[
+    {
+      label: "העלה פוליסה",
+      name: "policy",
+      type: "file",
+      justify: "center",
+    },
+  ],[
+    {
+      label: "קבצים נוספים",
+      name: "extraFiles",
+      type: "file",
+      justify: "center",
+      multiple: true,
+    },
+  ]
 ];
 
 const FillDetails = props => {
   const {
-    onSubmit,
+    createRequest,
     insurenceType,
   } = props;
 
@@ -93,46 +108,25 @@ const FillDetails = props => {
     setForm({...form, [name]: value});
   }
 
-  const _onSubmit = useCallback(e => {
+  const onSubmit = useCallback(e => {
     e.preventDefault();
-    onSubmit({...form, type: insurenceType});
+    createRequest({...form, type: insurenceType});
   }, [form]);
 
   return (
-    <form onSubmit={_onSubmit}>
+    <form onSubmit={onSubmit}>
       <FormBody
         formStructure={structure}
         spacing={3}
         margin="dense"
         onChange={onChange}
       />
-      <Box mt={5}/>
-      <Grid spacing={3} container direction="column" align="center">
-        <Box m={1}/>
-        <Grid item>
-          <Button
-            variant="outlined"
-            color="default"
-          >
-            העלה פוליסה
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button
-            variant="outlined"
-            color="default"
-          >
-            העלה קבצים נוספים
-          </Button>
-        </Grid>
-      </Grid>
-      <Box mt={7}/>
+      <Box mt={3}/>
       <Grid container justify="center">
         <Button
           type="submit"
           variant="contained"
           color="primary"
-          onClick={_onSubmit}
         >
           שלח בקשה
         </Button>
@@ -141,13 +135,8 @@ const FillDetails = props => {
   );
 }
 
-const mapStateToProps = state => ({
-})
-
 const mapDispatchToProps = dispatch => ({
-  onSubmit: request => {
-    newRequest(dispatch)(request);
-  },
+  createRequest: createRequestThunk(dispatch)
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(FillDetails);
+export default connect(null, mapDispatchToProps)(FillDetails);

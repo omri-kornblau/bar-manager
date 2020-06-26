@@ -11,6 +11,7 @@ import {
   getCheckToken,
   getLogout,
 } from "../../api/authentication";
+import { getClientData } from "./client";
 
 export const login = outerDispatch => (username, password) =>
   outerDispatch(dispatch => {
@@ -20,18 +21,24 @@ export const login = outerDispatch => (username, password) =>
       .then(res => {
         dispatch(loginSuccess());
         dispatch(push("/home/dashboard/edit"));
+        getClientData(dispatch)();
       })
       .catch(err => {
         dispatch(loginFailure(err))
       });
   })
 
-export const checkToken = outerDispatch => () =>
+export const checkToken = outerDispatch => originUrl =>
   outerDispatch(dispatch => {
     getCheckToken()
       .then(res => {
         dispatch(loginSuccess());
-      });
+        dispatch(push(originUrl));
+      })
+      .catch(err => {
+        dispatch(logoutSuccess());
+        dispatch(push("/home/welcome"));
+      })
   })
 
 export const logout = outerDispatch => () =>

@@ -3,13 +3,12 @@ const Yup = require("yup");
 
 const {
   OBJECT_ID_LENGTH,
-  STATUSES,
-  INSURENSE_TYPES,
-} = require("./consts");
+} = require("../config/consts");
 
 const {
   REQUEST_STATUSES,
-} = require("../types")
+  INSURENSE_TYPES,
+} = require("../config/types")
 
 const yupRequestSchema = Yup.object().shape({
   type: Yup.mixed().oneOf(INSURENSE_TYPES),
@@ -17,12 +16,15 @@ const yupRequestSchema = Yup.object().shape({
   status: Yup.mixed().oneOf(REQUEST_STATUSES),
   assetDescription: Yup.string(),
   companyDescription: Yup.string(),
-  insurenceDuration: Yup.number().positive(),
+  insuranceDuration: Yup.number().positive(),
+  isCurrentlyInsured: Yup.boolean(),
   maxPrice: Yup.number().positive(),
   comments: Yup.string(),
   createdTime: Yup.date(),
   startDate: Yup.date(),
   recivedTime: Yup.date(),
+  policy: Yup.string().length(OBJECT_ID_LENGTH),
+  extraFiles: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   messages: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   offers: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
 });
@@ -43,7 +45,7 @@ const mongoFormat = {
   companyDescription: {
     type: String,
   },
-  insurenceDuration: {
+  insuranceDuration: {
     type: Number,
   },
   maxPrice: {
@@ -61,12 +63,24 @@ const mongoFormat = {
   recivedTime: {
     type: Date,
   },
+  policy: {
+    type: String,
+  },
+  extraFiles: {
+    type: Array
+  },
   messages: {
     type: Array,
   },
   offers: {
     type: Array,
   },
+  isCurrentlyInsured: {
+    type: Boolean
+  },
+  index: {
+    type: Number
+  }
 };
 
 const requestScheme = new Mongoose.Schema(mongoFormat);
@@ -76,5 +90,7 @@ requestScheme.pre("save", async function () {
 });
 
 const Request = Mongoose.model("Request", requestScheme);
+
+Request.yupRequestSchema = yupRequestSchema;
 
 module.exports = Request;
