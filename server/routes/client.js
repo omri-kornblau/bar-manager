@@ -23,7 +23,9 @@ const {
 } = require("../config/types")
 const {
   ALLOW_UPDATE_STATUSES,
-  STATUS_UPDATE_ALLOWED_FIELDS
+  STATUS_UPDATE_ALLOWED_FIELDS,
+  ALLOW_ACCEPT_CANCEL_STATUSES,
+  ACCEPT_CANCEL_UPDATE_ALLOWED_FIELDS
 } = require("../config/consts");
 
 exports.getAll = async (req, res) => {
@@ -31,7 +33,7 @@ exports.getAll = async (req, res) => {
     username
   } = req;
 
-  const client = await getClient(username);
+  const [_, client] = await getClient(username);
 
   const requests = await prepareRequests(await findByIds(RequestModel, client.requests, "Request not found"));
   const oldRequests = await prepareRequests(await findByIds(OldRequestModel, client.oldRequests, "Old request not found"));
@@ -52,15 +54,7 @@ exports.createRequest = async (req, res) => {
 
   const { Attachment } = internals;
 
-  const user = await UserModel.findOne({ username });
-  if (_.isNil(user)) {
-    throw Boom.internal("User not found");
-  }
-
-  const client = await ClientModel.findOne({ _id: user.clientId });
-  if (_.isNil(client)) {
-    throw Boom.internal("Client not found");
-  }
+  const [user, client] = await getClient(username);
 
   if (!_.isArray(policy) || policy.length != 1) {
     throw Boom.badRequest("Policy file must be provided");
@@ -83,6 +77,8 @@ exports.createRequest = async (req, res) => {
     recivedTime: undefined,
     messages: [],
     offers: [],
+    firstAccept: "",
+    secondAccept: "",
     index: client.requests.length + client.oldRequests.length,
     ...req.body
   });
@@ -109,7 +105,15 @@ exports.updateRequest = async (req, res) => {
     _id
   } = data;
 
+  const [_, client] = await getClient(username);
+  if (!client.requests.includes(_id) && !client.oldRequests.includes(_id)) {
+    throw Boom.badRequest("_id not belong to client");
+  }
+  
   const currentRequest = await RequestModel.findById(_id);
+  if (_.isNil(currentRequest)) {
+    throw Boom.internal("Request not found");
+  }
 
   if (!_.includes(ALLOW_UPDATE_STATUSES, currentRequest.status)) {
     throw Boom.badRequest("Cannot update request with such status");
@@ -130,6 +134,47 @@ exports.updateRequest = async (req, res) => {
   res.sendStatus(204);
 }
 
+exports.acceptRequest = async (req, res) => {
+  const {
+    username
+  } = req;
+
+  const {
+    _id,
+  } = req.body;
+
+  const [user, client] = await getClient(username);
+  if (!client.requests.includes(_id) && !client.oldRequests.includes(_id)) {
+    throw Boom.badRequest("_id not belong to client");
+  }
+
+  const currentRequest = await RequestModel.findById(_id);
+  if (_.isNil(currentRequest)) {
+    throw Boom.internal("Request not found");
+  }
+
+  if (!_.includes(ALLOW_ACCEPT_CANCEL_STATUSES, currentRequest.status)) {
+    throw Boom.badRequest("Cannot update request with such status");
+  }
+
+  const action = currentRequest.firstAccept === ""
+    ? {$set: {firstAccept: user._id}}
+    :  (currentRequest.secondAccept === "" && currentRequest.firstAccept === user._id) 
+      ? {$set: {secondAccept: user._id}}
+      : null
+
+  if (_.isNil(action)) {
+    throw Boom.badRequest("Cannot update request with curent accepts statuses");
+  }
+  const updateRes = await RequestModel.findByIdAndUpdate(_id, action);
+
+  if (updateRes.n === 0) {
+    throw Boom.internal("Failed updating request");
+  }
+
+  res.sendStatus(204);
+}
+
 exports.downloadFiles = async (req, res) => {
   const {
     username
@@ -140,7 +185,7 @@ exports.downloadFiles = async (req, res) => {
   } = req.body;
   const { Attachment } = internals;
 
-  const client = await getClient(username);
+  const [_, client] = await getClient(username);
 
   if (!client.requests.includes(_id) && !client.oldRequests.includes(_id)) {
     throw Boom.badRequest("_id not belong to client");

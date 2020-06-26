@@ -17,6 +17,7 @@ router.post("/client/signup", UserRoutes.signupClient)
 router.get("/client/get", withAuth, ClientRoutes.getAll)
 router.post("/client/newrequest", withAuth, ClientRoutes.createRequest)
 router.post("/client/updaterequest", withAuth, ClientRoutes.updateRequest)
+router.post("/client/acceptrequest", withAuth, ClientRoutes.acceptRequest)
 router.post("/client/downloadfiles", withAuth, ClientRoutes.downloadFiles)
 
 router.post("/provider/signup", UserRoutes.signupProvider)

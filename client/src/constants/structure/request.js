@@ -6,8 +6,13 @@ import {
 import { labels } from "../hebrew/request";
 
 import ConnectedButton from "../../components/ConnectedButton/ConnectedButton";
+import {
+  acceptRequest,
+} from "../../redux/thunks/client"
 
 import {
+  formatAccept,
+  formatActions,
   formatYesNo,
   formatTimeStampRTL,
   formatShekel,
@@ -101,9 +106,26 @@ export const tableHeaders = {
         type: "text"
       }
     },
+    firstAccept: {
+      id: "firstAccept",
+      label: labels.firstAccept,
+      formatter: formatAccept,
+      filter: {
+        type: "bool",
+      },
+    },
+    secondAccept: {
+      id: "secondAccept",
+      label: labels.secondAccept,
+      formatter: formatAccept,
+      filter: {
+        type: "bool",
+      },
+    },
     actions: {
       id: "actions",
       label: "פעולות",
+      formatter: formatActions,
       filter: false,
       sort: false,
     },
@@ -113,9 +135,9 @@ export const progressBar = {
   waitingForApproval: {
     label: "בקשות המחכות לאישור מורשה חתימה",
     description: "",
-    chosenHeaders: ["index", "maxPrice"],
+    chosenHeaders: ["index", "maxPrice", "firstAccept", "secondAccept"],
     actions: [
-      <ConnectedButton label="אשר" action={(_, row) => console.log("ACCEPT", row)} className="success"/>,
+      <ConnectedButton label="אשר" action={(dispatch, row) => acceptRequest(dispatch)(row._id)} className="success"/>,
       <ConnectedButton label="בטל" action={(_, row) => console.log("CANCEL", row)} className="failed"/>,
     ],
   },

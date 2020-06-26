@@ -27,6 +27,8 @@ const yupCreateRequestSchema = Yup.object().shape({
   extraFiles: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   messages: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   offers: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
+  firstAccept: Yup.string().test('len', 'Must be "" or object id length', val => val.length === OBJECT_ID_LENGTH || val.length === 0),
+  secondAccept: Yup.string().test('len', 'Must be "" or object id length', val => val.length === OBJECT_ID_LENGTH || val.length === 0),
 });
 
 const yupUpdateRequestSchema = Yup.object().shape({
@@ -75,7 +77,7 @@ const mongoFormat = {
     type: String,
   },
   extraFiles: {
-    type: Array
+    type: Array,
   },
   messages: {
     type: Array,
@@ -84,11 +86,17 @@ const mongoFormat = {
     type: Array,
   },
   isCurrentlyInsured: {
-    type: Boolean
+    type: Boolean,
   },
   index: {
-    type: Number
-  }
+    type: Number,
+  },
+  firstAccept: {
+    type: String,
+  },
+  secondAccept: {
+    type: String,
+  },
 };
 
 const requestScheme = new Mongoose.Schema(mongoFormat);

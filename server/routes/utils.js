@@ -39,7 +39,7 @@ exports.getClient = async username => {
     throw Boom.internal("Client not found");
   }
 
-  return client;
+  return [user, client];
 }
 
 exports.writerFile = (attachment, file) => {

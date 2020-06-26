@@ -10,11 +10,15 @@ import {
   tryUpdateRequest,
   updateRequestSuccess,
   updateRequestFailure,
+  tryAcceptRequest,
+  acceptRequestSuccess,
+  acceptRequestFailure,
 } from "../actions/request";
 import {
   getClient,
   postCreateRequest,
   postUpdateRequest,
+  postAcceptRequest,
 } from "../../api/client"
 import { getCreateRequestLoading } from "../selectors/request";
 
@@ -68,6 +72,21 @@ export const updateRequest = outerDispatch => updatedRequest => {
         dispatch(push(`/home/${type}/${status}?or=${index}&em=false`));
       }).catch(err => {
         dispatch(updateRequestFailure(err));
+      })
+  })
+}
+
+export const acceptRequest = outerDispatch => _id => {
+
+  outerDispatch(dispatch => {
+    dispatch(tryAcceptRequest());
+
+    postAcceptRequest(_id)
+      .then(res => {
+        dispatch(acceptRequestSuccess());
+        getClientData(dispatch)();
+      }).catch(err => {
+        dispatch(acceptRequestFailure(err));
       })
   })
 }

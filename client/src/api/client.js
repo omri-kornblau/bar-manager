@@ -11,3 +11,7 @@ export const postCreateRequest = async request => {
 export const postUpdateRequest = async request => {
   return Axios.post("/client/updaterequest", request)
 }
+
+export const postAcceptRequest = async _id => {
+  return Axios.post("/client/acceptrequest", {_id})
+}

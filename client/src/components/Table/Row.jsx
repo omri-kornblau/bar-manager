@@ -8,6 +8,7 @@ import {
   Grid,
  } from '@material-ui/core';
 
+import { applyFormat } from "../../helpers/formats";
 import ColumnResizer from "./ColumnResizer";
 import useStyles from "./style";
 
@@ -63,21 +64,7 @@ const Row = props => {
                 onClick={() => column.id === "actions" ? _onClick(() => {}) : _onClick(onRowClick)}
                 {...props}
               >
-                {
-                  column.id === "actions"
-                  ? 
-                  <Grid container>
-                    {
-                      actions.map(action =>
-                        <>
-                          {cloneElement(action, {actionParams: row})}
-                          <Box ml={1}/>
-                        </>
-                      )
-                    }
-                  </Grid>
-                  : value
-                }
+                {applyFormat(column.id === "actions" ? actions : value, column.formatter, row)}
               </TableCell>
               {
                 index + 1 < columns.length

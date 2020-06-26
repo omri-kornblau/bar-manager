@@ -27,3 +27,8 @@ exports.STATUS_UPDATE_ALLOWED_FIELDS = {
     "isCurrentlyInsured"
   ]
 }
+exports.ALLOW_ACCEPT_CANCEL_STATUSES = ["waitingForApproval"];
+exports.ACCEPT_CANCEL_UPDATE_ALLOWED_FIELDS = [
+    "firstAccept",
+    "secondAccept",
+]
