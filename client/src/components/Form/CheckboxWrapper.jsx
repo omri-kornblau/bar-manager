@@ -10,6 +10,7 @@ const CheckboxWrapper = props => {
     onChange,
     name,
     label,
+    value
   } = props;
 
   const [checked, setChecked] = useState(false);
@@ -25,6 +26,7 @@ const CheckboxWrapper = props => {
         <Checkbox color="primary" {...props} onChange={e=>{}} onClick={onClick}/>
       }
       name={name}
+      checked={value}
       label={label}
       labelPlacement="start"
     />
