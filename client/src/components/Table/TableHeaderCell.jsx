@@ -1,12 +1,16 @@
+import _ from "lodash";
 import React, { useState, forwardRef } from "react";
 import PropTypes from "prop-types";
 import {
   TableCell,
-  Grid,
   Box,
   Typography,
 } from "@material-ui/core";
-import FilterListIcon from "@material-ui/icons/FilterList";
+import {
+  FilterList as FilterListIcon,
+  ArrowDropDown as ArrowDropDownIcon,
+  ArrowDropUp as ArrowDropUpIcon,
+} from '@material-ui/icons';
 
 import {
   StyledMenu,
@@ -19,32 +23,52 @@ import {
   useHover,
   mergeRefs,
 } from "./utils"
+import {
+  SORT_OPTIONS,
+} from "./consts";
 
 const TextMenuItems = props => {
   const {
-    rows,
+    options,
+    setOptions,
   } = props;
 
-  const [checkboxStatuses,  setCheckbox] = useState(rows.reduce((prev, cur) => (
-    {[cur]: true, ...prev}
-  ), {}));
+  const _setOptions = newOptions => {
+    setOptions({
+      ...newOptions,
+      isActive: newOptions.search !== ""
+      || _.some(newOptions.options, value => !value),
+    });
+  }
 
   return (
     <>
       <StyledMenuItem>
-        <StyledTextField label="חיפוש"/>
+        <StyledTextField
+          label="חיפוש"
+          value={options.search}
+          onChange={e => {
+            e.preventDefault()
+            _setOptions({...options, search: e.target.value});
+          }}/>
       </StyledMenuItem>
       {
-        rows.map(row => (
+        _.map(options.options, (value, key) => (
           <StyledMenuItem
-            key={row}
-            onClick={() => setCheckbox({
-              ...checkboxStatuses,
-              [row]: !checkboxStatuses[row],
-            })}>
+            key={key}
+            onClick={() =>
+              _setOptions({
+                ...options, 
+                options: {
+                  ...options.options, 
+                  [key]: !value
+                }
+              })
+            }
+          >
             <StyledCheckbox
-              checked={checkboxStatuses[row]}
-              label={row}
+              checked={value}
+              label={key}
             />
           </StyledMenuItem>
         ))
@@ -53,14 +77,41 @@ const TextMenuItems = props => {
   );
 }
 
-const NumberMenuItems = () => {
+const NumberMenuItems = props => {
+  const {
+    options,
+    setOptions
+  } = props;
+
+  const onChange = e => {
+    const {
+      name,
+      value,
+    } = e.target;
+
+    const tempOptions = {...options, [name]: value};
+    setOptions({...tempOptions, isActive: tempOptions.min !== "" || tempOptions.max !== ""});
+  }
+
   return (
     <>
       <StyledMenuItem>
-        <StyledTextField label="גדול מ" type="number"/>
+        <StyledTextField
+          label="גדול מ"
+          type="number"
+          name="min"
+          value={options.min}
+          onChange={onChange}
+        />
       </StyledMenuItem>
       <StyledMenuItem>
-        <StyledTextField label="קטן מ" type="number"/>
+        <StyledTextField
+          label="קטן מ"
+          type="number"
+          name="max"
+          value={options.max}
+          onChange={onChange}
+        />
       </StyledMenuItem>
     </>
   );
@@ -93,21 +144,22 @@ const OptionsMenuItems = props => {
 const MenuItems = forwardRef((props, ref) => {
   const {
     filterType,
-    filterData,
+    options,
+    setOptions,
   } = props;
 
   switch (filterType) {
     case "text": {
-      return <TextMenuItems rows={filterData}/>;
+      return <TextMenuItems options={options} setOptions={setOptions}/>;
     }
     case "number": {
-      return <NumberMenuItems/>;
+      return <NumberMenuItems options={options} setOptions={setOptions}/>;
     }
     case "options": {
-      return <OptionsMenuItems options={filterData}/>;
+      return <OptionsMenuItems options={options} setOptions={setOptions}/>;
     }
     default: {
-      return <TextMenuItems rows={filterData}/>;
+      return <TextMenuItems options={options} setOptions={setOptions}/>;
     }
   }
 });
@@ -127,7 +179,12 @@ const TableHeaderCell = forwardRef((props, ref) => {
   const {
     column,
     isFilter,
+    options,
+    setOptions,
+    setSortBy,
+    sortDirection,
   } = props;
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [hoverRef, isHover] = isFilter ? useHover() : [null, null];
 
@@ -145,16 +202,23 @@ const TableHeaderCell = forwardRef((props, ref) => {
     <>
       <TableCell align="left" ref={mergeRefs(ref, hoverRef)}>
         <Box display="flex" alignItems="center">
-          <Typography noWrap={true}>
+          <Typography noWrap={true} onClick={setSortBy}>
             {column.label}
           </Typography>
+          {
+            sortDirection === SORT_OPTIONS.NONE
+            ? <></>
+            : sortDirection === SORT_OPTIONS.UP
+              ? <ArrowDropUpIcon/>
+              : <ArrowDropDownIcon/>
+          }
           <Box ml={1}/>
           {
             isFilter
             ? <FilterListIcon 
                 onClick={onClick} 
                 className={classes.filterListIcon} 
-                style={{ opacity: (isHover || Boolean(anchorEl)) ? 1 : 0 }}
+                style={{ opacity: (isHover || Boolean(anchorEl)) || options.isActive ? 1 : 0 }}
               />
             : <></>
           }
@@ -168,7 +232,11 @@ const TableHeaderCell = forwardRef((props, ref) => {
             open={Boolean(anchorEl)}
             onClose={onClose}
           >
-            <MenuItems filterType={column.filter.type} filterData={column.filter.data}/>
+            <MenuItems
+              filterType={column.filter.type}
+              options={options}
+              setOptions={setOptions}
+            />
           </StyledMenu>
         : <></>
       }
