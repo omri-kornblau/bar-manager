@@ -16,4 +16,15 @@ exports.PASSWORD_MAX_LENGTH = 25;
 exports.SALT_ROUNDS = 10;
 
 // Request
-exports.ALLOW_UPDATE_STATUSES = ["inTenderProcedure"];
+// TODO: change this to inTenderProcedure
+exports.ALLOW_UPDATE_STATUSES = ["waitingForApproval"];
+exports.STATUS_UPDATE_ALLOWED_FIELDS = {
+  waitingForApproval: [
+    "maxPrice",
+    "comments",
+    "insuranceDuration",
+    "assetDescription",
+    "companyDescription",
+    "isCurrentlyInsured"
+  ]
+}

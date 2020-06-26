@@ -83,4 +83,6 @@ requestScheme.pre("save", async function () {
 
 const Request = Mongoose.model("Request", requestScheme);
 
+Request.yupRequestSchema = yupRequestSchema;
+
 module.exports = Request;

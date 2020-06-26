@@ -130,7 +130,8 @@ export const modalChosenHeaders = [
   "insuranceDuration",
   "companyDescription",
   "assetDescription",
-  "isCurrentlyInsured"
+  "isCurrentlyInsured",
+  "comments",
 ]
 
 export const modalEditFormStructure = [

@@ -8,9 +8,15 @@ const RequestModel = Mongoose.model("Request");
 const OldRequestModel = Mongoose.model("OldRequest");
 const NotificationModel = Mongoose.model("Notification");
 
+const yupRequestSchema = require("../models/request").yupRequestSchema;
+
 const {
   REQUEST_STATUSES,
 } = require("../config/types")
+const {
+  ALLOW_UPDATE_STATUSES,
+  STATUS_UPDATE_ALLOWED_FIELDS
+} = require("../config/consts");
 
 const findByIds = async (Model, ids, error) => {
   const promises = ids.map(_id => (
@@ -102,5 +108,28 @@ exports.createRequest = async (req, res) => {
 }
 
 exports.updateRequest = async (req, res) => {
-  res.sendStatus(200);
+  const data = req.body;
+  const {
+    _id
+  } = data;
+
+  const currentRequest = await RequestModel.findById(_id);
+
+  if (!_.includes(ALLOW_UPDATE_STATUSES, currentRequest.status)) {
+    throw Boom.badRequest("Cannot update request with such status");
+  }
+
+  const cleanData = _.pick(data, STATUS_UPDATE_ALLOWED_FIELDS[data.status]);
+
+  await yupRequestSchema.validate(cleanData);
+
+  const updateRes = await RequestModel.findByIdAndUpdate(
+    _id, { $set: { ...cleanData } }
+  );
+
+  if (updateRes.n === 0) {
+    throw Boom.internal("Failed updating request");
+  }
+
+  res.sendStatus(204);
 }

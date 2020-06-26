@@ -55,12 +55,16 @@ export const createRequest = outerDispatch => request => {
 }
 
 export const updateRequest = outerDispatch => updatedRequest => {
+  const { type, status, index } = updatedRequest;
+
   outerDispatch(dispatch => {
     dispatch(tryUpdateRequest);
 
     postUpdateRequest(updatedRequest)
       .then(res => {
         updateRequestSuccess();
+        getClientData(dispatch)();
+        dispatch(push(`/home/${type}/${status}?or=${index}&em=false`));
       }).catch(err => {
         updateRequestFailure(err);
       })
