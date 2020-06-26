@@ -92,30 +92,30 @@ export const columnsTypes = {
 }
 
 export const progressConf = {
-  waitingForApprovel: {
+  waitingForApproval: {
     label: "בקשות המחכות לאישור מורשה חתימה",
     description: "",
-    columns: ["index", "maxPrice", "actions"], 
-    actions: [{element: <EditIcon/>, onClick: () => console.log("EDIT")}],
+    columns: ["index", "maxPrice"],
+    actions: [{element: <EditIcon/>, onClick: row => console.log("EDIT", row)}],
   },
   inTenderProcedure: {
     label: "פוליסות בהליך מכרזי",
     description: "",
-    columns: ["type", "recivedTime", "maxPrice"], 
+    columns: ["type", "recivedTime", "maxPrice"],
   },
   waitingForSign: {
     label: "פוליסות שאושרו ומחכות לחתימה",
     description: "",
-    columns: ["type", "startDate", "maxPrice"], 
+    columns: ["type", "startDate", "maxPrice"],
   },
   active: {
     label: "פוליסות פעילות",
     description: "",
-    columns: ["type", "startDate", "recivedTime"], 
+    columns: ["type", "startDate", "recivedTime"],
   },
   history: {
     label: "היסטוריה",
     description: "",
-    columns: ["index", "startDate", "recivedTime", "maxPrice"], 
+    columns: ["index", "startDate", "recivedTime", "maxPrice"],
   },
 }

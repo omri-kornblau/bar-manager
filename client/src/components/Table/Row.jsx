@@ -34,6 +34,7 @@ const Row = props => {
     headerRefs,
     rounded,
     onRowClick,
+    actions,
   } = props;
 
   const [open, setOpen] = useState(false);
@@ -57,10 +58,14 @@ const Row = props => {
               <TableCell
                 className={rounded ? classes.roundedTableCell : classes.tabelCell}
                 align="left"
-                onClick={() => column.onClick ? _onClick(column.onClick) : _onClick(onRowClick)}
+                onClick={() => column.id === "actions" ? _onClick(() => {}) : _onClick(onRowClick)}
                 {...props}
               >
-                {value}
+                {
+                  column.id === "actions"
+                  ? actions.map(action => cloneElement(action.element, {onClick: () => {action.onClick(row)}}))
+                  : value
+                }
               </TableCell>
               {
                 index + 1 < columns.length

@@ -85,6 +85,7 @@ const CustomTable = props => {
     pagination,
     onRowClick,
     sort,
+    actions,
   } = props;
 
   const [page, setPage] = useState(0);
@@ -204,6 +205,7 @@ const CustomTable = props => {
                 headerRefs={headerRefs}
                 rounded={rounded}
                 onRowClick={onRowClick}
+                actions={actions}
               />
             )}
           </TableBody>
