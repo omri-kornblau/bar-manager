@@ -23,6 +23,7 @@ import { updateRequest as updateRequestThunk } from "../../../../../redux/thunks
 
 import CustomTable from "../../../../../components/Table/Table";
 import RequestModal from "../../../../../components/RequestModal/RequestModal";
+import { getUpdateRequestErrors } from "../../../../../redux/selectors/errors";
 
 
 const TableView = props => {
@@ -34,7 +35,8 @@ const TableView = props => {
     progress,
     type,
     pushUrl,
-    updateRequest
+    updateRequest,
+    updateStatus
   } = props;
 
   const {
@@ -110,6 +112,7 @@ const TableView = props => {
           onSaveEdit={onSaveEdit}
           onExitEdit={onExitEditMode}
           editMode={editMode}
+          updateStatus={updateStatus}
         />
       </Modal>
     </Box>
@@ -122,7 +125,8 @@ const mapStateToProps = state => ({
   requests: getRequests(state),
   openedRequestIdx: getOpenedRequest(state),
   editMode: getRequestEditMode(state),
-  location: getLocation(state)
+  location: getLocation(state),
+  updateStatus: getUpdateRequestErrors(state)
 })
 
 const mapDispatchToProps = dispatch => ({

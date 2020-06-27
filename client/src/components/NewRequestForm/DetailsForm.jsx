@@ -5,12 +5,18 @@ import {
   Button,
   Box,
   InputAdornment,
+  Typography,
+  CircularProgress,
 } from "@material-ui/core";
 
 import FormBody from "../Form/FormBody";
 import {
   createRequest as createRequestThunk,
 } from "../../redux/thunks/client"
+import { parseFormError } from "../../helpers/errors";
+import { getCreateRequestErrors } from "../../redux/selectors/errors";
+import LoadingButton from "../LoadingButton/LoadingButton";
+import ErrorMessage from "../LoadingButton/ErrorMessage";
 
 const structure =
   [[
@@ -95,18 +101,16 @@ const FillDetails = props => {
   const {
     createRequest,
     insurenceType,
+    createRequestStatus
   } = props;
 
   const [form, setForm] = useState({});
+  const parsedError = parseFormError(createRequestStatus.error);
 
-  const onChange = async e => {
-    const {
-      name,
-      value,
-    } = e.target;
-
-    setForm({...form, [name]: value});
-  }
+  const onChange = useCallback(e => {
+    const { name, value, } = e.target;
+    setForm(form => ({...form, [name]: value}));
+  }, [])
 
   const onSubmit = useCallback(e => {
     e.preventDefault();
@@ -114,29 +118,39 @@ const FillDetails = props => {
   }, [form]);
 
   return (
-    <form onSubmit={onSubmit}>
+    <form noValidate onSubmit={onSubmit}>
       <FormBody
         formStructure={structure}
-        spacing={3}
+        spacing={2}
         margin="dense"
         onChange={onChange}
+        error={parsedError}
       />
       <Box mt={3}/>
+      <ErrorMessage
+        error={parsedError}
+        defaultText="יש לתקן את הטופס"
+      />
       <Grid container justify="center">
-        <Button
+        <LoadingButton
           type="submit"
           variant="contained"
           color="primary"
+          loading={createRequestStatus.inProgress}
         >
           שלח בקשה
-        </Button>
+        </LoadingButton>
       </Grid>
     </form>
   );
 }
 
+const mapStateToProps = state => ({
+  createRequestStatus: getCreateRequestErrors(state)
+})
+
 const mapDispatchToProps = dispatch => ({
   createRequest: createRequestThunk(dispatch)
 })
 
-export default connect(null, mapDispatchToProps)(FillDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(FillDetails);
