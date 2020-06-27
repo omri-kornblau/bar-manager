@@ -22,6 +22,10 @@ import LoadingButton from "../LoadingButton/LoadingButton";
 import { parseFormError } from "../../helpers/errors";
 import ErrorMessage from "../LoadingButton/ErrorMessage";
 
+import { progressBar } from "../../constants/structure/request"
+import {formatActions} from "../../helpers/formats"
+import { cloneElement } from "react";
+
 const DataList = ({ data }) => (
   modalChosenHeaders.map(headStruct => {
     const { id, formatter } = headStruct;
@@ -162,16 +166,7 @@ const RequestModal = props => {
               }
               <Box mt={2}/>
               {!editMode ?
-                <Grid container justify="center">
-                  <Button
-                    variant="contained"
-                    size="small"
-                    color="primary"
-                    onClick={onEnterEdit}
-                  >
-                    ערוך
-                  </Button>
-                </Grid>
+              formatActions(progressBar[data.status].actions, data)
               : <></>}
             </Grid>
             <Divider orientation="vertical" flexItem/>

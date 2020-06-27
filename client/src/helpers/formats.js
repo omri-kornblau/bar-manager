@@ -19,7 +19,7 @@ export const formatMonths = val =>  `${val} חודשים`;
 export const formatTimeStampRTL = time => Moment(time).format("HH:mm:ss YYYY/MM/DD");
 export const formatActions = (actions, row) => {
   return (
-    <Grid container>
+    <Grid container justify="center">
       {
         actions.map(action =>
           <>
