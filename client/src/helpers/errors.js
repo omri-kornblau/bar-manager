@@ -1,6 +1,11 @@
 import _ from "lodash";
 
 import { labels } from "../constants/hebrew/request";
+import { getAction } from "connected-react-router";
+
+const unknowErrorData = {
+  message: "שגיאה לא ידועה"
+}
 
 const errMessageToText = {
   "Policy file must be provided": "יש להעלות קובץ פוליסה",
@@ -14,9 +19,7 @@ const generalErrorToText = ({ message }) => (
 const yupErrorToText = errData => {
   const label = labels[errData.path];
 
-  if (_.isNil(label)) {
-    return "יש בעיה בטופס"
-  }
+  if (_.isNil(label)) return "יש בעיה בטופס";
 
   switch(errData.type) {
     case "min":
@@ -30,10 +33,10 @@ const yupErrorToText = errData => {
   }
 }
 
-export const parseFormError = errData => {
-  if (_.isNil(errData)) {
-    return {}
-  }
+export const parseFormError = err => {
+  const errData = getAxiosError(err);
+
+  if (_.isNil(errData)) return unknowErrorData;
 
   if (errData.name === "ValidationError") {
     return {
@@ -49,17 +52,9 @@ export const parseFormError = errData => {
 }
 
 export const getAxiosError = err => {
-  if (_.isNil(err)) {
-    return "Unknown Error";
-  }
-
-  if (_.isNil(err.response)) {
-    return "Unknown Error";
-  }
-
-  if (_.isNil(err.response.data)) {
-    return "Unknown Error";
-  }
+  if (_.isNil(err)) return unknowErrorData;
+  if (_.isNil(err.response)) return unknowErrorData;
+  if (_.isNil(err.response.data)) return unknowErrorData;
 
   return err.response.data;
 }
