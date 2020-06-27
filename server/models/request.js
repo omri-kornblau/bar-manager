@@ -10,15 +10,15 @@ const {
   INSURENSE_TYPES,
 } = require("../config/types")
 
-const yupRequestSchema = Yup.object().shape({
-  type: Yup.mixed().oneOf(INSURENSE_TYPES),
+const yupCreateRequestSchema = Yup.object().shape({
+  type: Yup.mixed().oneOf(INSURENSE_TYPES).required(),
   author: Yup.string().length(OBJECT_ID_LENGTH),
   status: Yup.mixed().oneOf(REQUEST_STATUSES),
-  assetDescription: Yup.string(),
-  companyDescription: Yup.string(),
-  insuranceDuration: Yup.number().positive(),
+  assetDescription: Yup.string().required(),
+  companyDescription: Yup.string().required(),
+  insuranceDuration: Yup.number().positive().required(),
   isCurrentlyInsured: Yup.boolean(),
-  maxPrice: Yup.number().positive(),
+  maxPrice: Yup.number().positive().required(),
   comments: Yup.string(),
   createdTime: Yup.date(),
   startDate: Yup.date(),
@@ -27,6 +27,14 @@ const yupRequestSchema = Yup.object().shape({
   extraFiles: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   messages: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   offers: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
+});
+
+const yupUpdateRequestSchema = Yup.object().shape({
+  assetDescription: Yup.string().required(),
+  companyDescription: Yup.string().required(),
+  insuranceDuration: Yup.number().positive().required(),
+  isCurrentlyInsured: Yup.boolean(),
+  maxPrice: Yup.number().positive().required(),
 });
 
 const mongoFormat = {
@@ -86,11 +94,12 @@ const mongoFormat = {
 const requestScheme = new Mongoose.Schema(mongoFormat);
 
 requestScheme.pre("save", async function () {
-  await yupRequestSchema.validate(this);
+  await yupCreateRequestSchema.validate(this);
 });
 
 const Request = Mongoose.model("Request", requestScheme);
 
-Request.yupRequestSchema = yupRequestSchema;
+Request.yupCreateRequestSchema = yupCreateRequestSchema;
+Request.yupUpdateRequestSchema= yupUpdateRequestSchema;
 
 module.exports = Request;
