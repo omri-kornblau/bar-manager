@@ -86,7 +86,7 @@ export const acceptRequest = outerDispatch => request => {
 
     postAcceptRequest(request._id)
       .then(res => {
-        dispatch(acceptRequestSuccess(request));
+        dispatch(acceptRequestSuccess(res.data));
       }).catch(err => {
         dispatch(acceptRequestFailure(request, err));
       })

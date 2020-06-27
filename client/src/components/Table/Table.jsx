@@ -134,7 +134,7 @@ const CustomTable = props => {
     }
 
     return filteredRows;
-  }, [options, filter, sort, sortBy]);
+  }, [options, filter, sort, sortBy, rows]);
 
   const headerRefs = columns.map(() => useRef(null));
 

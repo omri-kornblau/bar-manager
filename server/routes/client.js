@@ -181,12 +181,17 @@ exports.acceptRequest = async (req, res) => {
   if (_.isNil(action)) {
     throw Boom.badRequest("Cannot update request with curent accepts statuses");
   }
-  const newRequest = await RequestModel.findByIdAndUpdate(_id, action);
-  if (_.isNil(newRequest)) {
+  const request = await RequestModel.findByIdAndUpdate(_id, action);
+  if (_.isNil(request)) {
     throw Boom.internal("Failed updating request");
   }
 
-  res.sendStatus(204);
+  const newRequest = await RequestModel.findById(_id);
+  if (_.isNil(newRequest)) {
+    throw Boom.internal("Failed finding request after accept");
+  }
+
+  res.send(newRequest);
 }
 
 exports.cancelRequest = async (req, res) => {
@@ -216,7 +221,7 @@ exports.cancelRequest = async (req, res) => {
   const updateRes = await ClientModel.findByIdAndUpdate(client._id, {$pull: {
     requests: Mongoose.mongo.ObjectID(_id)
   }});
-  if (_.isNil(updateRes) ||  _.includes(updateRes.requests, Mongoose.mongo.ObjectID(_id))) {
+  if (_.isNil(updateRes)) {
     throw Boom.internal("Failed deleting request from client");
   }
 
