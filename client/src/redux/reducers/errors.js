@@ -20,22 +20,22 @@ const initialState = {
   login: {
     inProgress: false,
     try: false,
-    error: ""
+    error: undefined
   },
   getClient: {
     inProgress: false,
     try: false,
-    error: ""
+    error: undefined
   },
   createRequest: {
     inProgress: false,
     try: false,
-    error: ""
+    error: undefined
   },
   updateRequest: {
     inProgress: false,
     try: false,
-    error: ""
+    error: undefined
   }
 };
 
@@ -47,7 +47,7 @@ const reduceFetch = (prop, TRY, SUCCESS, FAILURE) => (state, action) => {
         [prop]: {
           inProgress: true,
           try: true,
-          error: "",
+          error: undefined,
         }
       }
 
@@ -57,7 +57,7 @@ const reduceFetch = (prop, TRY, SUCCESS, FAILURE) => (state, action) => {
         [prop]: {
           inProgress: false,
           try: true,
-          error: "",
+          error: undefined,
         }
       }
 

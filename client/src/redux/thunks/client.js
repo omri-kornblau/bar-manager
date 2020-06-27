@@ -19,6 +19,7 @@ import {
 import { getCreateRequestLoading } from "../selectors/request";
 
 import store from "../store";
+import { parseFormError, getAxiosError } from "../../helpers/errors";
 
 export const getClientData = outerDispatch => () => {
   outerDispatch(dispatch => {
@@ -29,7 +30,7 @@ export const getClientData = outerDispatch => () => {
         dispatch(getClientSuccess(res.data));
       })
       .catch(err => {
-        dispatch(getClientFailure(err.response));
+        dispatch(getClientFailure(getAxiosError(err)));
       })
   })
 }
@@ -50,7 +51,7 @@ export const createRequest = outerDispatch => request => {
         getClientData(dispatch)();
       })
       .catch(err => {
-        dispatch(createRequestFailure(err.response));
+        dispatch(createRequestFailure(getAxiosError(err)));
       })
   })
 }
@@ -67,7 +68,7 @@ export const updateRequest = outerDispatch => updatedRequest => {
         getClientData(dispatch)();
         dispatch(push(`/home/${type}/${status}?or=${index}&em=false`));
       }).catch(err => {
-        dispatch(updateRequestFailure(err.response));
+        dispatch(updateRequestFailure(getAxiosError(err)));
       })
   })
 }
