@@ -1,13 +1,24 @@
+const _ = require("lodash");
 const Boom = require("boom");
 
 const errorRoutes = [
   {
     condition: err => err.isBoom,
-    handler: (res, err) => { res.status(err.output.statusCode).send(err); }
+    handler: (res, err) => { res.status(err.output.statusCode).send(err.output.payload); }
   },
   {
-    condition: err => err.name === "ValidationError",
+    // Yup validation error
+    condition: err => err.name === "ValidationError" && !!err.path,
     handler: (res, err) => {
+      res.status(400).send(Boom.badRequest(err));
+    }
+  },
+  {
+    // Mongoose validation error
+    condition: err => err.name === "ValidationError" && !!err.errors && !err.path,
+    handler: (res, err) => {
+      err = _.extend(err, _.sample(err.errors).properties);
+      delete err.errors;
       res.status(400).send(Boom.badRequest(err));
     }
   },
