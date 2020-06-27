@@ -54,7 +54,7 @@ const Drafts = props => {
       <CustomTable
         rows={fakeTableData.rows}
         columns={fakeTableData.columns}
-        isPagination={false}
+        pagination={false}
       />
     </Box>
   );

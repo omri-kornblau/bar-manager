@@ -8,7 +8,7 @@ const RequestModel = Mongoose.model("Request");
 const OldRequestModel = Mongoose.model("OldRequest");
 const NotificationModel = Mongoose.model("Notification");
 
-const { yupRequestSchema } = require("../models/request");
+const { yupUpdateRequestSchema } = require("../models/request");
 const { internals } = require("../models/attachment");
 
 const {
@@ -49,7 +49,7 @@ exports.createRequest = async (req, res) => {
     policy,
     extraFiles,
   } = req.body;
-  
+
   const { Attachment } = internals;
 
   const user = await UserModel.findOne({ username });
@@ -63,15 +63,15 @@ exports.createRequest = async (req, res) => {
   }
 
   if (!_.isArray(policy) || policy.length != 1) {
-    throw Boom.badRequest("policy must be list of 1 item");
+    throw Boom.badRequest("Policy file must be provided");
   }
 
   if (!_.isArray(extraFiles)) {
-    throw Boom.badRequest("extraFiles must be list");
+    throw Boom.badRequest("Extra files must be provided");
   }
 
   req.body.policy = await writerFile(Attachment, policy[0]);
-  req.body.extraFiles = await Promise.all(extraFiles.map(file => 
+  req.body.extraFiles = await Promise.all(extraFiles.map(file =>
     writerFile(Attachment, file)
   ));
 
@@ -117,7 +117,7 @@ exports.updateRequest = async (req, res) => {
 
   const cleanData = _.pick(data, STATUS_UPDATE_ALLOWED_FIELDS[data.status]);
 
-  await yupRequestSchema.validate(cleanData);
+  await yupUpdateRequestSchema.validate(cleanData);
 
   const updateRes = await RequestModel.findByIdAndUpdate(
     _id, { $set: { ...cleanData } }
@@ -150,7 +150,7 @@ exports.downloadFiles = async (req, res) => {
   if (request === null) {
     throw Boom.internal("Request not found")
   }
-  
+
   const files = Promise.all(request.extraFiles.map(fileId =>
     Attachment.read({_id: fileId})
   ));

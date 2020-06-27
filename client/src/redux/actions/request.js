@@ -20,8 +20,8 @@ export const getClientSuccess = client => ({
 });
 
 export const getClientFailure = err => ({
-  type: GET_CLIENT_SUCCESS,
-  payload: err,
+  type: GET_CLIENT_FAILURE,
+  payload: { err },
 });
 
 export const tryCreateRequest = () => ({
@@ -35,7 +35,7 @@ export const createRequestSuccess = request => ({
 
 export const createRequestFailure = err => ({
   type: CREATE_REQUEST_FAILURE,
-  payload: err,
+  payload: { err },
 });
 
 export const tryUpdateRequest = () => ({
@@ -47,7 +47,9 @@ export const updateRequestSuccess = request => ({
   payload: request,
 });
 
-export const updateRequestFailure = err => ({
-  type: UPDATE_REQUEST_FAILURE,
-  payload: err,
-});
+export const updateRequestFailure = err => {
+  return ({
+    type: UPDATE_REQUEST_FAILURE,
+    payload: { err },
+  });
+}

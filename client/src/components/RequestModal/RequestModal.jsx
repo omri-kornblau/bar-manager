@@ -18,6 +18,9 @@ import {
 import MessagesBox from "./MessagesBox";
 import FormBody from "../Form/FormBody";
 import { applyFormat } from "../../helpers/formats";
+import LoadingButton from "../LoadingButton/LoadingButton";
+import { parseFormError } from "../../helpers/errors";
+import ErrorMessage from "../LoadingButton/ErrorMessage";
 
 const DataList = ({ data }) => (
   modalChosenHeaders.map(headStruct => {
@@ -47,7 +50,8 @@ const EditDataList = props => {
   const {
     data,
     onSubmit,
-    onExit
+    onExit,
+    updateStatus
   } = props;
 
   const [form, setForm] = useState(data);
@@ -62,6 +66,8 @@ const EditDataList = props => {
     setForm(form => ({ ...form, [name]: value }))
   }, []);
 
+  const parsedError = parseFormError(updateStatus.error)
+
   return (
     <form onSubmit={_onSubmit}>
       <FormBody
@@ -72,17 +78,19 @@ const EditDataList = props => {
         margin="dense"
         spacing={1}
         onChange={onChange}
+        error={parsedError}
       />
       <Box mt={2}/>
       <Grid container justify="center">
-        <Button
+        <LoadingButton
           type="submit"
           variant="contained"
           color="primary"
           size="small"
+          loading={updateStatus.inProgress}
         >
           עדכן פרטים
-        </Button>
+        </LoadingButton>
         <Box mr={2}/>
         <Button
           size="small"
@@ -91,6 +99,11 @@ const EditDataList = props => {
           בטל
         </Button>
       </Grid>
+      <Box mt={2}/>
+      <ErrorMessage
+        error={parsedError}
+        defaultText="יש לתקן את הטופס"
+      />
     </form>
   );
 }
@@ -110,7 +123,8 @@ const RequestModal = props => {
     editMode,
     onEnterEdit,
     onSaveEdit,
-    onExitEdit
+    onExitEdit,
+    updateStatus
   } = props;
 
   if (_.isNil(data)) {
@@ -142,6 +156,7 @@ const RequestModal = props => {
                   onExit={onExitEdit}
                   onSubmit={onSaveEdit}
                   data={data}
+                  updateStatus={updateStatus}
                 />
                 : <DataList data={data}/>
               }
