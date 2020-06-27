@@ -1,6 +1,7 @@
 const _ = require("lodash");
 const Mongoose = require("mongoose");
 const Boom = require("boom");
+const Moment = require("moment");
 
 const UserModel = Mongoose.model("User");
 const ClientModel = Mongoose.model("Client");
@@ -25,7 +26,8 @@ const {
   ALLOW_UPDATE_STATUSES,
   STATUS_UPDATE_ALLOWED_FIELDS,
   ALLOW_ACCEPT_CANCEL_STATUSES,
-  ACCEPT_CANCEL_UPDATE_ALLOWED_FIELDS
+  IN_TENDER_PROCEDURE_DURATION,
+  WAITING_FOR_SIGN_DURATION,
 } = require("../config/consts");
 
 exports.getAll = async (req, res) => {
@@ -33,7 +35,7 @@ exports.getAll = async (req, res) => {
     username
   } = req;
 
-  const [_, client] = await getClient(username);
+  const [user, client] = await getClient(username);
 
   const requests = await prepareRequests(await findByIds(RequestModel, client.requests, "Request not found"));
   const oldRequests = await prepareRequests(await findByIds(OldRequestModel, client.oldRequests, "Old request not found"));
@@ -64,10 +66,11 @@ exports.createRequest = async (req, res) => {
     throw Boom.badRequest("Extra files must be provided");
   }
 
-  req.body.policy = await writerFile(Attachment, policy[0]);
-  req.body.extraFiles = await Promise.all(extraFiles.map(file =>
+  const filesIds = await Promise.all([policy[0], ...extraFiles].map(file => 
     writerFile(Attachment, file)
   ));
+  req.body.policy = filesIds[0];
+  req.body.extraFiles = filesIds.slice(1);
 
   const createdRequest = await RequestModel.create({
     author: user._id,
@@ -105,7 +108,7 @@ exports.updateRequest = async (req, res) => {
     _id
   } = data;
 
-  const [_, client] = await getClient(username);
+  const [user, client] = await getClient(username);
   if (!client.requests.includes(_id) && !client.oldRequests.includes(_id)) {
     throw Boom.badRequest("_id not belong to client");
   }
@@ -159,8 +162,14 @@ exports.acceptRequest = async (req, res) => {
 
   const action = currentRequest.firstAccept === ""
     ? {$set: {firstAccept: user._id}}
-    :  (currentRequest.secondAccept === "" && currentRequest.firstAccept === user._id) 
-      ? {$set: {secondAccept: user._id}}
+    // TODO: understand how 2 clients accept the same request
+    :  (currentRequest.secondAccept === "" /*&& currentRequest.firstAccept === user._id*/) 
+      ? {$set: {
+          secondAccept: user._id, 
+          status: "inTenderProcedure",
+          recivedTime: Moment().add(IN_TENDER_PROCEDURE_DURATION),
+          startDate: Moment().add(IN_TENDER_PROCEDURE_DURATION).add(WAITING_FOR_SIGN_DURATION),
+        }}
       : null
 
   if (_.isNil(action)) {
@@ -175,30 +184,39 @@ exports.acceptRequest = async (req, res) => {
   res.sendStatus(204);
 }
 
-exports.downloadFiles = async (req, res) => {
+exports.downloadFile = async (req, res) => {
   const {
     username
   } =  req;
 
   const {
-    _id,
-  } = req.body;
+    requestId,
+    fileId,
+  } = req.query;
   const { Attachment } = internals;
 
-  const [_, client] = await getClient(username);
+  const [user, client] = await getClient(username);
 
-  if (!client.requests.includes(_id) && !client.oldRequests.includes(_id)) {
-    throw Boom.badRequest("_id not belong to client");
+  if (!client.requests.includes(requestId) && !client.oldRequests.includes(requestId)) {
+    throw Boom.badRequest("Request not belong to client");
   }
 
-  const request = await RequestModel.findById(_id);
-  if (request === null) {
+  const request = await RequestModel.findById(requestId);
+  if (_.isNil(request)) {
     throw Boom.internal("Request not found")
   }
+  
+  if (!request.extraFiles.includes(fileId) && fileId !== request.policy) {
+    throw Boom.badRequest("File not belong to request")
+  }
 
-  const files = Promise.all(request.extraFiles.map(fileId =>
-    Attachment.read({_id: fileId})
-  ));
-  console.log(files);
-  res.sendStatus(200);
+  const file = await Attachment.findById(fileId);
+  if (_.isNil(file)) {
+    throw Boom.internal("File not found");
+  }
+
+  const readStream = Attachment.read({_id: Mongoose.mongo.ObjectID(fileId)});
+  res.set("Content-Type", "application/octet-stream");
+  res.set("Content-Disposition", `attachment; filename=\"${file.filename}\"`);
+  readStream.pipe(res);
 }

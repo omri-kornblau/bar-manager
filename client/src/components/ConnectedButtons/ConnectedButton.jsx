@@ -12,6 +12,7 @@ const ConnectedButton = props => {
     dispatch,
     actionParams,
     className,
+    color,
   } = props;
 
   const classes = useStyles();
@@ -24,6 +25,7 @@ const ConnectedButton = props => {
       onClick={() => {
         action(dispatch, actionParams)
       }}
+      color={color}
     >
       {label}
     </Button>

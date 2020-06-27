@@ -1,5 +1,5 @@
 const _ = require("lodash");
-
+const Moment = require("moment");
 const { USER_TYPES } = require("./types");
 
 // Validation
@@ -28,7 +28,5 @@ exports.STATUS_UPDATE_ALLOWED_FIELDS = {
   ]
 }
 exports.ALLOW_ACCEPT_CANCEL_STATUSES = ["waitingForApproval"];
-exports.ACCEPT_CANCEL_UPDATE_ALLOWED_FIELDS = [
-    "firstAccept",
-    "secondAccept",
-]
+exports.IN_TENDER_PROCEDURE_DURATION = Moment.duration(3, "days");
+exports.WAITING_FOR_SIGN_DURATION = Moment.duration(10, "days");

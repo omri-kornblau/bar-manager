@@ -77,7 +77,6 @@ export const updateRequest = outerDispatch => updatedRequest => {
 }
 
 export const acceptRequest = outerDispatch => _id => {
-
   outerDispatch(dispatch => {
     dispatch(tryAcceptRequest());
 
