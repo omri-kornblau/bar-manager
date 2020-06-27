@@ -179,17 +179,19 @@ export const progressBar = {
       <ConnectedButton
         label="אשר"
         action={(dispatch, row) => 
-          acceptRequest(dispatch)(row._id)
+          acceptRequest(dispatch)(row)
         } 
         className="success"
+        progressName="acceptRequest"
       />,
       <ConnectedButton
         label="בטל"
         action={(dispatch, row) => {
           if (window.confirm("אתה בטוח שאתה רוצה למחוק את הבקשה?")) {
-            cancelRequest(dispatch)(row._id)
+            cancelRequest(dispatch)(row)
           }
         }} 
+        progressName="cancelRequest"
         className="failed"
       />,
     ],

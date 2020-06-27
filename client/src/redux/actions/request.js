@@ -17,6 +17,7 @@ export const ACCEPT_REQUEST_FAILURE = "ACCEPT_REQUEST_FAILURE";
 export const TRY_CANCEL_REQUEST = "TRY_CANCEL_REQUEST";
 export const CANCEL_REQUEST_SUCCESS = "ACCEPT_CANCEL_SUCCESS";
 export const CANCEL_REQUEST_FAILURE = "ACCEPT_CANCEL_FAILURE";
+
 export const tryGetClient = () => ({
   type: TRY_GET_CLIENT,
 });
@@ -59,8 +60,9 @@ export const updateRequestFailure = err => ({
     payload: { err },
 });
 
-export const tryAcceptRequest = () => ({
+export const tryAcceptRequest = request => ({
   type: TRY_ACCEPT_REQUEST,
+  payload: request
 });
 
 export const acceptRequestSuccess = request => ({
@@ -68,13 +70,14 @@ export const acceptRequestSuccess = request => ({
   payload: request,
 });
 
-export const acceptRequestFailure = err => ({
+export const acceptRequestFailure = (request, err) => ({
   type: ACCEPT_REQUEST_FAILURE,
-  payload: { err },
+  payload: { ...request, err },
 });
 
-export const tryCancelRequest = () => ({
+export const tryCancelRequest = request => ({
   type: TRY_CANCEL_REQUEST,
+  payload: request
 });
 
 export const canceleRequestSuccess = request => ({
@@ -82,7 +85,7 @@ export const canceleRequestSuccess = request => ({
   payload: request,
 });
 
-export const canceleRequestFailure = err => ({
+export const canceleRequestFailure = (request, err) => ({
   type: CANCEL_REQUEST_FAILURE,
-  payload: err,
+  payload: { ...request, err },
 });

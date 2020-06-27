@@ -1,9 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
-import {
-  Button,
-} from '@material-ui/core';
 import useStyles from "./style";
+import LoadingButton from "../LoadingButton/LoadingButton";
+import {
+  getErrors,
+} from "../../redux/selectors/errors";
 
 const ConnectedButton = props => {
   const {
@@ -13,12 +14,14 @@ const ConnectedButton = props => {
     actionParams,
     className,
     color,
+    errors,
+    progressName,
   } = props;
 
   const classes = useStyles();
 
   return (
-    <Button
+    <LoadingButton
       variant="contained"
       size="small"
       className={classes[className]}
@@ -26,13 +29,16 @@ const ConnectedButton = props => {
         action(dispatch, actionParams)
       }}
       color={color}
+      loading={!!progressName ? !!errors[progressName][actionParams._id] ? errors[progressName][actionParams._id].inProgress : false : false}
     >
       {label}
-    </Button>
+    </LoadingButton>
   )
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  errors: getErrors(state)
+});
 const mapDispatchToProps = dispatch => ({
   dispatch: dispatch,
 });

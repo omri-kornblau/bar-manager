@@ -80,30 +80,28 @@ export const updateRequest = outerDispatch => updatedRequest => {
   })
 }
 
-export const acceptRequest = outerDispatch => _id => {
+export const acceptRequest = outerDispatch => request => {
   outerDispatch(dispatch => {
-    dispatch(tryAcceptRequest());
+    dispatch(tryAcceptRequest(request));
 
-    postAcceptRequest(_id)
+    postAcceptRequest(request._id)
       .then(res => {
-        dispatch(acceptRequestSuccess());
-        getClientData(dispatch)();
+        dispatch(acceptRequestSuccess(request));
       }).catch(err => {
-        dispatch(acceptRequestFailure(err));
+        dispatch(acceptRequestFailure(request, err));
       })
   })
 }
 
-export const cancelRequest = outerDispatch => _id => {
+export const cancelRequest = outerDispatch => request => {
   outerDispatch(dispatch => {
-    dispatch(tryCancelRequest());
+    dispatch(tryCancelRequest(request));
 
-    postCancelRequest(_id)
+    postCancelRequest(request._id)
       .then(res => {
-        dispatch(canceleRequestSuccess());
-        getClientData(dispatch)();
+        dispatch(canceleRequestSuccess(request));
       }).catch(err => {
-        dispatch(canceleRequestFailure(err));
+        dispatch(canceleRequestFailure(request, err));
       })
   })
 }
