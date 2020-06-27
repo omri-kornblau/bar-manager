@@ -13,12 +13,16 @@ import {
   tryAcceptRequest,
   acceptRequestSuccess,
   acceptRequestFailure,
+  tryCancelRequest,
+  canceleRequestSuccess,
+  canceleRequestFailure,
 } from "../actions/request";
 import {
   getClient,
   postCreateRequest,
   postUpdateRequest,
   postAcceptRequest,
+  postCancelRequest,
 } from "../../api/client"
 import { getCreateRequestLoading } from "../selectors/request";
 
@@ -86,6 +90,20 @@ export const acceptRequest = outerDispatch => _id => {
         getClientData(dispatch)();
       }).catch(err => {
         dispatch(acceptRequestFailure(err));
+      })
+  })
+}
+
+export const cancelRequest = outerDispatch => _id => {
+  outerDispatch(dispatch => {
+    dispatch(tryCancelRequest());
+
+    postCancelRequest(_id)
+      .then(res => {
+        dispatch(canceleRequestSuccess());
+        getClientData(dispatch)();
+      }).catch(err => {
+        dispatch(canceleRequestFailure(err));
       })
   })
 }

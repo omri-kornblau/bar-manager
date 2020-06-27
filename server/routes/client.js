@@ -96,6 +96,12 @@ exports.createRequest = async (req, res) => {
 
   if (updateRes.n === 0) {
     await RequestModel.deleteOne({_id: createdRequest._id});
+    filesIds.forEach(fileId => Attachment.unlink({_id: fileId}, err => {
+      if (!isNil(err)) {
+        console.error("Failed deleting file", fileId, err);
+      }
+    })
+    )
     throw Boom.internal("Failed updating client");
   }
 
@@ -130,7 +136,7 @@ exports.updateRequest = async (req, res) => {
     _id, { $set: { ...cleanData } }
   );
 
-  if (updateRes.n === 0) {
+  if (_.isNil(updateRes)) {
     throw Boom.internal("Failed updating request");
   }
 
@@ -175,11 +181,56 @@ exports.acceptRequest = async (req, res) => {
   if (_.isNil(action)) {
     throw Boom.badRequest("Cannot update request with curent accepts statuses");
   }
-  const updateRes = await RequestModel.findByIdAndUpdate(_id, action);
-
-  if (updateRes.n === 0) {
+  const newRequest = await RequestModel.findByIdAndUpdate(_id, action);
+  if (_.isNil(newRequest)) {
     throw Boom.internal("Failed updating request");
   }
+
+  res.sendStatus(204);
+}
+
+exports.cancelRequest = async (req, res) => {
+  const {
+    username
+  } = req;
+
+  const {
+    _id,
+  } = req.body;
+  const { Attachment } = internals;
+
+  const [user, client] = await getClient(username);
+  if (!client.requests.includes(_id) && !client.oldRequests.includes(_id)) {
+    throw Boom.badRequest("_id not belong to client");
+  }
+
+  const currentRequest = await RequestModel.findById(_id);
+  if (_.isNil(currentRequest)) {
+    throw Boom.internal("Request not found");
+  }
+
+  if (!_.includes(ALLOW_ACCEPT_CANCEL_STATUSES, currentRequest.status)) {
+    throw Boom.badRequest("Cannot cancel request with such status");
+  }
+
+  const updateRes = await ClientModel.findByIdAndUpdate(client._id, {$pull: {
+    requests: Mongoose.mongo.ObjectID(_id)
+  }});
+  if (_.isNil(updateRes) ||  _.includes(updateRes.requests, Mongoose.mongo.ObjectID(_id))) {
+    throw Boom.internal("Failed deleting request from client");
+  }
+
+  const deleteRes = await RequestModel.findByIdAndDelete(_id);
+  if (_.isNil(deleteRes)) {
+    console.error("Failed deleting request", _id);
+  }
+
+  [currentRequest.policy, ...currentRequest.extraFiles].forEach(fileId => 
+    Attachment.unlink({_id: fileId}, err => {
+      if (!_.isNil(err)) {
+        console.error("Failed deleting file", fileId, err);
+      }
+  }));
 
   res.sendStatus(204);
 }

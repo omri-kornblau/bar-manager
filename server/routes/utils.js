@@ -1,5 +1,6 @@
 const _ = require("lodash");
 const Mongoose = require("mongoose");
+const Boom = require("boom");
 const { Readable } = require("stream")
 
 const UserModel = Mongoose.model("User");

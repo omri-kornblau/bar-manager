@@ -11,6 +11,7 @@ import ConnectedButton from "../../components/ConnectedButtons/ConnectedButton";
 import ConnectedLink from "../../components/ConnectedButtons/ConnectedLink";
 import {
   acceptRequest,
+  cancelRequest,
 } from "../../redux/thunks/client"
 
 import {
@@ -184,8 +185,8 @@ export const progressBar = {
       />,
       <ConnectedButton
         label="בטל"
-        action={(_, row) =>
-          console.log("CANCEL", row)
+        action={(dispatch, row) => 
+          cancelRequest(dispatch)(row._id)
         } 
         className="failed"
       />,
