@@ -205,7 +205,7 @@ export const progressBar = {
         label="ערוך"
         action={(dispatch, row) => {
           dispatch(
-            push(`/home/${row.type}/${row.status}?or=${row.index}&em=false`)
+            push(`/home/${row.type}/${row.status}?or=${row.index}&em=true`)
           )
         }}
         color="primary"

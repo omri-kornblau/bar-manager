@@ -71,8 +71,7 @@ export const updateRequest = outerDispatch => updatedRequest => {
 
     postUpdateRequest(updatedRequest)
       .then(res => {
-        dispatch(updateRequestSuccess());
-        getClientData(dispatch)();
+        dispatch(updateRequestSuccess(res.data));
         dispatch(push(`/home/${type}/${status}?or=${index}&em=false`));
       }).catch(err => {
         dispatch(updateRequestFailure(err));

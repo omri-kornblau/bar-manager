@@ -109,6 +109,9 @@ exports.createRequest = async (req, res) => {
 }
 
 exports.updateRequest = async (req, res) => {
+  const {
+    username
+  } = req
   const data = req.body;
   const {
     _id
@@ -140,7 +143,12 @@ exports.updateRequest = async (req, res) => {
     throw Boom.internal("Failed updating request");
   }
 
-  res.sendStatus(204);
+  const newRequest = await RequestModel.findById(_id);
+  if (_.isNil(newRequest)) {
+    throw Boom.internal("Failed finding request after accept");
+  }
+
+  res.send(newRequest);
 }
 
 exports.acceptRequest = async (req, res) => {

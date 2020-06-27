@@ -1,5 +1,5 @@
 import {
-  GET_CLIENT_SUCCESS, ACCEPT_REQUEST_SUCCESS, CANCEL_REQUEST_SUCCESS,
+  GET_CLIENT_SUCCESS, ACCEPT_REQUEST_SUCCESS, CANCEL_REQUEST_SUCCESS, UPDATE_REQUEST_SUCCESS,
 } from "../actions/request";
 
 const initialState = {
@@ -18,6 +18,7 @@ const requestReducer = (state=initialState, action) => {
         client: action.payload
       };
     case ACCEPT_REQUEST_SUCCESS:
+    case UPDATE_REQUEST_SUCCESS:
       return {
         ...state,
         client: {
