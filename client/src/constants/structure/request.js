@@ -185,9 +185,11 @@ export const progressBar = {
       />,
       <ConnectedButton
         label="בטל"
-        action={(dispatch, row) => 
-          cancelRequest(dispatch)(row._id)
-        } 
+        action={(dispatch, row) => {
+          if (window.confirm("אתה בטוח שאתה רוצה למחוק את הבקשה?")) {
+            cancelRequest(dispatch)(row._id)
+          }
+        }} 
         className="failed"
       />,
     ],
