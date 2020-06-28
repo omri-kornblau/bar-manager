@@ -1,7 +1,6 @@
 import _ from "lodash";
 
 import { labels } from "../constants/hebrew/request";
-import { getAction } from "connected-react-router";
 
 const unknowErrorData = {
   message: "שגיאה לא ידועה"
@@ -34,9 +33,9 @@ const yupErrorToText = errData => {
 }
 
 export const parseFormError = err => {
-  const errData = getAxiosError(err);
+  if (_.isNil(err)) return err;
 
-  if (_.isNil(errData)) return unknowErrorData;
+  const errData = getAxiosError(err);
 
   if (errData.name === "ValidationError") {
     return {
@@ -52,7 +51,7 @@ export const parseFormError = err => {
 }
 
 export const getAxiosError = err => {
-  if (_.isNil(err)) return unknowErrorData;
+  if (_.isNil(err)) return err;
   if (_.isNil(err.response)) return unknowErrorData;
   if (_.isNil(err.response.data)) return unknowErrorData;
 
