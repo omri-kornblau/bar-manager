@@ -14,10 +14,10 @@ const CheckboxWrapper = props => {
     value
   } = props;
 
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(value);
 
   const onClick = () => {
-    onChange({target: {name: name, value: !checked}});
+    onChange({target: {name, value: !checked}});
     setChecked(!checked);
   }
 
