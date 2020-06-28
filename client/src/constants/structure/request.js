@@ -105,9 +105,9 @@ export const tableHeaders = {
         type: "text"
       }
     },
-    recivedTime: {
-      id: "recivedTime",
-      label: labels.recivedTime,
+    activeTime: {
+      id: "activeTime",
+      label: labels.activeTime,
       formatter: formatTimeStampRTL,
       filter: {
         // type: "date"
@@ -199,7 +199,7 @@ export const progressBar = {
   inTenderProcedure: {
     label: "פוליסות בהליך מכרזי",
     description: "",
-    chosenHeaders: ["index", "type", "recivedTime", "startDate", "maxPrice"],
+    chosenHeaders: ["index", "type", "activeTime", "startDate", "maxPrice"],
     actions: [
       <ConnectedButton
         label="ערוך"
@@ -221,13 +221,13 @@ export const progressBar = {
   active: {
     label: "פוליסות פעילות",
     description: "",
-    chosenHeaders: ["type", "startDate", "recivedTime"],
+    chosenHeaders: ["type", "startDate", "activeTime"],
     actions: downloadActions,
   },
   history: {
     label: "היסטוריה",
     description: "",
-    chosenHeaders: ["index", "startDate", "recivedTime", "maxPrice"],
+    chosenHeaders: ["index", "startDate", "activeTime", "maxPrice"],
     actions: downloadActions,
   },
 }
@@ -245,7 +245,7 @@ export const modalChosenHeaders = [
     formatter: formatTimeStampRTL
   },
   {
-    id: "recivedTime",
+    id: "activeTime",
     formatter: formatTimeStampRTL
   },
   {

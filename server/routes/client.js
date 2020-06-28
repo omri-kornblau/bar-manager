@@ -77,7 +77,7 @@ exports.createRequest = async (req, res) => {
     status: REQUEST_STATUSES[0],
     createdTime: new Date(),
     startDate: undefined,
-    recivedTime: undefined,
+    activeTime: undefined,
     messages: [],
     offers: [],
     firstAccept: "",
@@ -181,7 +181,7 @@ exports.acceptRequest = async (req, res) => {
       ? {$set: {
           secondAccept: user._id, 
           status: "inTenderProcedure",
-          recivedTime: Moment().add(IN_TENDER_PROCEDURE_DURATION),
+          activeTime: Moment().add(IN_TENDER_PROCEDURE_DURATION),
           startDate: Moment().add(IN_TENDER_PROCEDURE_DURATION).add(WAITING_FOR_SIGN_DURATION),
         }}
       : null

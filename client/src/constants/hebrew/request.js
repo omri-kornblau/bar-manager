@@ -12,7 +12,7 @@ export const labels = {
   isCurrentlyInsured: "מבוטח כרגע",
   createdTime: "זמן יצירה",
   startDate: "זמן התחלה",
-  recivedTime: "זמן קבלה",
+  activeTime: "תאריך העמדה",
   firstAccept: "אישור A",
   secondAccept: "אישור B",
 }

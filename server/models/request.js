@@ -22,7 +22,7 @@ const yupCreateRequestSchema = Yup.object().shape({
   comments: Yup.string(),
   createdTime: Yup.date(),
   startDate: Yup.date(),
-  recivedTime: Yup.date(),
+  activeTime: Yup.date(),
   policy: Yup.string().length(OBJECT_ID_LENGTH),
   extraFiles: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   messages: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
@@ -70,7 +70,7 @@ const mongoFormat = {
   startDate: {
     type: Date,
   },
-  recivedTime: {
+  activeTime: {
     type: Date,
   },
   policy: {
