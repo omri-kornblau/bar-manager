@@ -18,12 +18,15 @@ require("./models/cookie");
 require("./models/message");
 require("./models/offer");
 require("./models/oftenSampledRequest");
+require("./models/sampledRequest");
 require("./models/oldRequest");
 require("./models/provider");
 require("./models/request");
 require("./models/user");
 require("./models/notification");
 const { createAttachment  } = require("./models/attachment");
+
+const StatusWorker = require("./workers/requestStatus");
 
 AsyncErrorsHandler.patchRouter(ErrorsRouter.route);
 
@@ -35,18 +38,21 @@ Mongoose
   })
   .then(() => {
     console.log("MongoDB Connected");
+    StatusWorker.init();
+    console.log("Started request status worker")
   })
   .catch(err => console.log(err));
 
-Mongoose.createConnection(DbConfig.mongoFSURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then((gseFSConnection) => {
+Mongoose
+  .createConnection(DbConfig.mongoFSURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then((gseFSConnection) => {
     createAttachment(gseFSConnection);
     console.log("MongoDB-GridFS connected")
-})
-.catch(err => console.log(err));
+  })
+  .catch(err => console.log(err));
 
 
 // Setup express server
