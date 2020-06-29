@@ -1,10 +1,14 @@
 const _ = require("lodash");
 const Mongoose = require("mongoose");
 const Boom = require("boom");
-const { Readable } = require("stream")
+const { Readable } = require("stream");
+const { createNotification } = require("../db/notification");
+const {
+  addNotificationToClientById,
+  findClientById
+} = require("../db/client");
 
 const UserModel = Mongoose.model("User");
-const ClientModel = Mongoose.model("Client");
 
 exports.findByIds = async (Model, ids, error) => {
   const promises = ids.map(_id => (
@@ -26,7 +30,7 @@ exports.prepareRequests = async requests => {
   const authors = await Promise.all(promise);
   return requests.map((request, index) => {
     return {...request._doc, author: authors[index].username};
-  }); 
+  });
 }
 
 exports.getClient = async username => {
@@ -35,10 +39,7 @@ exports.getClient = async username => {
     throw Boom.internal("User not found");
   }
 
-  const client = await ClientModel.findById(user.clientId);
-  if (!client) {
-    throw Boom.internal("Client not found");
-  }
+  const client = await findClientById(user.clientId);
 
   return [user, client];
 }
@@ -64,4 +65,9 @@ exports.readFile = (attachment, _id) => {
       return resolve(buffer);
     })
   })
+}
+
+exports.createNotification = async (message, requestId, clientId) => {
+  const createdNotification = await createNotification(message, requestId);
+  return await addNotificationToClientById(clientId, createdNotification._id);
 }

@@ -27,6 +27,26 @@ exports.STATUS_UPDATE_ALLOWED_FIELDS = {
     "isCurrentlyInsured"
   ]
 }
+
 exports.ALLOW_ACCEPT_CANCEL_STATUSES = ["waitingForApproval"];
-exports.IN_TENDER_PROCEDURE_DURATION = Moment.duration(3, "days");
-exports.WAITING_FOR_SIGN_DURATION = Moment.duration(10, "days");
+
+// Request Status Worker
+exports.LONG_SAMPLE_INTERVAL = Moment.duration(5, "seconds");
+exports.SHORT_SAMPLE_INTERVAL = Moment.duration(1, "seconds")
+exports.STATUS_TIMING = {
+  waitingForApproval: {
+    endTimeKey: "createdTime",
+    duration: 0,
+    targetStatus: "inTenderProcedure"
+  },
+  inTenderProcedure: {
+    endTimeKey: "startDate",
+    duration: Moment.duration(20, "seconds"),
+    targetStatus: "waitingForSign"
+  },
+  waitingForSign: {
+    endTimeKey: "activeTime",
+    duration: Moment.duration(10, "seconds"),
+    targetStatus: "active"
+  }
+};
