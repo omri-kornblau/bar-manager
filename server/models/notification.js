@@ -1,22 +1,28 @@
 const Mongoose = require("mongoose");
 const Yup = require("yup");
 
+const { OBJECT_ID_LENGTH } = require("../config/consts");
+
 const yupNotificationSchema = Yup.object().shape({
-  message: Yup.string(),
-  date: Yup.date(),
+  message: Yup.object(),
+  time: Yup.date(),
   read: Yup.bool(),
+  requestId: Yup.string().length(OBJECT_ID_LENGTH)
 });
 
 const mongoFormat = {
   message: {
-    type: String
+    type: Object
   },
-  date: {
+  time: {
     type: Date
   },
   read: {
     type: Boolean
   },
+  requestId: {
+    type: String
+  }
 };
 
 const notificationScheme = new Mongoose.Schema(mongoFormat);
