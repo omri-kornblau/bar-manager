@@ -19,7 +19,7 @@ const {
   createRequest,
   deleteRequestById,
   findRequestById,
-  updateRequestById,
+  updateRequestFieldsById,
   updateFirstAcceptById,
   updateSecondAcceptById
 } = require("../db/request");
@@ -132,7 +132,7 @@ exports.updateRequest = async (req, res) => {
   }
 
   const cleanData = _.pick(data, STATUS_UPDATE_ALLOWED_FIELDS[data.status]);
-  const updatedRequest = await updateRequestById(_id, cleanData, true);
+  const updatedRequest = await updateRequestFieldsById(_id, cleanData, true);
 
   res.send(updatedRequest);
 }
