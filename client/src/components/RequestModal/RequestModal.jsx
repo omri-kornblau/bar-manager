@@ -139,7 +139,7 @@ const RequestModal = props => {
     <Container maxWidth="md">
       <Paper>
         <Box
-          height="90vh"
+          height="inherit"
           p={4}
           style={{
             overflowY: "auto",
@@ -164,9 +164,15 @@ const RequestModal = props => {
                 />
                 : <DataList data={data}/>
               }
-              <Box mt={2}/>
+              <Box mt={1}/>
+              <Divider/>
+              <Box mt={1}/>
               {!editMode ?
-              formatActions(progressBar[data.status].actions, data)
+              <>
+                <Typography align="center">כלים</Typography>
+                <Box mt={2}/>
+                {formatActions(progressBar[data.status].actions, data)}
+              </>
               : <></>}
             </Grid>
             <Divider orientation="vertical" flexItem/>
