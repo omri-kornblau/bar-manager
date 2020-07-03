@@ -27,7 +27,7 @@ const FileUploadWrapper = props => {
       fileName,
     } = e.target;
 
-    const newFile = {name: fileName, content: result};
+    const newFile = {name: fileName, content: btoa(result)};
     setFiles(files => {
       const newFiles = multiple ? [...files, newFile] : [newFile];
       onChange({target: {

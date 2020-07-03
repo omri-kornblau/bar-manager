@@ -46,7 +46,7 @@ exports.getClient = async username => {
 
 exports.writerFile = (attachment, file) => {
   return new Promise((resolve, reject) => {
-    const readable = Readable.from([file.content]);
+    const readable = Readable.from(Buffer.from(file.content, 'base64'));
     attachment.write({filename: file.name}, readable, (error, file) => {
       if (error !== null) {
         return reject();
