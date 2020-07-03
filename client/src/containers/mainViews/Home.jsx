@@ -15,9 +15,10 @@ import {
 } from "react-router-dom";
 
 import ClientViews from "./homeViews/homeClientViews";
+import ProviderViews from "./homeViews/homeProviderViews";
 import LoggedOutViews from "./homeViews/loggedOutViews";
 import { getView, getClosed } from "../../redux/selectors/sidebar";
-import { getUserLoggedIn } from "../../redux/selectors/user";
+import { getUserType, getUserLoggedIn } from "../../redux/selectors/user";
 import { setSidebarClosed } from "../../redux/actions/sidebar";
 
 import useStyles from "./style";
@@ -43,12 +44,14 @@ const Home = props => {
     getProgressWithView,
     isLoggedIn,
     isLoading,
+    type
   } = props;
 
   const match = useRouteMatch();
   const classes = useStyles();
 
-  const views = isLoggedIn ? ClientViews : LoggedOutViews;
+  const userViews = type === "provider" ? ProviderViews : ClientViews;
+  const views = isLoggedIn ? userViews : LoggedOutViews;
 
   return (
     <>
@@ -99,6 +102,7 @@ const mapStateToProps = state => ({
   getProgressWithView: view => getProgress(state, view),
   sidebarClosed: getClosed(state),
   isLoggedIn: getUserLoggedIn(state),
+  type: getUserType(state),
   isLoading: getLoading(state)
 })
 
