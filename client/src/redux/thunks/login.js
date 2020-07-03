@@ -19,7 +19,7 @@ export const login = outerDispatch => (username, password) =>
 
     postLogin(username, password)
       .then(res => {
-        dispatch(loginSuccess({name: username}));
+        dispatch(loginSuccess(res.data));
         dispatch(push("/home/dashboard/edit"));
         getClientData(dispatch)();
       })
@@ -32,7 +32,7 @@ export const checkToken = outerDispatch => originUrl =>
   outerDispatch(dispatch => {
     getCheckToken()
       .then(res => {
-        dispatch(loginSuccess({name: res.data.username}));
+        dispatch(loginSuccess(res.data));
         dispatch(push(originUrl));
       })
       .catch(err => {

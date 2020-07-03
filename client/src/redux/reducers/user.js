@@ -17,10 +17,7 @@ const userReducer = (state=initialUser, action) => {
     case LOGIN_SUCCESS:
       return {
         ...state,
-        data: {
-          name: action.payload.name,
-          type: action.payload.type
-        },
+        data: action.payload,
         isLoggedIn: true
       }
 

@@ -14,7 +14,8 @@ exports.signupClient = async (req, res) => {
     password,
   } = req.body;
 
-  let createdClient = undefined;
+  let createdClient;
+  let createdUser;
 
   try {
     const emptyClient = {
@@ -35,7 +36,7 @@ exports.signupClient = async (req, res) => {
       type: USER_TYPES.client,
     }
 
-    await UserModel.create(user);
+    createdUser = await UserModel.create(user);
   } catch (err) {
     if (createdClient != undefined) {
       await ClientModel.deleteOne(createdClient);
@@ -44,7 +45,7 @@ exports.signupClient = async (req, res) => {
     throw err;
   }
 
-  res.sendStatus(200);
+  res.status(200).send(createdUser);
 }
 
 exports.signupProvider = async (req, res) => {
@@ -71,11 +72,11 @@ exports.signupProvider = async (req, res) => {
       email,
       username,
       password,
-      clientId: createdProvider._id,
+      providerId: createdProvider._id,
       type: USER_TYPES.provider,
     }
 
-    await UserModel.create(user);
+    createdUser = await UserModel.create(user);
   } catch (err) {
     if (createdProvider != undefined) {
       await ProviderModel.deleteOne(createdProvider);
@@ -84,5 +85,5 @@ exports.signupProvider = async (req, res) => {
     throw err;
   }
 
-  res.sendStatus(200);
+  res.status(200).send(createdUser);
 }

@@ -13,6 +13,11 @@ const {
   maxUserLogins
 } = require("../config/server");
 
+const omitSensitiveFields = (user) => {
+  const pickedFields = ["username", "type", "email"];
+  return _.pick(user._doc, pickedFields);
+}
+
 exports.login = async (req, res) => {
   const {
     username,
@@ -66,7 +71,7 @@ exports.login = async (req, res) => {
   const token = Jwt.sign(payload, secretTokenKey, tokenOptions);
   return res.cookie("token", token, {
     httpOnly: true
-  }).send({username});
+  }).send(omitSensitiveFields(user));
 }
 
 exports.checkToken = async (req, res) => {
@@ -74,7 +79,8 @@ exports.checkToken = async (req, res) => {
   const {
     username,
   } = await Jwt.verify(token, secretTokenKey)
-  res.send({username});
+  const user = await UserModel.findOne({ username });
+  res.send(omitSensitiveFields(user));
 }
 
 exports.logout = async (req, res) => {
