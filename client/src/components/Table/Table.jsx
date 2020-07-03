@@ -109,7 +109,10 @@ const CustomTable = props => {
             switch (_.isNil(column.filter) ? "" : column.filter.type) {
               case "":
               case "text":
-                return value.toString().includes(currentOptions.search) && !!currentOptions.options[value];
+                return !!value
+                  ? value.toString().includes(currentOptions.search)
+                    && !!currentOptions.options[value]
+                  : "";
 
               case "number":
                 const { min, max } = currentOptions;
