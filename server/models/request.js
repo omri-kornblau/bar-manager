@@ -22,11 +22,13 @@ const yupCreateRequestSchema = Yup.object().shape({
   comments: Yup.string(),
   createdTime: Yup.date(),
   startDate: Yup.date(),
-  recivedTime: Yup.date(),
+  activeTime: Yup.date(),
   policy: Yup.string().length(OBJECT_ID_LENGTH),
   extraFiles: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   messages: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   offers: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
+  firstAccept: Yup.string().test('len', 'Must be "" or object id length', val => val.length === OBJECT_ID_LENGTH || val.length === 0),
+  secondAccept: Yup.string().test('len', 'Must be "" or object id length', val => val.length === OBJECT_ID_LENGTH || val.length === 0),
 });
 
 const yupUpdateRequestSchema = Yup.object().shape({
@@ -68,14 +70,14 @@ const mongoFormat = {
   startDate: {
     type: Date,
   },
-  recivedTime: {
+  activeTime: {
     type: Date,
   },
   policy: {
     type: String,
   },
   extraFiles: {
-    type: Array
+    type: Array,
   },
   messages: {
     type: Array,
@@ -84,11 +86,17 @@ const mongoFormat = {
     type: Array,
   },
   isCurrentlyInsured: {
-    type: Boolean
+    type: Boolean,
   },
   index: {
-    type: Number
-  }
+    type: Number,
+  },
+  firstAccept: {
+    type: String,
+  },
+  secondAccept: {
+    type: String,
+  },
 };
 
 const requestScheme = new Mongoose.Schema(mongoFormat);

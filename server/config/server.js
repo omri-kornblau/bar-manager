@@ -4,5 +4,6 @@ module.exports = {
   enviornment: process.env.NODE_ENV,
   production: process.env.NODE_ENV === "production",
   secretTokenKey: process.env.SECRET_KEY,
-  maxUserLogins: 10
+  maxUserLogins: 10,
+  requestSizeLimit: "100mb",
 }

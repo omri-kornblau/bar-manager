@@ -18,7 +18,7 @@ exports.signupClient = async (req, res) => {
 
   try {
     const emptyClient = {
-      unreadNotifictions: [],
+      unreadNotifications: [],
       readNotifications: [],
       requests: [],
       oldRequests: [],
@@ -27,6 +27,7 @@ exports.signupClient = async (req, res) => {
     createdClient = await ClientModel.create(emptyClient);
 
     const user = {
+      _id: createdClient._id,
       email,
       username,
       password,
@@ -54,9 +55,10 @@ exports.signupProvider = async (req, res) => {
   } = req.body;
 
   let createdProvider = undefined;
+
   try {
     const emptyProvider = {
-      unreadNotifictions: [],
+      unreadNotifications: [],
       readNotifications: [],
       requests: [],
       oldRequests: [],
@@ -65,6 +67,7 @@ exports.signupProvider = async (req, res) => {
     createdProvider = await ProviderModel.create(emptyProvider);
 
     const user = {
+      _id: createdProvider._id,
       email,
       username,
       password,

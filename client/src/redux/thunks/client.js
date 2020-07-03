@@ -10,11 +10,19 @@ import {
   tryUpdateRequest,
   updateRequestSuccess,
   updateRequestFailure,
+  tryAcceptRequest,
+  acceptRequestSuccess,
+  acceptRequestFailure,
+  tryCancelRequest,
+  canceleRequestSuccess,
+  canceleRequestFailure,
 } from "../actions/request";
 import {
   getClient,
   postCreateRequest,
   postUpdateRequest,
+  postAcceptRequest,
+  postCancelRequest,
 } from "../../api/client"
 import { getCreateRequestLoading } from "../selectors/request";
 
@@ -63,11 +71,36 @@ export const updateRequest = outerDispatch => updatedRequest => {
 
     postUpdateRequest(updatedRequest)
       .then(res => {
-        dispatch(updateRequestSuccess());
-        getClientData(dispatch)();
+        dispatch(updateRequestSuccess(res.data));
         dispatch(push(`/home/${type}/${status}?or=${index}&em=false`));
       }).catch(err => {
         dispatch(updateRequestFailure(err));
+      })
+  })
+}
+
+export const acceptRequest = outerDispatch => request => {
+  outerDispatch(dispatch => {
+    dispatch(tryAcceptRequest(request));
+
+    postAcceptRequest(request._id)
+      .then(res => {
+        dispatch(acceptRequestSuccess(res.data));
+      }).catch(err => {
+        dispatch(acceptRequestFailure(request, err));
+      })
+  })
+}
+
+export const cancelRequest = outerDispatch => request => {
+  outerDispatch(dispatch => {
+    dispatch(tryCancelRequest(request));
+
+    postCancelRequest(request._id)
+      .then(res => {
+        dispatch(canceleRequestSuccess(request));
+      }).catch(err => {
+        dispatch(canceleRequestFailure(request, err));
       })
   })
 }

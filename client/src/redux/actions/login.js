@@ -9,9 +9,9 @@ export const tryLogin = loggedIn => ({
   payload: { loggedIn }
 });
 
-export const loginSuccess = loggedIn => ({
+export const loginSuccess = (loggedIn) => ({
   type: LOGIN_SUCCESS,
-  payload: { loggedIn }
+  payload: { ...loggedIn }
 });
 
 export const loginFailure = err => ({

@@ -11,6 +11,7 @@
     "connected-react-router": "^6.8.0",
     "date-fns": "^2.14.0",
     "history": "^4.10.1",
+    "http-proxy-middleware": "^1.0.4",
     "jss-rtl": "^0.3.0",
     "lodash": "^4.17.15",
     "moment": "^2.27.0",
@@ -32,7 +33,6 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:5000",
   "eslintConfig": {
     "extends": "react-app"
   },

@@ -18,12 +18,15 @@ require("./models/cookie");
 require("./models/message");
 require("./models/offer");
 require("./models/oftenSampledRequest");
+require("./models/sampledRequest");
 require("./models/oldRequest");
 require("./models/provider");
 require("./models/request");
 require("./models/user");
 require("./models/notification");
 const { createAttachment  } = require("./models/attachment");
+
+const StatusWorker = require("./workers/requestStatus");
 
 AsyncErrorsHandler.patchRouter(ErrorsRouter.route);
 
@@ -35,7 +38,18 @@ Mongoose
   })
   .then(() => {
     console.log("MongoDB Connected");
-    createAttachment();
+    StatusWorker.init();
+    console.log("Started request status worker")
+  })
+  .catch(err => console.log(err));
+
+Mongoose
+  .createConnection(DbConfig.mongoFSURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then((gseFSConnection) => {
+    createAttachment(gseFSConnection);
     console.log("MongoDB-GridFS connected")
   })
   .catch(err => console.log(err));
@@ -44,7 +58,7 @@ Mongoose
 // Setup express server
 const app = Express();
 
-app.use(BodyParser({limit: '100mb'}));
+app.use(BodyParser({limit: ServerConfig.requestSizeLimit}));
 app.use(BodyParser.urlencoded({
   extended: false
 }));

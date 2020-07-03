@@ -66,11 +66,15 @@ exports.login = async (req, res) => {
   const token = Jwt.sign(payload, secretTokenKey, tokenOptions);
   return res.cookie("token", token, {
     httpOnly: true
-  }).send();
+  }).send({username});
 }
 
-exports.checkToken = (req, res) => {
-  res.send();
+exports.checkToken = async (req, res) => {
+  const token = req.cookies.token;
+  const {
+    username,
+  } = await Jwt.verify(token, secretTokenKey)
+  res.send({username});
 }
 
 exports.logout = async (req, res) => {

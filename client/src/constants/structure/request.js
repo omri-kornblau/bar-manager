@@ -1,13 +1,22 @@
 import React from "react";
+import { push } from "connected-react-router";
 import {
-  InputAdornment
+  InputAdornment, Grid
 } from "@material-ui/core"
+import GetAppIcon from '@material-ui/icons/GetApp';
 
 import { labels } from "../hebrew/request";
 
-import ConnectedButton from "../../components/ConnectedButton/ConnectedButton";
+import ConnectedButton from "../../components/ConnectedButtons/ConnectedButton";
+import ConnectedLink from "../../components/ConnectedButtons/ConnectedLink";
+import {
+  acceptRequest,
+  cancelRequest,
+} from "../../redux/thunks/client"
 
 import {
+  formatAccept,
+  formatActions,
   formatYesNo,
   formatTimeStampRTL,
   formatShekel,
@@ -62,6 +71,7 @@ export const tableHeaders = {
     maxPrice: {
       id: "maxPrice",
       label: labels.maxPrice,
+      formatter: formatShekel,
       filter: {
         type: "number"
       }
@@ -80,6 +90,7 @@ export const tableHeaders = {
     createdTime: {
       id: "createdTime",
       label: labels.createdTime,
+      formatter: formatTimeStampRTL,
       filter: {
         // type: "date"
         type: "text"
@@ -88,56 +99,136 @@ export const tableHeaders = {
     startDate: {
       id: "startDate",
       label: labels.startDate,
+      formatter: formatTimeStampRTL,
       filter: {
         // type: "date"
         type: "text"
       }
     },
-    recivedTime: {
-      id: "recivedTime",
-      label: labels.recivedTime,
+    activeTime: {
+      id: "activeTime",
+      label: labels.activeTime,
+      formatter: formatTimeStampRTL,
       filter: {
         // type: "date"
         type: "text"
       }
+    },
+    firstAccept: {
+      id: "firstAccept",
+      label: labels.firstAccept,
+      formatter: formatAccept,
+      filter: {
+        type: "bool",
+      },
+    },
+    secondAccept: {
+      id: "secondAccept",
+      label: labels.secondAccept,
+      formatter: formatAccept,
+      filter: {
+        type: "bool",
+      },
     },
     actions: {
       id: "actions",
       label: "פעולות",
+      formatter: formatActions,
       filter: false,
       sort: false,
     },
 }
 
+const downloadActions = [
+  <ConnectedLink
+    label={
+        <Grid container>
+          <GetAppIcon/>
+          הורד פוליסה
+        </Grid>
+    }
+    action={(_, row) => {
+      window.open(`/client/downloadfile?fileId=${row.policy}&requestId=${row._id}`, "_self");
+    }}
+    color="primary"
+  />,
+  <ConnectedLink
+    label={
+        <Grid container>
+          <GetAppIcon/>
+            הורד קבצים נוספים
+        </Grid>
+    }
+    action={(_, row) => {
+      row.extraFiles.forEach((fileId, index)=> {
+        const action = index + 1 === row.extraFiles.length
+        ? "_self"
+        : "blank";
+        window.open(`/client/downloadfile?fileId=${fileId}&requestId=${row._id}`, action);
+      })
+    }}
+  />,
+]
+
 export const progressBar = {
   waitingForApproval: {
     label: "בקשות המחכות לאישור מורשה חתימה",
     description: "",
-    chosenHeaders: ["index", "maxPrice"],
+    chosenHeaders: ["index", "maxPrice", "firstAccept", "secondAccept"],
     actions: [
-      <ConnectedButton label="אשר" action={(_, row) => console.log("ACCEPT", row)} className="success"/>,
-      <ConnectedButton label="בטל" action={(_, row) => console.log("CANCEL", row)} className="failed"/>,
+      <ConnectedButton
+        label="אשר"
+        action={(dispatch, row) => 
+          acceptRequest(dispatch)(row)
+        } 
+        className="success"
+        progressName="acceptRequest"
+      />,
+      <ConnectedButton
+        label="בטל"
+        action={(dispatch, row) => {
+          if (window.confirm("אתה בטוח שאתה רוצה למחוק את הבקשה?")) {
+            cancelRequest(dispatch)(row)
+          }
+        }} 
+        progressName="cancelRequest"
+        className="failed"
+      />,
     ],
   },
   inTenderProcedure: {
     label: "פוליסות בהליך מכרזי",
     description: "",
-    chosenHeaders: ["type", "recivedTime", "maxPrice"],
+    chosenHeaders: ["index", "type", "activeTime", "startDate", "maxPrice"],
+    actions: [
+      <ConnectedButton
+        label="ערוך"
+        action={(dispatch, row) => {
+          dispatch(
+            push(`/home/${row.type}/${row.status}?or=${row.index}&em=true`)
+          )
+        }}
+        color="primary"
+      />,
+    ],
   },
   waitingForSign: {
     label: "פוליסות שאושרו ומחכות לחתימה",
     description: "",
     chosenHeaders: ["type", "startDate", "maxPrice"],
+    actions: downloadActions,
   },
   active: {
     label: "פוליסות פעילות",
     description: "",
-    chosenHeaders: ["type", "startDate", "recivedTime"],
+    chosenHeaders: ["type", "startDate", "activeTime"],
+    actions: downloadActions,
   },
   history: {
     label: "היסטוריה",
     description: "",
-    chosenHeaders: ["index", "startDate", "recivedTime", "maxPrice"],
+    chosenHeaders: ["index", "startDate", "activeTime", "maxPrice"],
+    actions: downloadActions,
   },
 }
 
@@ -150,10 +241,12 @@ export const modalChosenHeaders = [
     formatter: formatTimeStampRTL
   },
   {
-    id: "startDate"
+    id: "startDate",
+    formatter: formatTimeStampRTL
   },
   {
-    id: "recivedTime"
+    id: "activeTime",
+    formatter: formatTimeStampRTL
   },
   {
     id: "maxPrice",

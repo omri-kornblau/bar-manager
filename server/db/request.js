@@ -1,0 +1,99 @@
+const _ = require("lodash");
+const Mongoose = require("mongoose");
+const Boom = require("boom");
+const Moment = require("moment");
+
+const RequestModel = Mongoose.model("Request");
+
+const { yupUpdateRequestSchema } = require("../models/request");
+
+const { STATUS_TIMING } = require("../config/consts");
+
+exports.createRequest = async requestData => {
+  const createdRequest = await RequestModel.create({
+    createdTime: new Date(),
+    startDate: undefined,
+    activeTime: undefined,
+    messages: [],
+    offers: [],
+    firstAccept: "",
+    secondAccept: "",
+    ...requestData
+  })
+
+  if (_.isNil(createdRequest)) {
+    console.error(`Failed creating request for user ${requestData.author}`)
+    throw Boom.internal(`Failed creating request`);
+  }
+
+  return createdRequest;
+}
+
+exports.deleteRequestById = _id => {
+  return RequestModel.findByIdAndDelete(_id);
+}
+
+exports.findRequestById = async _id => {
+  const request = await RequestModel.findById(_id);
+
+  if (_.isNil(request)) {
+    throw Boom.internal("Request not found");
+  }
+  return request;
+}
+
+exports.updateRequestFieldsById = async (_id, data, validate=true) => {
+  if (validate) {
+    await yupUpdateRequestSchema.validate(data);
+  }
+
+  const updatedRequest = await RequestModel.findByIdAndUpdate(
+    _id,
+    { $set: { ...data } },
+    { new: true}
+  );
+
+  if (_.isNil(updatedRequest)) {
+    throw Boom.internal("Failed updating request");
+  }
+
+  return updatedRequest;
+}
+
+exports.updateRequestById = async (_id, action, returnNew=false) => {
+  const updatedRequest = await RequestModel.findByIdAndUpdate(_id, action, { new: returnNew });
+
+  if (_.isNil(updatedRequest)) {
+    throw Boom.internal("Failed updating request");
+  }
+
+  return updatedRequest;
+}
+
+exports.updateFirstAcceptById = async (_id, userId) => {
+  return exports.updateRequestById(
+    _id,
+    { $set: { firstAccept: userId } },
+    true
+  );
+}
+
+exports.updateSecondAcceptById = async (_id, userId) => {
+  const now = Moment();
+
+  return exports.updateRequestById(
+    _id,
+    {
+      $set: {
+        secondAccept: userId,
+        status: "inTenderProcedure",
+        startDate: now.clone()
+          .add(STATUS_TIMING.inTenderProcedure.duration),
+        activeTime: now.clone()
+          .add(STATUS_TIMING.inTenderProcedure.duration)
+          .add(STATUS_TIMING.waitingForSign.duration),
+      }
+    },
+    true
+  );
+}

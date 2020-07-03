@@ -10,6 +10,14 @@ export const TRY_UPDATE_REQUEST = "TRY_UPDATE_REQUEST";
 export const UPDATE_REQUEST_SUCCESS = "UPDATE_REQUEST_SUCCESS";
 export const UPDATE_REQUEST_FAILURE = "UPDATE_REQUEST_FAILURE";
 
+export const TRY_ACCEPT_REQUEST = "TRY_ACCEPT_REQUEST";
+export const ACCEPT_REQUEST_SUCCESS = "ACCEPT_REQUEST_SUCCESS";
+export const ACCEPT_REQUEST_FAILURE = "ACCEPT_REQUEST_FAILURE";
+
+export const TRY_CANCEL_REQUEST = "TRY_CANCEL_REQUEST";
+export const CANCEL_REQUEST_SUCCESS = "ACCEPT_CANCEL_SUCCESS";
+export const CANCEL_REQUEST_FAILURE = "ACCEPT_CANCEL_FAILURE";
+
 export const tryGetClient = () => ({
   type: TRY_GET_CLIENT,
 });
@@ -47,9 +55,37 @@ export const updateRequestSuccess = request => ({
   payload: request,
 });
 
-export const updateRequestFailure = err => {
-  return ({
+export const updateRequestFailure = err => ({
     type: UPDATE_REQUEST_FAILURE,
     payload: { err },
-  });
-}
+});
+
+export const tryAcceptRequest = request => ({
+  type: TRY_ACCEPT_REQUEST,
+  payload: request
+});
+
+export const acceptRequestSuccess = request => ({
+  type: ACCEPT_REQUEST_SUCCESS,
+  payload: request,
+});
+
+export const acceptRequestFailure = (request, err) => ({
+  type: ACCEPT_REQUEST_FAILURE,
+  payload: { ...request, err },
+});
+
+export const tryCancelRequest = request => ({
+  type: TRY_CANCEL_REQUEST,
+  payload: request
+});
+
+export const canceleRequestSuccess = request => ({
+  type: CANCEL_REQUEST_SUCCESS,
+  payload: request,
+});
+
+export const canceleRequestFailure = (request, err) => ({
+  type: CANCEL_REQUEST_FAILURE,
+  payload: { ...request, err },
+});
