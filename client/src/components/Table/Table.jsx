@@ -34,7 +34,8 @@ const propTypes = {
   filter: PropTypes.bool,
   collapse: PropTypes.element,
   rounded: PropTypes.bool,
-  pagination: PropTypes.bool
+  pagination: PropTypes.bool,
+  drag: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -44,6 +45,7 @@ const defaultProps = {
   collapse: null,
   pagination: true,
   onRowClick: _.noop,
+  drag: true,
 };
 
 const initOptions = (columns, rows) => {
@@ -84,6 +86,7 @@ const CustomTable = props => {
     rounded,
     pagination,
     onRowClick,
+    drag,
     sort,
     actions,
   } = props;
@@ -133,7 +136,7 @@ const CustomTable = props => {
       });
     }
 
-    return filteredRows;
+    return pagination ? filteredRows.slice(page * rowsPerPage, (page + 1) * rowsPerPage) : filteredRows;
   }, [options, filter, sort, sortBy, rows]);
 
   const headerRefs = columns.map(() => useRef(null));
@@ -156,7 +159,7 @@ const CustomTable = props => {
   return (
     <Paper elevation={3} className={classes.table}>
       <TableContainer className={`${classes.table} ${rounded ? classes.roundedTable : ""}`}>
-        <Table stickyHeader className={classes.tableBody} size="small">
+        <Table stickyHeader={pagination} className={classes.tableBody} size="small">
           <TableHead>
             <TableRow className={classes.tableHeader}>
               {
@@ -170,7 +173,7 @@ const CustomTable = props => {
                         options={options[column.id]}
                         setOptions={newOptions => setOptions({...options, [column.id]: newOptions})}
                         setSortBy={
-                          column.sort === false
+                          column.sort === false || !sort
                           ? () => {}
                           : () => setSortBy(
                               sortBy.id === column.id ?
@@ -185,8 +188,8 @@ const CustomTable = props => {
                         }
                       />
                       {
-                        index + 1 < columns.length
-                        ? <ColumnResizer style={{padding: "0.5px"}}/>
+                        index + 1 < columns.length && !!drag
+                        ? <ColumnResizer style={{padding: "0.5px"}} header/>
                         : <></>
                       }
                     </Fragment>
@@ -196,7 +199,7 @@ const CustomTable = props => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {finalRows.slice(page * rowsPerPage, (page + 1) * rowsPerPage).map((row, index) =>
+            {finalRows.map((row, index) =>
               <Row
                 row={row}
                 columns={columns}
@@ -206,6 +209,7 @@ const CustomTable = props => {
                 rounded={rounded}
                 onRowClick={onRowClick}
                 actions={actions}
+                drag={drag}
               />
             )}
           </TableBody>

@@ -32,3 +32,17 @@ exports.findNotificationById = async _id => {
   }
   return notification;
 }
+
+exports.readNotification = async (_id, isRead) => {
+  const updatedNotification = await NotificationModel.findByIdAndUpdate(
+    _id,
+    { $set: {read: isRead} },
+    { new: true}
+  );
+
+  if (_.isNil(updatedNotification)) {
+    throw Boom.internal("Failed updating notification");
+  }
+
+  return updatedNotification;
+}

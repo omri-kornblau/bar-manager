@@ -38,6 +38,7 @@ const Row = props => {
     rounded,
     onRowClick,
     actions,
+    drag,
   } = props;
 
   const [open, setOpen] = useState(false);
@@ -67,7 +68,7 @@ const Row = props => {
                 {applyFormat(column.id === "actions" ? actions : value, column.formatter, row)}
               </TableCell>
               {
-                index + 1 < columns.length
+                index + 1 < columns.length && !! drag
                 ? <ColumnResizer
                     style={{opacity: rounded ? 0 : 1}}
                     prev={headerRefs[index]}

@@ -1,87 +1,120 @@
-import React from "react";
+import _ from "lodash";
+import React, {
+  useMemo,
+  useCallback,
+} from "react";
 import {
   Grid,
   Typography,
   Box,
-  Tooltip
+  Tooltip,
+  Paper,
+  Container,
 } from "@material-ui/core";
+
+import {
+  push,
+} from "connected-react-router";
 
 import CustomTable from "../../../../components/Table/Table";
 import skylineBack from "../../../../assets/img/skyline-back.png";
 import useStyles from "./style";
+import {
+  progressBar,
+  tableHeaders as requestTableHeaders,
+} from "../../../../constants/structure/request";
+import {
+  chosenHeaders as notificationsChosenHeaders,
+  tableHeaders as notificationsTableHeaders,
+} from "../../../../constants/structure/notification";
+import { getTableHeaders } from "../../../../helpers/structer";
+import { connect } from "react-redux";
+import { getRequests } from "../../../../redux/selectors/request";
+import { getNotifications } from "../../../../redux/selectors/notification";
+import { readNotification } from "../../../../redux/thunks/client";
 
-const notificationsColumns = [
-  {
-    id: "message",
-    label: "הודעה",
-    filter: {
-      type: "text"
-    }
-  },
-  {
-    id: "time",
-    label: "זמן",
-    filter: {
-      type: "text"
-    }
-  },
-  {
-    id: "policy",
-    label: "פוליסה",
-    filter: {
-      type: "text"
-    }
-  }
-];
+const DashboardTable = props => {
+  const {
+    rows,
+    title,
+    tooltip,
+    chosenHeaders,
+    tableHeaders,
+    emtpyMessage,
+    onRowClick,
+  } = props;
 
-const createNotification = (message, time, policy) => ({message, time, policy});
+  const classes = useStyles();
 
-const notifications = [
-  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
-  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
-  createNotification("התקבלה הצעה חדשה", "20:00", "ביטוח רכב"),
-];
-
-const policiesColumns = [
-  {
-    id: "type",
-    label: "סוג פוליסה",
-    filter: {
-      type: "text"
-    }
-  },
-  {
-    id: "price",
-    label: "מחיר",
-    filter: {
-      type: "text"
-    }
-  },
-  {
-    id: "startTime",
-    label: "תאריך התחלה",
-    filter: {
-      type: "text"
-    }
-  },
-  {
-    id: "endTime",
-    label: "תאריך תפוגה",
-    filter: {
-      type: "text"
-    }
-  },
-]
-
-const createPolicies = (type, price, startTime, endTime) => ({type, price, startTime, endTime});
-
-const policies = [
-  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
-  createPolicies("רכב", "3000", "10-03-2018", "09-03-2012"),
-]
+  return (
+    <>
+      <Tooltip arrow title={tooltip}>
+        <Typography variant="h6" color="inherit" align="center">
+          {title}
+        </Typography>
+      </Tooltip>
+      {
+        rows.length > 0
+        ? <CustomTable
+            rows={rows}
+            columns={getTableHeaders(
+              chosenHeaders,
+              false,
+              tableHeaders
+            )}
+            pagination={false}
+            onRowClick={onRowClick}
+          />
+        : <Paper>
+            <Typography variant="h6" color="inherit" align="center">
+              {emtpyMessage}
+            </Typography>
+          </Paper>
+      }
+    </>
+  )
+}
 
 const ClientDashboardMainView = props => {
   const classes = useStyles();
+  const {
+    requests,
+    notifications,
+    pushUrl,
+    readNotification,
+  } = props;
+
+  const sepratedRequests = useMemo(() => {
+    return requests
+      .reduce((pre, request) => ({
+        ...pre,
+        [request.status]: pre[request.status]
+          ? [...pre[request.status], request]
+          : [request]
+     }), {
+       inTenderProcedure: [],
+       waitingForApproval: [],
+       active: [],
+      })
+    }, [requests]);
+
+  const formatedNotifications = useMemo(() => {
+    return notifications
+      .map(notification => ({
+        ...notification,
+        requestId: notification.request.index,
+        requestType: notification.request.type,
+      }))
+  }, [notifications]);
+
+  const onOpenRequest = useCallback(requestData => {
+    pushUrl(`/home/${requestData.type}/${requestData.status}?or=${requestData.index}`);
+  })
+
+  const onOpenNotification = useCallback(notificationData => {
+    readNotification(notificationData._id);
+    pushUrl(`/home/${notificationData.request.type}/${notificationData.request.status}?or=${notificationData.request.index}`);
+  })
 
   return (
     <>
@@ -96,46 +129,51 @@ const ClientDashboardMainView = props => {
         </Typography>
       </Grid>
       <Box height={2}/>
-      <Grid container justify="space-evenly" direction="column">
-        <Grid container justify="space-evenly" direction="row" className={classes.gridRow}>
-          <Grid item className={classes.gridColumn}>
-            <Tooltip arrow title="התראות אשר עדיין לא נקראו">
-              <Typography variant="h6" color="inherit" align="center">
-                התראות חדשות
-              </Typography>
-            </Tooltip>
-            <CustomTable isPagination={false} rows={notifications} columns={notificationsColumns}>
-              text
-            </CustomTable>
+      <Container maxWidth="xl">
+        <Grid container direction="row" justify="space-evenly" spacing={5}>
+          <Grid item xs="6">
+            <DashboardTable
+              title="התראות חדשות"
+              tooltip= "התראות אשר עדיין לא נקראו"
+              rows={formatedNotifications}
+              chosenHeaders={notificationsChosenHeaders}
+              tableHeaders={notificationsTableHeaders}
+              onRowClick={onOpenNotification}
+              emtpyMessage="אין התראות חדשות"
+              xs
+            />
           </Grid>
-          <Grid item className={classes.gridColumn}>
-            <Tooltip arrow title="פוליסות שאושרו ונחתמו">
-              <Typography variant="h6" color="inherit" align="center">
-                פוליסות פעילות
-              </Typography>
-            </Tooltip>
-            <CustomTable isPagination={false} rows={policies} columns={policiesColumns} isRounded={true} isFilter={true}/>
+          <Grid item direction="column" xs="6">
+            <DashboardTable
+              title="מחכות לאישור חתימה"
+              tooltip= "פוליסות שמחכות לאישור חתימה"
+              rows={sepratedRequests.waitingForApproval}
+              chosenHeaders={["type", ...progressBar.waitingForApproval.chosenHeaders]}
+              tableHeaders={requestTableHeaders}
+              onRowClick={onOpenRequest}
+              emtpyMessage="אין בקשות שמחכות לאישור חתימה"
+            />
+            <DashboardTable
+              title="פוליסות בהליך מכרזי"
+              tooltip= "פוליסות בהליך מכרזי"
+              rows={sepratedRequests.inTenderProcedure}
+              chosenHeaders={["type", ...progressBar.inTenderProcedure.chosenHeaders]}
+              tableHeaders={requestTableHeaders}
+              onRowClick={onOpenRequest}
+              emtpyMessage="אין פוליסות בהליך מכרזי"
+            />
+            <DashboardTable
+              title="פוליסות פעילות"
+              tooltip= "פוליסות שאושרו ונחתמו"
+              rows={sepratedRequests.active}
+              chosenHeaders={["type", ...progressBar.active.chosenHeaders]}
+              tableHeaders={requestTableHeaders}
+              onRowClick={onOpenRequest}
+              emtpyMessage="אין פוליסות פעילות"
+            />
           </Grid>
         </Grid>
-        <Grid container justify="space-evenly" direction="row" className={classes.gridRow}>
-          <Grid item className={classes.gridColumn}>
-            <Tooltip arrow title="פוליסות שאושרו ונחתמו">
-              <Typography variant="h6" color="inherit" align="center">
-                פוליסות פעילות
-              </Typography>
-            </Tooltip>
-            <CustomTable isPagination={false} rows={policies} columns={policiesColumns} isRounded={true} isFilter={true}/>
-          </Grid>
-          <Grid item className={classes.gridColumn}>
-            <Tooltip arrow title="פוליסות שאושרו ונחתמו">
-              <Typography variant="h6" color="inherit" align="center">
-                פוליסות פעילות
-              </Typography>
-            </Tooltip>
-            <CustomTable isPagination={false} rows={policies} columns={policiesColumns} isRounded={true} isFilter={true}/>
-          </Grid>
-        </Grid>
-      </Grid>
+      </Container>
       <img style={{
         opacity: "0.15",
         width: "100%",
@@ -149,4 +187,14 @@ const ClientDashboardMainView = props => {
   );
 }
 
-export default ClientDashboardMainView;
+const mapStateToProps = state => ({
+  requests: getRequests(state),
+  notifications: getNotifications(state),
+})
+
+const mapDispatchToProps = dispatch => ({
+  pushUrl: _.flow(push, dispatch),
+  readNotification: readNotification(dispatch)
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(ClientDashboardMainView);

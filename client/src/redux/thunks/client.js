@@ -18,11 +18,15 @@ import {
   canceleRequestFailure,
 } from "../actions/request";
 import {
+  readNotification as readNotificationAction,
+} from "../actions/notification"
+import {
   getClient,
   postCreateRequest,
   postUpdateRequest,
   postAcceptRequest,
   postCancelRequest,
+  postReadNotification,
 } from "../../api/client"
 import { getCreateRequestLoading } from "../selectors/request";
 
@@ -103,4 +107,13 @@ export const cancelRequest = outerDispatch => request => {
         dispatch(canceleRequestFailure(request, err));
       })
   })
+}
+
+export const readNotification = outerDispatch => notificationId => {
+  outerDispatch(dispatch => {
+    postReadNotification(notificationId)
+      .then(res => {
+        dispatch(readNotificationAction(notificationId));
+      })
+    })
 }

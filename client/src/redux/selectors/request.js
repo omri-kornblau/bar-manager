@@ -7,7 +7,7 @@ export const getCreateRequestLoading = state => {
 }
 
 export const getRequests = state => {
-  return state.app.request.client.requests;
+  return state.app.client.requests;
 }
 
 export const getOpenedRequest = state => {

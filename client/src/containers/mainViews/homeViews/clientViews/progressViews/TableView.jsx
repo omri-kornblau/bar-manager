@@ -12,8 +12,11 @@ import { push, getLocation } from "connected-react-router";
 
 import { getProgress } from "../../../../../redux/selectors/progressBar";
 import { getView } from "../../../../../redux/selectors/sidebar"
-import { getOpenedRequest } from "../../../../../redux/selectors/request";
-import { getRequests, getRequestEditMode } from "../../../../../redux/selectors/request";
+import {
+  getOpenedRequest,
+  getRequests,
+  getRequestEditMode
+} from "../../../../../redux/selectors/request";
 
 import {
   tableHeaders,
@@ -24,6 +27,7 @@ import { updateRequest as updateRequestThunk } from "../../../../../redux/thunks
 import CustomTable from "../../../../../components/Table/Table";
 import RequestModal from "../../../../../components/RequestModal/RequestModal";
 import { getUpdateRequestErrors } from "../../../../../redux/selectors/errors";
+import { getTableHeaders } from "../../../../../helpers/structer";
 
 
 const TableView = props => {
@@ -91,7 +95,7 @@ const TableView = props => {
       <Box mb={2}/>
       <CustomTable
         rows={progressRequests}
-        columns={[...chosenHeaders.map(column => tableHeaders[column]), ...(actions ? [tableHeaders.actions] : [])]}
+        columns={getTableHeaders(chosenHeaders, actions, tableHeaders)}
         filter
         sort
         actions={actions}

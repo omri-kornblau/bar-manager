@@ -151,12 +151,19 @@ export default class ColumnResizer extends React.Component {
         }
 
         return (
-          <td
-            ref="ele" 
-            style={style}
-            className={this.props.className}
-            onMouseDown={!this.props.disabled && this.startDrag}
-            onTouchStart={!this.props.disabled && this.startDrag}/>
+            this.props.header
+            ? <th
+                ref="ele" 
+                style={style}
+                className={this.props.className}
+                onMouseDown={!this.props.disabled && this.startDrag}
+                onTouchStart={!this.props.disabled && this.startDrag}/>
+            : <td
+                ref="ele" 
+                style={style}
+                className={this.props.className}
+                onMouseDown={!this.props.disabled && this.startDrag}
+                onTouchStart={!this.props.disabled && this.startDrag}/>
         );
     }
 
