@@ -7,6 +7,23 @@ const initialState = {
   filteredRequests: []
 };
 
+const createOffersFromOffer = (oldOffers, offer) => {
+  let foundOffer = false;
+  const newOffers = oldOffers.map(oldOffer => {
+    if (offer.provider === offer.provider) {
+      foundOffer = true;
+      return offer;
+    }
+    return oldOffer;
+  });
+
+  if (!foundOffer) {
+    return [...oldOffers, offer];
+  }
+
+  return newOffers;
+}
+
 const providerReducer = (state=initialState, action) => {
   switch(action.type) {
     case POST_FILTERED_REQUESTS_SUCCESS:
@@ -27,12 +44,8 @@ const providerReducer = (state=initialState, action) => {
         ...state,
         fetchedRequest: {
           ...state.fetchedRequest,
-          offers: state.fetchedRequest.offers.map(offer =>
-            offer.provider === action.payload.offer.provider
-            ? action.payload.offer
-            : offer
-          ),
-          myOffer: action.payload.offer
+          myOffer: action.payload.offer,
+          offers: createOffersFromOffer(state.fetechRequest.offers, action.payload.offer)
         }
       }
       : state

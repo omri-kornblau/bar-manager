@@ -34,7 +34,9 @@ const ProviderOfferBox = props => {
   } = props;
 
   offers.sort((a, b) => a.price - b.price);
-  const isOfferWinning = _.maxBy(offers, offer => offer.price).provider === provider._id;
+  const isOfferWinning = offers.length > 0 ?
+    _.minBy(offers, offer => offer.price).provider === provider._id
+    : false;
 
   const [newOffer, setNewOffer] = useState(myOffer)
   const _onSetOffer = e => {

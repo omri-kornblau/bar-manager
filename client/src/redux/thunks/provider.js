@@ -53,6 +53,7 @@ export const setOffer = outerDispatch => (requestId, price) => {
         dispatch(postSetOfferSuccess(requestId, res.data));
       })
       .catch(err => {
+        console.log(err);
         dispatch(postSetOfferFailed(err));
       })
   })
