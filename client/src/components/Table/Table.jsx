@@ -3,6 +3,7 @@ import React, {
   useMemo,
   useState,
   useRef,
+  useEffect,
   Fragment
 } from "react";
 import PropTypes from "prop-types";
@@ -96,10 +97,12 @@ const CustomTable = props => {
   const [sortBy, setSortBy] = useState({id: "", direction: true});
   const [options, setOptions] = useState(filter ? initOptions(columns, rows) : []);
 
+  useEffect(() => setOptions(initOptions(columns, rows)), [rows, columns])
+
   const finalRows = useMemo(() => {
     const filteredRows = filter ?
-      rows.filter(row => (
-          columns.every(column => {
+      rows.filter(row => {
+          return columns.every(column => {
             const value = row[column.id];
             const currentOptions = options[column.id];
             if (column.filter === false) {
@@ -122,7 +125,7 @@ const CustomTable = props => {
                 return _.isNil(currentOptions.value) || currentOptions.value === value;
             }
           })
-      ))
+      })
       : rows;
 
     if (sort && sortBy.id !== "") {
