@@ -21,7 +21,7 @@ import { filterButtons } from "../../../../constants/structure/requestsPool";
 import { providerPoolChosenHeaders as chosenHeaders, tableHeaders } from "../../../../constants/structure/request";
 
 import CustomTable from "../../../../components/Table/Table";
-import RequestModal from "../../../../components/RequestModal/RequestModal";
+import ProviderRequestModal from "../../../../components/RequestModal/ProviderRequestModal";
 import skylineBack from "../../../../assets/img/skyline-back.png";
 
 const toRequestFilters = filters => (
@@ -43,7 +43,7 @@ const ProviderRequestsPool = props => {
     editMode,
   } = props;
 
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [openedRequestId, setOpenedRequest] = useState("5eff2df0fc6b4c40bc0fcc53");
   const [activeType, setActiveType] = useState(typeButtons[0].id);
   const [activeFilters, setActiveFilters] = useState(_.keyBy(filterButtons, "id"));
 
@@ -51,8 +51,8 @@ const ProviderRequestsPool = props => {
     filterRequests(activeType, toRequestFilters(activeFilters));
   }, [activeType, activeFilters])
 
-  const onOpenRequest = () => setModalOpen(true);
-  const onCloseRequest = () => setModalOpen(false);
+  const onOpenRequest = e => setOpenedRequest(e._id);
+  const onCloseRequest = () => setOpenedRequest(null);
   const onTypeSelect = id => setActiveType(id);
   const onFilterSelect = id => {
     setActiveFilters({
@@ -60,6 +60,8 @@ const ProviderRequestsPool = props => {
       [id]: { isActive: !activeFilters[id].isActive }
     });
   };
+
+  const isModalOpen = !!openedRequestId;
 
   return (
     <>
@@ -111,7 +113,6 @@ const ProviderRequestsPool = props => {
               columns={_.map(chosenHeaders, column => tableHeaders[column])}
               filter
               sort
-              // actions={actions}
               onRowClick={onOpenRequest}
             />
             <Modal
@@ -123,8 +124,8 @@ const ProviderRequestsPool = props => {
                 alignItems: "center",
               }}
             >
-              <RequestModal
-                // data={requests[openedRequestIdx]}
+              <ProviderRequestModal
+                data={_.find(requests, { _id: openedRequestId })}
                 editMode={editMode}
               />
             </Modal>
