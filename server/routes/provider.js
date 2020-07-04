@@ -20,6 +20,7 @@ const {
   removeOffer: removeOfferFromRequest,
   addMessage: addMessageToRequest,
   removeMessage: removeMessageFromRequest,
+  getProviderRequests,
 } = require("../db/request");
 
 const {
@@ -32,19 +33,22 @@ const {
   deleteMessage,
 } = require("../db/message");
 
-exports.getAllRequests = async (req, res) => {
+exports.getRequests = async (req, res) => {
+  const {
+    username,
+  } = req;
+
   const {
     filters,
-    type
+    type,
+    skip,
+    limit,
   } = req.body;
 
   const types = _.flattenDeep([type]);
+  const provider = getProvider(username);
 
-  const requests = await RequestModel.find({
-    status: { $in: REQUESTS_POOL_STATUSES },
-    type: { $in: types }
-  });
-
+  const requests = await getProviderRequests(types, provider.requests, skip, limit);
   res.send(requests);
 }
 

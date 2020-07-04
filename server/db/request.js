@@ -145,3 +145,16 @@ exports.removeMessage = async (requestId, messageId) => {
     true
   )
 }
+
+exports.getProviderRequests = async (types, existsRequests, skip, limit) => {
+  return RequestModel
+    .find({
+      status: { $in: REQUESTS_POOL_STATUSES },
+      type: { $in: types },
+      _id: {
+        $nin: existsRequests
+      },
+    })
+    .skip(skip)
+    .limit(limit);
+}
