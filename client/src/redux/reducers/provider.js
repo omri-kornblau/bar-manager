@@ -1,5 +1,5 @@
 import {
-  POST_FILTERED_REQUESTS_SUCCESS, FETCH_REQUEST_SUCCESS, POST_SEND_MESSAGE_SUCCESS
+  POST_FILTERED_REQUESTS_SUCCESS, FETCH_REQUEST_SUCCESS, POST_SEND_MESSAGE_SUCCESS, POST_SET_OFFER_SUCCESS
 } from "../actions/provider";
 
 const initialState = {
@@ -22,7 +22,7 @@ const providerReducer = (state=initialState, action) => {
       };
 
     case POST_SET_OFFER_SUCCESS:
-      return fetchedRequest._id === action.payload.requestId
+      return state.fetchedRequest._id === action.payload.requestId
       ? {
         ...state,
         fetchedRequest: {
@@ -32,7 +32,7 @@ const providerReducer = (state=initialState, action) => {
       }
       : state
     case POST_SEND_MESSAGE_SUCCESS:
-      return fetchedRequest._id === action.payload.requestId
+      return state.fetchedRequest._id === action.payload.requestId
       ? {
         ...state,
         fetchedRequest: {

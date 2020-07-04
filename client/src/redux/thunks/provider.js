@@ -10,6 +10,7 @@ import {
   tryPostSendMessage,
   postSendMessageSuccess,
   postSendMessageFailed,
+  postSetOfferFailed,
 } from "../actions/provider";
 import {
   postFilteredRequests, getFetchRequest, postSetOffer, postSendMessage,

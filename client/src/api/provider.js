@@ -1,6 +1,6 @@
 import Axios from "axios";
 
-export const postFilteredRequests = async (type, filters) => {
+export const postFilteredRequests = async (type, filters, skip, limit) => {
   return Axios.post("/provider/filteredrequests", { type, filters, skip, limit })
 }
 
