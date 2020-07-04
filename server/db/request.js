@@ -97,3 +97,27 @@ exports.updateSecondAcceptById = async (_id, userId) => {
     true
   );
 }
+
+exports.addOffer = async (requestId, offerId) => {
+  return exports.updateRequestById(
+    requestId,
+    {
+      $addToSet: {
+        offers: offerId
+      }
+    },
+    true
+  )
+}
+
+exports.removeOffer = async (requestId, offerId) => {
+  return exports.updateRequestById(
+    requestId,
+    {
+      $pull: {
+        offers: offerId
+      }
+    },
+    true
+  )
+}

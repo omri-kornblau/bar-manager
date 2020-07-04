@@ -8,7 +8,12 @@ const {
   findClientById
 } = require("../db/client");
 
+const {
+  findProviderById,
+} = require("../db/provider");
+
 const UserModel = Mongoose.model("User");
+const ProviderModel = Mongoose.model("Provider");
 const RequestModal = Mongoose.model("Request");
 
 exports.findByIds = async (Model, ids, error) => {
@@ -54,6 +59,17 @@ exports.getClient = async username => {
   const client = await findClientById(user.clientId);
 
   return [user, client];
+}
+
+exports.getProvider = async username => {
+  const user = await UserModel.findOne({username});
+  if (!user) {
+    throw Boom.internal("User not found");
+  }
+
+  const provider = await findProviderById(user.clientId);
+
+  return [user, provider];
 }
 
 exports.writerFile = (attachment, file) => {
