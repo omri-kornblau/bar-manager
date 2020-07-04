@@ -178,9 +178,9 @@ export const progressBar = {
     actions: [
       <ConnectedButton
         label="אשר"
-        action={(dispatch, row) => 
+        action={(dispatch, row) =>
           acceptRequest(dispatch)(row)
-        } 
+        }
         className="success"
         progressName="acceptRequest"
       />,
@@ -190,7 +190,7 @@ export const progressBar = {
           if (window.confirm("אתה בטוח שאתה רוצה למחוק את הבקשה?")) {
             cancelRequest(dispatch)(row)
           }
-        }} 
+        }}
         progressName="cancelRequest"
         className="failed"
       />,
@@ -231,6 +231,10 @@ export const progressBar = {
     actions: downloadActions,
   },
 }
+
+export const providerPoolChosenHeaders = [
+  "type", "createdTime", "maxPrice", "insuranceDuration", "author"
+];
 
 export const modalChosenHeaders = [
   {

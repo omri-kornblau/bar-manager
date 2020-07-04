@@ -7,8 +7,9 @@ import progressBarReducer from "./progressBar"
 import settingsTabReducer from "./settingsTab"
 import userReducer from "./user";
 import errorsReducer from "./errors";
-import clientReducer from "./client";
 import notificationReducer from "./notification";
+import clientReducer from "./client";
+import providerReducer from "./provider";
 
 export default combineReducers({
   navbar: navbarReducer,
@@ -20,4 +21,5 @@ export default combineReducers({
   errors: errorsReducer,
   client: clientReducer,
   notifications: notificationReducer,
+  provider: providerReducer,
 });

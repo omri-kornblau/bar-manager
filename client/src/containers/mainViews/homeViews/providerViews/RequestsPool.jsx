@@ -1,7 +1,6 @@
 import _ from "lodash";
-import React, { useMemo, useCallback, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { stringifyUrl } from "query-string";
 import {
   Typography,
   Grid,
@@ -13,54 +12,54 @@ import {
   CardHeader,
   Divider
 } from "@material-ui/core";
-import { push, getLocation } from "connected-react-router";
 
-import { getProgress } from "../../../../redux/selectors/progressBar";
-import { getView } from "../../../../redux/selectors/sidebar"
-import { getOpenedRequest } from "../../../../redux/selectors/request";
-import { getRequests, getRequestEditMode } from "../../../../redux/selectors/request";
-import { updateRequest as updateRequestThunk } from "../../../../redux/thunks/client";
+import { filterRequests } from "../../../../redux/thunks/provider";
+import { getFilteredRequests } from "../../../../redux/selectors/provider";
 
-import {
-  tableHeaders,
-  progressBar,
-} from "../../../../constants/structure/request";
 import { typeButtons } from "../../../../constants/structure/requestsPool";
 import { filterButtons } from "../../../../constants/structure/requestsPool";
+import { providerPoolChosenHeaders as chosenHeaders, tableHeaders } from "../../../../constants/structure/request";
 
 import CustomTable from "../../../../components/Table/Table";
 import RequestModal from "../../../../components/RequestModal/RequestModal";
-import { getUpdateRequestErrors } from "../../../../redux/selectors/errors";
 import skylineBack from "../../../../assets/img/skyline-back.png";
+
+const toRequestFilters = filters => (
+  _.map(
+    _.filter(
+      filters,
+      "isActive"
+    ), "id"
+  )
+)
 
 const ProviderRequestsPool = props => {
   const {
-    location,
-    openedRequestIdx,
-    editMode,
     requests,
+    filterRequests,
+    pushUrl,
     progress,
     type,
-    pushUrl,
-    updateRequest,
-    updateStatus
+    editMode,
   } = props;
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [activeType, setActiveType] = useState(typeButtons[0].id);
   const [activeFilters, setActiveFilters] = useState(_.keyBy(filterButtons, "id"));
 
-  const progressRequests = useMemo(() => (
-    [[]]
-  ), [requests, progress]);
+  useEffect(() => {
+    filterRequests(activeType, toRequestFilters(activeFilters));
+  }, [activeType, activeFilters])
 
   const onOpenRequest = () => setModalOpen(true);
   const onCloseRequest = () => setModalOpen(false);
   const onTypeSelect = id => setActiveType(id);
-  const onFilterSelect = id => setActiveFilters({
-    ...activeFilters,
-    [id]: { isActive: !activeFilters[id].isActive }
-  });
+  const onFilterSelect = id => {
+    setActiveFilters({
+      ...activeFilters,
+      [id]: { isActive: !activeFilters[id].isActive }
+    });
+  };
 
   return (
     <>
@@ -108,8 +107,8 @@ const ProviderRequestsPool = props => {
         <CardContent>
           <Box pb={1}>
             <CustomTable
-              // rows={progressRequests}
-              // columns={[...chosenHeaders.map(column => tableHeaders[column]), ...(actions ? [tableHeaders.actions] : [])]}
+              rows={requests}
+              columns={_.map(chosenHeaders, column => tableHeaders[column])}
               filter
               sort
               // actions={actions}
@@ -145,4 +144,12 @@ const ProviderRequestsPool = props => {
   );
 }
 
-export default ProviderRequestsPool;
+const mapStateToProps = state => ({
+  requests: getFilteredRequests(state)
+});
+
+const mapDispatchToProps = dispatch => ({
+  filterRequests: filterRequests(dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProviderRequestsPool);

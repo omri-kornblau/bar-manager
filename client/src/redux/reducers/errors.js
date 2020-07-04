@@ -21,6 +21,11 @@ import {
   CANCEL_REQUEST_SUCCESS,
   CANCEL_REQUEST_FAILURE,
 } from "../actions/request";
+import {
+  TRY_POST_FILTERED_REQUESTS,
+  POST_FILTERED_REQUESTS_SUCCESS,
+  POST_FILTERED_REQUESTS_FAILURE
+} from "../actions/provider";
 
 const initialState = {
   login: {
@@ -39,6 +44,11 @@ const initialState = {
     error: undefined
   },
   updateRequest: {
+    inProgress: false,
+    try: false,
+    error: undefined
+  },
+  postFilteredRequests: {
     inProgress: false,
     try: false,
     error: undefined
@@ -136,6 +146,7 @@ const userReducer = (state=initialState, action) => {
     reduceFetch("getClient", TRY_GET_CLIENT, GET_CLIENT_SUCCESS, GET_CLIENT_FAILURE),
     reduceFetch("createRequest", TRY_CREATE_REQUEST, CREATE_REQUEST_SUCCESS, CREATE_REQUEST_FAILURE),
     reduceFetch("updateRequest", TRY_UPDATE_REQUEST, UPDATE_REQUEST_SUCCESS, UPDATE_REQUEST_FAILURE),
+    reduceFetch("postFilteredRequests", TRY_POST_FILTERED_REQUESTS, POST_FILTERED_REQUESTS_SUCCESS, POST_FILTERED_REQUESTS_FAILURE),
     reduceRowFetch("acceptRequest", TRY_ACCEPT_REQUEST, ACCEPT_REQUEST_SUCCESS, ACCEPT_REQUEST_FAILURE),
     reduceRowFetch("cancelRequest", TRY_CANCEL_REQUEST, CANCEL_REQUEST_SUCCESS, CANCEL_REQUEST_FAILURE),
   ]
