@@ -12,7 +12,8 @@ exports.setOffer = async (providerId, requestId, price) => {
       $set: {
         provider: providerId,
         requests: requestId,
-        price ,
+        timestamp: new Date(),
+        price,
       }
     },{
     returnNewDocument: true,

@@ -53,3 +53,5 @@ exports.STATUS_TIMING = {
 
 // Request Pool
 exports.REQUESTS_POOL_STATUSES = ["inTenderProcedure"];
+
+exports.MAX_MESSAGE_LENGTH = 1000;

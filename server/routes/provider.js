@@ -18,12 +18,19 @@ const {
 const {
   addOffer: addOfferToRequest,
   removeOffer: removeOfferFromRequest,
+  addMessage: addMessageToRequest,
+  removeMessage: removeMessageFromRequest,
 } = require("../db/request");
 
 const {
   addOffer: addOfferToProvider,
   removeOffer: removeOfferFromProvider,
 } = require("../db/provider");
+
+const {
+  addMessage,
+  deleteMessage,
+} = require("../db/message");
 
 exports.getAllRequests = async (req, res) => {
   const {
@@ -77,5 +84,39 @@ exports.setOffer = async (req, res) => {
     offer,
     request,
     provider
+  })
+}
+
+exports.sendMessage = async (req, res) => {
+  const {
+    username
+  } = req;
+
+  const {
+    requestId,
+    body,
+  } = req.body;
+
+  const provider = await getProvider(username)
+  const message = await addMessage(body, provider._id);
+  let request;
+  try {
+    request = await addMessageToRequest(requestId, message._id);
+  } catch (err) {
+    try {
+      if (!_.isNil(request)) {
+        await removeMessageFromRequest(requestId, message._id);
+      }
+      await deleteMessage(message._id);
+    } catch(err) {
+      console.error(err);
+    }
+
+    throw Boom.internal(err);
+  }
+
+  res.send({
+    request,
+    message,
   })
 }

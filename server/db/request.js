@@ -103,7 +103,7 @@ exports.addOffer = async (requestId, offerId) => {
     requestId,
     {
       $addToSet: {
-        offers: offerId
+        offers: offerId,
       }
     },
     true
@@ -115,7 +115,31 @@ exports.removeOffer = async (requestId, offerId) => {
     requestId,
     {
       $pull: {
-        offers: offerId
+        offers: offerId,
+      }
+    },
+    true
+  )
+}
+
+exports.addMessage = async (requestId, messageId) => {
+  return exports.updateRequestById(
+    requestId,
+    {
+      $push: {
+        messages: messageId,
+      }
+    },
+    true
+  )
+}
+
+exports.removeMessage = async (requestId, messageId) => {
+  return exports.updateRequestById(
+    requestId,
+    {
+      $pull: {
+        messages: messageId,
       }
     },
     true
