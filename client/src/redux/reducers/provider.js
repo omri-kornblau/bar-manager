@@ -1,5 +1,5 @@
 import {
-  POST_FILTERED_REQUESTS_SUCCESS
+  POST_FILTERED_REQUESTS_SUCCESS, FETCH_REQUEST_SUCCESS
 } from "../actions/provider";
 
 const initialState = {
@@ -13,6 +13,11 @@ const providerReducer = (state=initialState, action) => {
       return {
         ...state,
         filteredRequests: action.payload
+      };
+    case FETCH_REQUEST_SUCCESS:
+      return {
+        ...state,
+        fetchedRequest: action.payload
       };
 
     default:
