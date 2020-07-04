@@ -10,6 +10,10 @@ export const TRY_POST_SET_OFFER = "TRY_POST_SET_OFFER";
 export const POST_SET_OFFER_SUCCESS = "POST_SET_OFFER_SUCCESS";
 export const POST_SET_OFFER_FAILED = "POST_SET_OFFER_FAILED";
 
+export const TRY_POST_SEND_MESSAGE = "TRY_POST_SEND_MESSAGE";
+export const POST_SEND_MESSAGE_SUCCESS = "POST_SEND_MESSAGE_SUCCESS";
+export const POST_SEND_MESSAGE_FAILURE = "POST_SEND_MESSAGE_FAILURE";
+
 export const tryPostFilteredRequests = () => ({
   type: TRY_POST_FILTERED_REQUESTS,
 });
@@ -53,10 +57,31 @@ export const postSetOfferSuccess = (requestId, offer) => ({
   }
 });
 
-export const postSetOfferFailed = requestId => ({
+export const postSetOfferFailed = err => ({
   type: POST_SET_OFFER_FAILED,
   payload: {
+    err,
+  },
+});
+
+export const tryPostSendMessage = requestId => ({
+  type: TRY_POST_SEND_MESSAGE,
+  payload: {
     requestId,
+  }
+});
+
+export const postSendMessageSuccess = (requestId, message) => ({
+  type: POST_SEND_MESSAGE_SUCCESS,
+  payload: {
+    requestId,
+    message,
+  }
+});
+
+export const postSendMessageFailed = err => ({
+  type: POST_SEND_MESSAGE_FAILURE,
+  payload: {
     err,
   },
 });

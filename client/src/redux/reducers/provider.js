@@ -1,5 +1,5 @@
 import {
-  POST_FILTERED_REQUESTS_SUCCESS, FETCH_REQUEST_SUCCESS
+  POST_FILTERED_REQUESTS_SUCCESS, FETCH_REQUEST_SUCCESS, POST_SEND_MESSAGE_SUCCESS
 } from "../actions/provider";
 
 const initialState = {
@@ -30,9 +30,17 @@ const providerReducer = (state=initialState, action) => {
           myOffer: action.payload.offer
         }
       }
-      : {
-        ...state
+      : state
+    case POST_SEND_MESSAGE_SUCCESS:
+      return fetchedRequest._id === action.payload.requestId
+      ? {
+        ...state,
+        fetchedRequest: {
+          ...state.fetchedRequest,
+          messages: [...state.fetchedRequest.messages, action.payload.message]
+        }
       }
+      : state
 
     default:
       return state;
