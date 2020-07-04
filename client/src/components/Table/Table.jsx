@@ -47,6 +47,10 @@ const defaultProps = {
   pagination: true,
   onRowClick: _.noop,
   drag: true,
+  page: 0,
+  rowsPerPage: 5,
+  onPageChange: _.noop,
+  onRowsPerPageChange: _.noop,
 };
 
 const initOptions = (columns, rows) => {
@@ -90,10 +94,14 @@ const CustomTable = props => {
     drag,
     sort,
     actions,
+    page,
+    rowsPerPage,
+    onPageChange,
+    onRowsPerPageChange,
   } = props;
 
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [_page, setPage] = useState(page);
+  const [_rowsPerPage, setRowsPerPage] = useState(rowsPerPage);
   const [sortBy, setSortBy] = useState({id: "", direction: true});
   const [options, setOptions] = useState(filter ? initOptions(columns, rows) : []);
 
@@ -142,18 +150,20 @@ const CustomTable = props => {
       });
     }
 
-    return pagination ? filteredRows.slice(page * rowsPerPage, (page + 1) * rowsPerPage) : filteredRows;
+    return pagination ? filteredRows.slice(_page * _rowsPerPage, (_page + 1) * _rowsPerPage) : filteredRows;
   }, [options, filter, sort, sortBy, rows]);
 
   const headerRefs = columns.map(() => useRef(null));
 
-  const onPageChange = (event, newPage) => {
+  const _onPageChange = (event, newPage) => {
+    onPageChange(newPage);
     setPage(newPage);
   };
 
-  const onRowsPerPageChange = event => {
+  const _onRowsPerPageChange = event => {
+    onRowsPerPageChange(+event.target.value);
     setRowsPerPage(+event.target.value);
-    setPage(0);
+    _onPageChange(null, 0);
   };
 
   const renderLabelDisplayedRows = ({from, to, count}) => {
@@ -226,10 +236,10 @@ const CustomTable = props => {
           rowsPerPageOptions={[5,10,25,100]}
           component="div"
           count={finalRows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onChangePage={onPageChange}
-          onChangeRowsPerPage={onRowsPerPageChange}
+          rowsPerPage={_rowsPerPage}
+          page={_page}
+          onChangePage={_onPageChange}
+          onChangeRowsPerPage={_onRowsPerPageChange}
           labelDisplayedRows={renderLabelDisplayedRows}
           labelRowsPerPage="שורות בכל עמוד:"
           ActionsComponent={props =>

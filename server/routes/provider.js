@@ -22,7 +22,6 @@ const {
   addMessage: addMessageToRequest,
   removeMessage: removeMessageFromRequest,
   getProviderRequests,
-  findRequestById,
 } = require("../db/request");
 
 const {

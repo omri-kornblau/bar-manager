@@ -7,7 +7,10 @@ const RequestModel = Mongoose.model("Request");
 
 const { yupUpdateRequestSchema } = require("../models/request");
 
-const { STATUS_TIMING } = require("../config/consts");
+const { 
+  STATUS_TIMING,
+  REQUESTS_POOL_STATUSES,
+} = require("../config/consts");
 
 exports.createRequest = async requestData => {
   const createdRequest = await RequestModel.create({

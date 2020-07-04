@@ -14,3 +14,6 @@ export const getUpdateRequestErrors = state => {
   return state.app.errors.updateRequest
 }
 
+export const getFetchedRequestErrors = state => {
+  return state.app.errors.fetchRequest;
+}

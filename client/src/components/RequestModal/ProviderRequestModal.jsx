@@ -124,8 +124,7 @@ const ProviderRequestModal = props => {
                   פרטי מבקש הביטוח
                 </Typography>
                 <Box mt={2}/>
-                <DataList data={data}/>
-                {/* <DataList data={data.author}/> */}
+                <DataList data={data.author}/>
               </Grid>
             </Grid>
           </TabPanel>

@@ -20,6 +20,10 @@ const {
   findOfferById,
 } = require("../db/offer");
 
+const {
+  findRequestById,
+} = require("../db/request");
+
 const UserModel = Mongoose.model("User");
 const ProviderModel = Mongoose.model("Provider");
 const RequestModal = Mongoose.model("Request");
@@ -111,15 +115,25 @@ exports.createNotification = async (message, requestId, clientId) => {
 exports.fetchRequestById = async requestId => {
   const request = await findRequestById(requestId);
 
-  const author = findClientById(request.author);
+  const author = findClientById(request.author, {fullName: 1});
   const messagesPromises = request.messages.map(findMessageById);
   const offersPromises = request.offers.map(findOfferById);
 
   const result = await Promise.all([author, ...messagesPromises, ...offersPromises]);
 
-  request.author = result[0];
-  request.messages = result.slice(1, messagesPromises.length);
-  request.offers = result.slice(messagesPromises.length);
+  const finalRequest = request._doc;
+  let index = 0
+  finalRequest.author = result[index];
+  index += 1;
 
-  return request;
+  finalRequest.messages = result.length > index
+    ? result.slice(index, messagesPromises.length)
+    : [];
+  index += messagesPromises.length
+
+  finalRequest.offers = result.length > index
+    ? result.slice(index)
+    : [];
+
+  return finalRequest;
 }

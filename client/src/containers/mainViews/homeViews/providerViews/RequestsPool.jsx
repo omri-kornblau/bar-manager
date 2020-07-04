@@ -13,8 +13,11 @@ import {
   Divider
 } from "@material-ui/core";
 
-import { filterRequests } from "../../../../redux/thunks/provider";
-import { getFilteredRequests } from "../../../../redux/selectors/provider";
+import {
+  filterRequests,
+  fetchRequest,
+} from "../../../../redux/thunks/provider";
+import { getFilteredRequests, getFetchedRequest } from "../../../../redux/selectors/provider";
 
 import { typeButtons } from "../../../../constants/structure/requestsPool";
 import { filterButtons } from "../../../../constants/structure/requestsPool";
@@ -23,6 +26,8 @@ import { providerPoolChosenHeaders as chosenHeaders, tableHeaders } from "../../
 import CustomTable from "../../../../components/Table/Table";
 import ProviderRequestModal from "../../../../components/RequestModal/ProviderRequestModal";
 import skylineBack from "../../../../assets/img/skyline-back.png";
+import { getFetchRequest } from "../../../../api/provider";
+import { getFetchedRequestErrors } from "../../../../redux/selectors/errors";
 
 const toRequestFilters = filters => (
   _.map(
@@ -37,6 +42,7 @@ const ProviderRequestsPool = props => {
   const {
     requests,
     filterRequests,
+    fetchRequest,
     pushUrl,
     progress,
     type,
@@ -46,12 +52,17 @@ const ProviderRequestsPool = props => {
   const [openedRequestId, setOpenedRequest] = useState("5eff2df0fc6b4c40bc0fcc53");
   const [activeType, setActiveType] = useState(typeButtons[0].id);
   const [activeFilters, setActiveFilters] = useState(_.keyBy(filterButtons, "id"));
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
-    filterRequests(activeType, toRequestFilters(activeFilters));
+    filterRequests(activeType, toRequestFilters(activeFilters), page * rowsPerPage, rowsPerPage);
   }, [activeType, activeFilters])
 
-  const onOpenRequest = e => setOpenedRequest(e._id);
+  const onOpenRequest = e => {
+    setOpenedRequest(e._id);
+    fetchRequest(e._id)
+  };
   const onCloseRequest = () => setOpenedRequest(null);
   const onTypeSelect = id => setActiveType(id);
   const onFilterSelect = id => {
@@ -114,6 +125,10 @@ const ProviderRequestsPool = props => {
               filter
               sort
               onRowClick={onOpenRequest}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={setRowsPerPage}
+              page={page}
+              onPageChange={setPage}
             />
             <Modal
               open={isModalOpen}
@@ -146,11 +161,14 @@ const ProviderRequestsPool = props => {
 }
 
 const mapStateToProps = state => ({
-  requests: getFilteredRequests(state)
+  requests: getFilteredRequests(state),
+  fetchRequestLoading: getFetchedRequestErrors(state),
+  fetchedRequest: getFetchedRequest(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  filterRequests: filterRequests(dispatch)
+  filterRequests: filterRequests(dispatch),
+  fetchRequest: fetchRequest(dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProviderRequestsPool);

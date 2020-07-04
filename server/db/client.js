@@ -4,8 +4,8 @@ const Boom = require("boom");
 
 const ClientModel = Mongoose.model("Client");
 
-exports.findClientById = async _id => {
-  const client = await ClientModel.findById(_id);
+exports.findClientById = async (_id, projection) => {
+  const client = await ClientModel.findById(_id, projection);
 
   if (_.isNil(client)) {
     throw Boom.internal("Client not found");
