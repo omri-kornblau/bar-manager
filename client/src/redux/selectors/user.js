@@ -9,3 +9,7 @@ export const getUserLoggedIn = state => {
 export const getUserData = state => {
   return state.app.user.data;
 }
+
+export const getUserType = state => {
+  return state.app.user.data.type;
+}

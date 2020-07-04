@@ -4,14 +4,13 @@ export const LOGIN_FAILURE = "LOGIN_FAILURE";
 
 export const LOGOUT_SUCCESS = "LOGOUT_SUCCESS";
 
-export const tryLogin = loggedIn => ({
-  type: TRY_LOGIN,
-  payload: { loggedIn }
+export const tryLogin = () => ({
+  type: TRY_LOGIN
 });
 
-export const loginSuccess = (loggedIn) => ({
+export const loginSuccess = (userData) => ({
   type: LOGIN_SUCCESS,
-  payload: { ...loggedIn }
+  payload: userData
 });
 
 export const loginFailure = err => ({

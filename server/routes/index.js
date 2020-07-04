@@ -6,6 +6,7 @@ const withAuth = require("../middleware/auth").withAuth;
 const AuthRoutes = require("./auth");
 const UserRoutes = require("./user");
 const ClientRoutes = require("./client");
+const ProviderRoutes = require("./provider");
 
 const router = Express.Router();
 
@@ -23,5 +24,6 @@ router.get("/client/downloadfile", withAuth, ClientRoutes.downloadFile);
 router.post("/client/readnotification", withAuth, ClientRoutes.readNotification);
 
 router.post("/provider/signup", UserRoutes.signupProvider);
+router.post("/provider/filteredrequests", withAuth, ProviderRoutes.getAllRequests);
 
 module.exports = router;

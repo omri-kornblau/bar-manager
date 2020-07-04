@@ -41,7 +41,7 @@ exports.STATUS_TIMING = {
   },
   inTenderProcedure: {
     endTimeKey: "startDate",
-    duration: Moment.duration(30, "seconds"),
+    duration: Moment.duration(10, "days"),
     targetStatus: "waitingForSign"
   },
   waitingForSign: {
@@ -50,3 +50,6 @@ exports.STATUS_TIMING = {
     targetStatus: "active"
   }
 };
+
+// Request Pool
+exports.REQUESTS_POOL_STATUSES = ["inTenderProcedure"];
