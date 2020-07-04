@@ -14,11 +14,25 @@ const providerReducer = (state=initialState, action) => {
         ...state,
         filteredRequests: action.payload
       };
+
     case FETCH_REQUEST_SUCCESS:
       return {
         ...state,
         fetchedRequest: action.payload
       };
+
+    case POST_SET_OFFER_SUCCESS:
+      return fetchedRequest._id === action.payload.requestId
+      ? {
+        ...state,
+        fetchedRequest: {
+          ...state.fetchedRequest,
+          myOffer: action.payload.offer
+        }
+      }
+      : {
+        ...state
+      }
 
     default:
       return state;

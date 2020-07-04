@@ -5,9 +5,11 @@ import {
   tryFetchRequest,
   fetchRequestSuccess,
   fetchRequestFailed,
+  tryPostSetOffer,
+  postSetOfferSuccess,
 } from "../actions/provider";
 import {
-  postFilteredRequests, getFetchRequest,
+  postFilteredRequests, getFetchRequest, postSetOffer,
 } from "../../api/provider";
 
 export const filterRequests = outerDispatch => (type, filters) => {
@@ -34,6 +36,20 @@ export const fetchRequest = outerDispatch => requestId => {
       })
       .catch(err => {
         dispatch(fetchRequestFailed(err));
+      })
+  })
+}
+
+export const setOffer = outerDispatch => (requestId, price) => {
+  outerDispatch(dispatch => {
+    dispatch(tryPostSetOffer());
+
+    postSetOffer(requestId, price)
+      .then(res => {
+        dispatch(postSetOfferSuccess(requestId, res.data));
+      })
+      .catch(err => {
+        dispatch(postSetOfferFailed(err));
       })
   })
 }

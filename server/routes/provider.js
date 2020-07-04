@@ -88,8 +88,6 @@ exports.setOffer = async (req, res) => {
 
   res.send({
     offer,
-    request,
-    provider
   })
 }
 
