@@ -7,9 +7,9 @@ const {
 } = require("../config/consts");
 
 const yupMessageSchema = Yup.object().shape({
-    body: Yup.string().max(MAX_MESSAGE_LENGTH),
+    body: Yup.string().min(1).max(MAX_MESSAGE_LENGTH),
     from: Yup.string().length(OBJECT_ID_LENGTH),
-    time: Yup.date(),
+    timestamp: Yup.date(),
 });
 
 const mongoFormat = {
@@ -19,7 +19,7 @@ const mongoFormat = {
   from: {
       type: String
   },
-  time: {
+  timestamp: {
     type: Date
   },
 };

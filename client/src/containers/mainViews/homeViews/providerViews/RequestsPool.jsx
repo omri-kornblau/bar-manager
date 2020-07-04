@@ -19,6 +19,7 @@ import {
   filterRequests as filterRequestsThunk,
   fetchRequest as fetchRequestThunk,
   setOffer as setOfferThunk,
+  sendMessage,
 } from "../../../../redux/thunks/provider";
 import { getFilteredRequests, getFetchedRequest } from "../../../../redux/selectors/provider";
 
@@ -29,7 +30,11 @@ import { providerPoolChosenHeaders as chosenHeaders, tableHeaders } from "../../
 import CustomTable from "../../../../components/Table/Table";
 import ProviderRequestModal from "../../../../components/RequestModal/ProviderRequestModal";
 import skylineBack from "../../../../assets/img/skyline-back.png";
-import { getFetchedRequestErrors, getSetOfferLoading } from "../../../../redux/selectors/errors";
+import {
+  getFetchedRequestErrors,
+  getSetOfferLoading,
+  getSendMessageLoading,
+} from "../../../../redux/selectors/errors";
 import { getUserData } from "../../../../redux/selectors/user";
 
 const toRequestFilters = filters => (
@@ -51,9 +56,11 @@ const ProviderRequestsPool = props => {
     fetchedRequest,
     provider,
     setOfferLoading,
+    sendMessage,
+    sendMessageLoading,
   } = props;
 
-  const [openedRequestId, setOpenedRequest] = useState("5eff2df0fc6b4c40bc0fcc53");
+  const [openedRequestId, setOpenedRequest] = useState(null);
   const [activeType, setActiveType] = useState(typeButtons[0].id);
   const [activeFilters, setActiveFilters] = useState(_.keyBy(filterButtons, "id"));
   const [page, setPage] = useState(0);
@@ -156,6 +163,8 @@ const ProviderRequestsPool = props => {
                     onSetOffer={setOffer}
                     provider={provider}
                     setOfferLoading={setOfferLoading}
+                    sendMessage={sendMessage}
+                    sendMessageLoading={sendMessageLoading}
                   />
               }
             </Modal>
@@ -181,12 +190,14 @@ const mapStateToProps = state => ({
   fetchedRequest: getFetchedRequest(state),
   provider: getUserData(state),
   setOfferLoading: getSetOfferLoading(state),
+  sendMessageLoading: getSendMessageLoading(state),
 });
 
 const mapDispatchToProps = dispatch => ({
   filterRequests: filterRequestsThunk(dispatch),
   fetchRequest: fetchRequestThunk(dispatch),
   setOffer: setOfferThunk(dispatch),
+  sendMessage: sendMessage(dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProviderRequestsPool);

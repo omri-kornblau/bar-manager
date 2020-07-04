@@ -21,3 +21,7 @@ export const getFetchedRequestErrors = state => {
 export const getSetOfferLoading = state => {
   return state.app.errors.setOffer.inProgress;
 }
+
+export const getSendMessageLoading = state => {
+  return state.app.errors.sendMessage.inProgress;
+}

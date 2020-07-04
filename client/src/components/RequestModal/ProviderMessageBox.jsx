@@ -17,13 +17,15 @@ import {
 } from '@material-ui/core';
 import SendIcon from '@material-ui/icons/Send';
 import { GradeRounded } from "@material-ui/icons";
+import { useState } from "react";
+import LoadingButton from "../LoadingButton/LoadingButton";
 
-const Message = ({ author, title, body, time }) => {
+const Message = ({ from, title,  body, timestamp }) => {
   return (
     <Box>
       <ListItem alignItems="center">
         <ListItemText
-          primary={author}
+          primary={from}
           secondary={
             <>
               <Typography
@@ -31,7 +33,7 @@ const Message = ({ author, title, body, time }) => {
                 variant="body2"
                 color="textPrimary"
               >
-                {title}:{" "}
+                {title}
               </Typography>
               {body}
             </>
@@ -39,7 +41,7 @@ const Message = ({ author, title, body, time }) => {
         />
         <ListItemText>
           <Box fontSize="80%" textAlign="right">
-            {time}
+            {timestamp}
           </Box>
         </ListItemText>
       </ListItem>
@@ -49,8 +51,23 @@ const Message = ({ author, title, body, time }) => {
 
 const ProviderMessagesBox = props => {
   const {
-    messages
+    messages,
+    sendMessage,
+    sendMessageLoading,
   } = props;
+
+  const [newMessage, setNewMessage] = useState("");
+
+  const onMessageChange = e => {
+    const {
+      value
+    } = e.target;
+    setNewMessage(value);
+  }
+
+  const onSendMessage = () => {
+    sendMessage(newMessage.trim());
+  }
 
   return (
     <Box>
@@ -78,14 +95,17 @@ const ProviderMessagesBox = props => {
           rows={4}
           variant="outlined"
           style={{ flex: 1 }}
+          onChange={onMessageChange}
         />
         <Box mr={2}/>
-        <Fab
+        <LoadingButton
           size="small"
           color="primary"
+          onClick={onSendMessage}
+          loading={sendMessageLoading}
         >
           <SendIcon/>
-        </Fab>
+        </LoadingButton>
       </Grid>
     </Box>
   );

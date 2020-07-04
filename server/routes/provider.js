@@ -98,7 +98,7 @@ exports.sendMessage = async (req, res) => {
     body,
   } = req.body;
 
-  const provider = await getProvider(username)
+  const [user, provider] = await getProvider(username)
   const message = await addMessage(body, provider._id);
   let request;
   try {
@@ -116,10 +116,7 @@ exports.sendMessage = async (req, res) => {
     throw Boom.internal(err);
   }
 
-  res.send({
-    request,
-    message,
-  })
+  res.send(message);
 }
 
 exports.fetchRequest = async (req, res) => {

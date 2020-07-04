@@ -127,7 +127,7 @@ exports.fetchRequestById = async requestId => {
   index += 1;
 
   finalRequest.messages = result.length > index
-    ? result.slice(index, messagesPromises.length)
+    ? result.slice(index, index + messagesPromises.length)
     : [];
   index += messagesPromises.length
 

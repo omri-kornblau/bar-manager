@@ -68,6 +68,8 @@ const ProviderRequestModal = props => {
     onSetOffer,
     provider,
     setOfferLoading,
+    sendMessage,
+    sendMessageLoading,
   } = props;
 
   const [selectedTab, setSelectedTab] = useState(0);
@@ -80,6 +82,10 @@ const ProviderRequestModal = props => {
   const TabPanel = ({ index, children }) => <div hidden={index === selectedTab}>{children}</div>
   const _onSetOffer = value => {
     onSetOffer(data._id, value);
+  }
+
+  const _onSendMessage = value => {
+    sendMessage(data._id, value);
   }
 
   return (
@@ -155,7 +161,11 @@ const ProviderRequestModal = props => {
                   הודעות
                 </Typography>
                 <Box mt={2}/>
-                <ProviderMessagesBox messages={data.messages}/>
+                <ProviderMessagesBox
+                  messages={data.messages}
+                  sendMessage={_onSendMessage}
+                  sendMessageLoading={sendMessageLoading}
+                />
               </Grid>
             </Grid>
           </TabPanel>
