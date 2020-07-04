@@ -10,7 +10,7 @@ const initialState = {
 const createOffersFromOffer = (oldOffers, offer) => {
   let foundOffer = false;
   const newOffers = oldOffers.map(oldOffer => {
-    if (offer.provider === offer.provider) {
+    if (oldOffer.provider === offer.provider) {
       foundOffer = true;
       return offer;
     }
@@ -45,7 +45,7 @@ const providerReducer = (state=initialState, action) => {
         fetchedRequest: {
           ...state.fetchedRequest,
           myOffer: action.payload.offer,
-          offers: createOffersFromOffer(state.fetechRequest.offers, action.payload.offer)
+          offers: createOffersFromOffer(state.fetchedRequest.offers, action.payload.offer)
         }
       }
       : state

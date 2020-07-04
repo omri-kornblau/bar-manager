@@ -39,3 +39,12 @@ exports.findOfferById = async _id => {
   }
   return offer;
 }
+
+exports.findOfferByProviderId = async (providerId, checkNil=true) => {
+  const offer = await OfferModel.findOne({provider: Mongoose.mongo.ObjectID(providerId)});
+
+  if (checkNil && _.isNil(offer)) {
+    throw Boom.internal("Offer not found");
+  }
+  return offer;
+}

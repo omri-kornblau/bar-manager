@@ -14,6 +14,7 @@ const {
 const {
   setOffer,
   deleteOffer,
+  findOfferByProviderId,
 } = require("../db/offer");
 
 const {
@@ -63,18 +64,28 @@ exports.setOffer = async (req, res) => {
     price,
   } = req.body;
 
-  let [user, provider] = await getProvider(username)
+  if (price <= 0) {
+    throw Boom.badRequest("Price should be bigger then 0");
+  }
+
+  const [user, provider] = await getProvider(username)
+  const originalOffer = await findOfferByProviderId(provider._id, false);
+  if (!_.isNil(originalOffer) && price >= originalOffer.price) {
+    throw Boom.badRequest("Price should be lower then last price")
+  }
+
   const offer = await setOffer(provider._id, requestId, price);
   let request;
+  let updatedProvider;
   try {
     request = await addOfferToRequest(requestId, offer._id);
-    provider = await addOfferToProvider(provider._id, offer._id)
+    updatedProvider = await addOfferToProvider(provider._id, offer._id)
   } catch (err) {
     try {
       if (!_.isNil(request)) {
         await removeOfferFromRequest(requestId, offer._id);
       }
-      if (!_.isNil(provider)) {
+      if (!_.isNil(updatedProvider)) {
         await removeOfferFromProvider(requestId, offer._id);
       }
       await deleteOffer(offer._id);
