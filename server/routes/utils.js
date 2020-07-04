@@ -9,6 +9,7 @@ const {
 } = require("../db/client");
 
 const UserModel = Mongoose.model("User");
+const RequestModal = Mongoose.model("Request");
 
 exports.findByIds = async (Model, ids, error) => {
   const promises = ids.map(_id => (
@@ -30,6 +31,17 @@ exports.prepareRequests = async requests => {
   const authors = await Promise.all(promise);
   return requests.map((request, index) => {
     return {...request._doc, author: authors[index].username};
+  });
+}
+
+exports.prepareNotifications = async notifications => {
+  const promise = notifications.map(notification => (
+    RequestModal.findById(notification.requestId)
+  ))
+
+  const requests = await Promise.all(promise);
+  return notifications.map((notification, index) => {
+    return {...notification._doc, request: requests[index]._doc};
   });
 }
 

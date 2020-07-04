@@ -12,6 +12,7 @@ const {
   writerFile,
   findByIds,
   prepareRequests,
+  prepareNotifications,
   getClient,
 } = require("./utils");
 
@@ -21,15 +22,19 @@ const {
   findRequestById,
   updateRequestFieldsById,
   updateFirstAcceptById,
-  updateSecondAcceptById
+  updateSecondAcceptById,
 } = require("../db/request");
 const {
   addRequestToClientById,
-  removeRequestFromClientById
+  removeRequestFromClientById,
+  readNotificationInClientById,
 } = require("../db/client");
 const {
   createSampledFromRequest
 } = require("../db/sampledRequest");
+const {
+  readNotification,
+} = require("../db/notification")
 
 
 const {
@@ -50,7 +55,7 @@ exports.getAll = async (req, res) => {
 
   const requests = await prepareRequests(await findByIds(RequestModel, client.requests, "Request not found"));
   const oldRequests = await prepareRequests(await findByIds(OldRequestModel, client.oldRequests, "Old request not found"));
-  const notifications = await findByIds(NotificationModel, client.unreadNotifications, "Unread notification not found");
+  const notifications = await prepareNotifications(await findByIds(NotificationModel, client.unreadNotifications, "Unread notification not found"));
 
   res.send({ requests, oldRequests, notifications });
 }
@@ -234,4 +239,28 @@ exports.downloadFile = async (req, res) => {
   res.set("Content-Type", "application/octet-stream");
   res.set("Content-Disposition", `attachment; filename=\"${file.filename}\"`);
   readStream.pipe(res);
+}
+
+exports.readNotification = async (req, res) => {
+  const {
+    username
+  } =  req;
+
+  const {
+    notificationId,
+  } = req.body;
+
+  const [user, client] = await getClient(username);
+  if (!client.unreadNotifications.includes(notificationId)) {
+    throw Boom.badRequest("Notification not belong to client");
+  }
+
+  await readNotification(notificationId, true)
+  try {
+    await readNotificationInClientById(client._id, notificationId);
+  } catch (err) {
+    await readNotification(notificationId, false)
+    throw Boom.internal(err);
+  }
+  res.sendStatus(204)
 }

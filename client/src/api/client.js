@@ -19,3 +19,7 @@ export const postAcceptRequest = async _id => {
 export const postCancelRequest = async _id => {
   return Axios.post("/client/cancelrequest", {_id})
 }
+
+export const postReadNotification = async notificationId => {
+  return Axios.post("/client/readnotification", {notificationId})
+}

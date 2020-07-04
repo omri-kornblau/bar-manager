@@ -3,11 +3,8 @@ import {
 } from "../actions/request";
 
 const initialState = {
-  client: {
-    requests: [],
-    oldRequests: [],
-    notifcations: [],
-  }
+  requests: [],
+  oldRequests: [],
 };
 
 const requestReducer = (state=initialState, action) => {
@@ -15,30 +12,23 @@ const requestReducer = (state=initialState, action) => {
     case GET_CLIENT_SUCCESS:
       return {
         ...state,
-        client: action.payload
+        requests: action.payload.requests,
+        oldRequests: action.payload.oldRequests,
       };
     case ACCEPT_REQUEST_SUCCESS:
     case UPDATE_REQUEST_SUCCESS:
       return {
         ...state,
-        client: {
-          ...state.client,
-          requests: state.client.requests.map( request => {
-            return request._id === action.payload._id ? action.payload : request
-          }
-          ),
-        },
+        requests: state.requests.map(request => (
+          request._id === action.payload._id ? action.payload : request
+        )),
       }
     case CANCEL_REQUEST_SUCCESS:
       return {
         ...state,
-        client: {
-          ...state.client,
-          requests: state.client.requests.filter( request => {
-            return request._id !== action.payload._id
-          }
-          ),
-        },
+        requests: state.requests.filter(request => (
+          request._id !== action.payload._id
+        )),
       }
     default:
       return state;
