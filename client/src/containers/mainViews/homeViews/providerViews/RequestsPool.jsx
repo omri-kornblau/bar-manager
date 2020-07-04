@@ -152,12 +152,18 @@ const ProviderRequestsPool = props => {
             >
               {
                 fetchRequestLoading
-                ? 
-                  <Container maxWidth="md">
-                    <Paper>
+                ?
+                  <Paper>
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      width="60vw"
+                      height="90vh"
+                    >
                       <CircularProgress color="primary" size={80}/>
-                    </Paper>
-                  </Container>
+                    </Box>
+                  </Paper>
                 : <ProviderRequestModal
                     data={fetchedRequest}
                     onSetOffer={setOffer}

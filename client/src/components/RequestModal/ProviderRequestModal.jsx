@@ -155,8 +155,7 @@ const ProviderRequestModal = props => {
                   setOfferLoading={setOfferLoading}
                 />
               </Grid>
-              <Box mt={1}/>
-              <Grid item xs={7}>
+              <Grid item xs>
                 <Typography align="center" variant="h6">
                   הודעות
                 </Typography>
