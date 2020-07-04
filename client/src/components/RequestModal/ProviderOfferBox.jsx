@@ -1,5 +1,5 @@
 import _ from "lodash";
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Paper,
   Box,
@@ -25,10 +25,25 @@ import CustomTable from "../Table/Table";
 
 const ProviderOfferBox = props => {
   const {
-    offers
+    myOffer,
+    offers,
+    onSetOffer,
   } = props;
 
-  const isOfferWinning = true;
+  const isOfferWinning = false;
+
+  const [newOffer, setNewOffer] = useState(myOffer)
+  const _onSetOffer = e => {
+    onSetOffer(newOffer);
+  }
+
+  const onOfferChange = e => {
+    const {
+      value
+    } = e.target;
+
+    setNewOffer(value);
+  }
 
   return (
     <Box>
@@ -37,7 +52,7 @@ const ProviderOfferBox = props => {
           הצעה נוכחית:
         </Box>
         <Chip
-          label={`140,000 ש"ח`}
+          label={myOffer ? `${myOffer} ש"ח` : "אין הצעה נוכחית"}
           size="small"
           color={isOfferWinning ? "primary" : "default"}
         />
@@ -49,11 +64,14 @@ const ProviderOfferBox = props => {
           variant="outlined"
           margin="dense"
           type="number"
+          value={newOffer}
+          onChange={onOfferChange}
         />
         <Box mr={2}/>
         <IconButton
           size="small"
           color="primary"
+          onClick={_onSetOffer}
         >
           <GetAppIcon/>
         </IconButton>

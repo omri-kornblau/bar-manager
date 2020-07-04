@@ -6,17 +6,17 @@ const OfferModel = Mongoose.model("Offer");
 
 exports.setOffer = async (providerId, requestId, price) => {
   const newOffer = await OfferModel.findOneAndUpdate({
-      provider: provider._id,
-      requests: requestId,
+      provider: providerId,
+      request: requestId,
     },{
       $set: {
         provider: providerId,
-        requests: requestId,
+        request: requestId,
         timestamp: new Date(),
         price,
       }
     },{
-    returnNewDocument: true,
+    new: true,
     upsert: true,
   })
 

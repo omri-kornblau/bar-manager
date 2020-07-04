@@ -63,7 +63,7 @@ exports.setOffer = async (req, res) => {
     price,
   } = req.body;
 
-  let provider = await getProvider(username)
+  let [user, provider] = await getProvider(username)
   const offer = await setOffer(provider._id, requestId, price);
   let request;
   try {
@@ -85,9 +85,7 @@ exports.setOffer = async (req, res) => {
     throw Boom.internal(err);
   }
 
-  res.send({
-    offer,
-  })
+  res.send(offer)
 }
 
 exports.sendMessage = async (req, res) => {
@@ -126,9 +124,15 @@ exports.sendMessage = async (req, res) => {
 
 exports.fetchRequest = async (req, res) => {
   const {
+    username
+  } = req;
+
+  const {
     requestId,
   } = req.query;
 
+  const [user, provider] = await getProvider(username);
   const request = await fetchRequestById(requestId);
-  res.send(request);
+  const myOffer = _.find(request.offers, {provider: provider._id.toString()});
+  res.send({...request, myOffer: myOffer ? myOffer : {price: undefined}})
 }

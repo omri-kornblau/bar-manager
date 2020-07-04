@@ -15,5 +15,5 @@ export const getUpdateRequestErrors = state => {
 }
 
 export const getFetchedRequestErrors = state => {
-  return state.app.errors.fetchRequest;
+  return state.app.errors.fetchRequest.inProgress;
 }

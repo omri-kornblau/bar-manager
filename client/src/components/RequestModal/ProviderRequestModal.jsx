@@ -65,6 +65,7 @@ const NoDataModal = () =>
 const ProviderRequestModal = props => {
   const {
     data,
+    onSetOffer,
   } = props;
 
   const [selectedTab, setSelectedTab] = useState(0);
@@ -75,6 +76,9 @@ const ProviderRequestModal = props => {
 
   const onTabChange = (e, val) => setSelectedTab(val);
   const TabPanel = ({ index, children }) => <div hidden={index === selectedTab}>{children}</div>
+  const _onSetOffer = value => {
+    onSetOffer(data._id, value);
+  }
 
   return (
     <Container maxWidth="md">
@@ -93,7 +97,7 @@ const ProviderRequestModal = props => {
             </Typography>
             <Typography align="center" variant="subtitle2">
               בקשה מאת
-              {" "}{data.author}
+              {" "}{data.author._id}
             </Typography>
           </Box>
           <Box mt={2}/>
@@ -135,16 +139,11 @@ const ProviderRequestModal = props => {
                   הגש הצעה
                 </Typography>
                 <Box mt={1}/>
-                <ProviderOfferBox offers={[
-                  {
-                    provider: "מבטח א",
-                    price: 123413414,
-                  },
-                  {
-                    provider: "מבטח א",
-                    price: 123413414
-                  }
-                ]}/>
+                <ProviderOfferBox
+                  myOffer={data.myOffer.price}
+                  offers={data.offers}
+                  onSetOffer={_onSetOffer}
+                />
               </Grid>
               <Box mt={1}/>
               <Grid item xs={7}>

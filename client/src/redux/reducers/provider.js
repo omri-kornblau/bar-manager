@@ -27,6 +27,11 @@ const providerReducer = (state=initialState, action) => {
         ...state,
         fetchedRequest: {
           ...state.fetchedRequest,
+          offers: state.fetchedRequest.offers.map(offer =>
+            offer.provider === action.payload.offer.provider
+            ? action.payload.offer
+            : offer
+          ),
           myOffer: action.payload.offer
         }
       }

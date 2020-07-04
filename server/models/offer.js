@@ -6,7 +6,7 @@ const { OBJECT_ID_LENGTH } = require("../config/consts");
 const yupOfferSchema = Yup.object().shape({
   provider: Yup.string().length(OBJECT_ID_LENGTH),
   request: Yup.string().length(OBJECT_ID_LENGTH),
-  amount: Yup.number().integer().positive(),
+  price: Yup.number().integer().positive(),
   time: Yup.date(),
 });
 
@@ -17,7 +17,7 @@ const mongoFormat = {
   request: {
       type: String
   },
-  amount: {
+  price: {
       type: Number
   },
   time: {

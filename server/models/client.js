@@ -10,8 +10,8 @@ const yupNotifictionSchema = Yup.object().shape({
 });
 
 const yupClientSchema = Yup.object().shape({
-  unreadNotifications: Yup.array().of(yupNotifictionSchema),
-  readNotifications: Yup.array().of(yupNotifictionSchema),
+  unreadNotifications: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
+  readNotifications: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   requests: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   oldRequests: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
 });

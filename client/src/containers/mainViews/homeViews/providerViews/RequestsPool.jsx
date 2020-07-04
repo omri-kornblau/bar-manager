@@ -9,13 +9,16 @@ import {
   Button,
   Card,
   CardContent,
-  CardHeader,
-  Divider
+  Divider,
+  Container,
+  Paper,
+  CircularProgress,
 } from "@material-ui/core";
 
 import {
-  filterRequests,
-  fetchRequest,
+  filterRequests as filterRequestsThunk,
+  fetchRequest as fetchRequestThunk,
+  setOffer as setOfferThunk,
 } from "../../../../redux/thunks/provider";
 import { getFilteredRequests, getFetchedRequest } from "../../../../redux/selectors/provider";
 
@@ -26,7 +29,6 @@ import { providerPoolChosenHeaders as chosenHeaders, tableHeaders } from "../../
 import CustomTable from "../../../../components/Table/Table";
 import ProviderRequestModal from "../../../../components/RequestModal/ProviderRequestModal";
 import skylineBack from "../../../../assets/img/skyline-back.png";
-import { getFetchRequest } from "../../../../api/provider";
 import { getFetchedRequestErrors } from "../../../../redux/selectors/errors";
 
 const toRequestFilters = filters => (
@@ -43,10 +45,9 @@ const ProviderRequestsPool = props => {
     requests,
     filterRequests,
     fetchRequest,
-    pushUrl,
-    progress,
-    type,
-    editMode,
+    setOffer,
+    fetchRequestLoading,
+    fetchedRequest,
   } = props;
 
   const [openedRequestId, setOpenedRequest] = useState("5eff2df0fc6b4c40bc0fcc53");
@@ -139,10 +140,19 @@ const ProviderRequestsPool = props => {
                 alignItems: "center",
               }}
             >
-              <ProviderRequestModal
-                data={_.find(requests, { _id: openedRequestId })}
-                editMode={editMode}
-              />
+              {
+                fetchRequestLoading
+                ? 
+                  <Container maxWidth="md">
+                    <Paper>
+                      <CircularProgress color="primary" size={80}/>
+                    </Paper>
+                  </Container>
+                : <ProviderRequestModal
+                    data={fetchedRequest}
+                    onSetOffer={setOffer}
+                  />
+              }
             </Modal>
           </Box>
         </CardContent>
@@ -167,8 +177,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  filterRequests: filterRequests(dispatch),
-  fetchRequest: fetchRequest(dispatch),
+  filterRequests: filterRequestsThunk(dispatch),
+  fetchRequest: fetchRequestThunk(dispatch),
+  setOffer: setOfferThunk(dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProviderRequestsPool);
