@@ -22,3 +22,11 @@ exports.deleteMessage = async messageId => {
   return MessageModel.findByIdAndDelete(messageId)
 }
 
+exports.findMessageById = async _id => {
+  const message = await MessageModel.findById(_id);
+
+  if (_.isNil(message)) {
+    throw Boom.internal("Message not found");
+  }
+  return message;
+}

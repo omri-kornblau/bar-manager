@@ -5,12 +5,20 @@ const { Readable } = require("stream");
 const { createNotification } = require("../db/notification");
 const {
   addNotificationToClientById,
-  findClientById
+  findClientById,
 } = require("../db/client");
 
 const {
   findProviderById,
 } = require("../db/provider");
+
+const {
+  findMessageById,
+} = require("../db/message");
+
+const {
+  findOfferById,
+} = require("../db/offer");
 
 const UserModel = Mongoose.model("User");
 const ProviderModel = Mongoose.model("Provider");
@@ -98,4 +106,20 @@ exports.readFile = (attachment, _id) => {
 exports.createNotification = async (message, requestId, clientId) => {
   const createdNotification = await createNotification(message, requestId);
   return await addNotificationToClientById(clientId, createdNotification._id);
+}
+
+exports.fetchRequestById = async requestId => {
+  const request = await findRequestById(requestId);
+
+  const author = findClientById(request.author);
+  const messagesPromises = request.messages.map(findMessageById);
+  const offersPromises = request.offers.map(findOfferById);
+
+  const result = await Promise.all([author, ...messagesPromises, ...offersPromises]);
+
+  request.author = result[0];
+  request.messages = result.slice(1, messagesPromises.length);
+  request.offers = result.slice(messagesPromises.length);
+
+  return request;
 }

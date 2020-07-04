@@ -8,6 +8,7 @@ const OfferModel = Mongoose.model("Offer");
 const { REQUESTS_POOL_STATUSES } = require("../config/consts");
 const {
   getProvider,
+  fetchRequestById,
 } = require("./utils");
 
 const {
@@ -21,6 +22,7 @@ const {
   addMessage: addMessageToRequest,
   removeMessage: removeMessageFromRequest,
   getProviderRequests,
+  findRequestById,
 } = require("../db/request");
 
 const {
@@ -123,4 +125,13 @@ exports.sendMessage = async (req, res) => {
     request,
     message,
   })
+}
+
+exports.fetchRequest = async (req, res) => {
+  const {
+    requestId,
+  } = req.query;
+
+  const request = await fetchRequestById(requestId);
+  res.send(request);
 }

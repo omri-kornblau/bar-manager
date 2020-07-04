@@ -30,3 +30,12 @@ exports.setOffer = async (providerId, requestId, price) => {
 exports.deleteOffer = async offerId => {
   return OfferModel.findByIdAndDelete(offerId)
 }
+
+exports.findOfferById = async _id => {
+  const offer = await OfferModel.findById(_id);
+
+  if (_.isNil(offer)) {
+    throw Boom.internal("Offer not found");
+  }
+  return offer;
+}
