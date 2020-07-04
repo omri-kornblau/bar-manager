@@ -29,7 +29,8 @@ import { providerPoolChosenHeaders as chosenHeaders, tableHeaders } from "../../
 import CustomTable from "../../../../components/Table/Table";
 import ProviderRequestModal from "../../../../components/RequestModal/ProviderRequestModal";
 import skylineBack from "../../../../assets/img/skyline-back.png";
-import { getFetchedRequestErrors } from "../../../../redux/selectors/errors";
+import { getFetchedRequestErrors, getSetOfferLoading } from "../../../../redux/selectors/errors";
+import { getUserData } from "../../../../redux/selectors/user";
 
 const toRequestFilters = filters => (
   _.map(
@@ -48,6 +49,8 @@ const ProviderRequestsPool = props => {
     setOffer,
     fetchRequestLoading,
     fetchedRequest,
+    provider,
+    setOfferLoading,
   } = props;
 
   const [openedRequestId, setOpenedRequest] = useState("5eff2df0fc6b4c40bc0fcc53");
@@ -151,6 +154,8 @@ const ProviderRequestsPool = props => {
                 : <ProviderRequestModal
                     data={fetchedRequest}
                     onSetOffer={setOffer}
+                    provider={provider}
+                    setOfferLoading={setOfferLoading}
                   />
               }
             </Modal>
@@ -174,6 +179,8 @@ const mapStateToProps = state => ({
   requests: getFilteredRequests(state),
   fetchRequestLoading: getFetchedRequestErrors(state),
   fetchedRequest: getFetchedRequest(state),
+  provider: getUserData(state),
+  setOfferLoading: getSetOfferLoading(state),
 });
 
 const mapDispatchToProps = dispatch => ({

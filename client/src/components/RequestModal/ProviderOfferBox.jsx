@@ -22,15 +22,19 @@ import {
 } from '@material-ui/icons';
 
 import CustomTable from "../Table/Table";
+import LoadingButton from "../LoadingButton/LoadingButton";
 
 const ProviderOfferBox = props => {
   const {
+    provider,
     myOffer,
     offers,
     onSetOffer,
+    setOfferLoading,
   } = props;
 
-  const isOfferWinning = false;
+  offers.sort((a, b) => a.price - b.price);
+  const isOfferWinning = _.maxBy(offers, offer => offer.price).provider === provider._id;
 
   const [newOffer, setNewOffer] = useState(myOffer)
   const _onSetOffer = e => {
@@ -68,13 +72,14 @@ const ProviderOfferBox = props => {
           onChange={onOfferChange}
         />
         <Box mr={2}/>
-        <IconButton
+        <LoadingButton
           size="small"
           color="primary"
           onClick={_onSetOffer}
+          loading={setOfferLoading}
         >
           <GetAppIcon/>
-        </IconButton>
+        </LoadingButton>
         <Typography align="left" variant="caption">
           *לאחר הגשת ההצעה לא ניתן לבטלה
         </Typography>

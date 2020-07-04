@@ -66,6 +66,8 @@ const ProviderRequestModal = props => {
   const {
     data,
     onSetOffer,
+    provider,
+    setOfferLoading,
   } = props;
 
   const [selectedTab, setSelectedTab] = useState(0);
@@ -140,9 +142,11 @@ const ProviderRequestModal = props => {
                 </Typography>
                 <Box mt={1}/>
                 <ProviderOfferBox
+                  provider={provider}
                   myOffer={data.myOffer.price}
                   offers={data.offers}
                   onSetOffer={_onSetOffer}
+                  setOfferLoading={setOfferLoading}
                 />
               </Grid>
               <Box mt={1}/>

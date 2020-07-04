@@ -17,3 +17,7 @@ export const getUpdateRequestErrors = state => {
 export const getFetchedRequestErrors = state => {
   return state.app.errors.fetchRequest.inProgress;
 }
+
+export const getSetOfferLoading = state => {
+  return state.app.errors.setOffer.inProgress;
+}

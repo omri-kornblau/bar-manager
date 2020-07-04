@@ -14,7 +14,7 @@ const {
 } = require("../config/server");
 
 const omitSensitiveFields = (user) => {
-  const pickedFields = ["username", "type", "email"];
+  const pickedFields = ["username", "type", "email", "_id"];
   return _.pick(user._doc, pickedFields);
 }
 
