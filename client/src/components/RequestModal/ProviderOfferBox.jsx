@@ -23,6 +23,7 @@ import {
 
 import CustomTable from "../Table/Table";
 import LoadingButton from "../LoadingButton/LoadingButton";
+import { parseOfferBoxError } from "../../helpers/errors";
 
 const ProviderOfferBox = props => {
   const {
@@ -30,7 +31,7 @@ const ProviderOfferBox = props => {
     myOffer,
     offers,
     onSetOffer,
-    setOfferLoading,
+    setOfferStatus,
   } = props;
 
   offers.sort((a, b) => a.price - b.price);
@@ -72,13 +73,18 @@ const ProviderOfferBox = props => {
           type="number"
           value={newOffer}
           onChange={onOfferChange}
+          error={!_.isNil(setOfferStatus.error)}
+          inputProps={{
+            min: 1
+          }}
+          helperText={parseOfferBoxError(setOfferStatus.error)}
         />
         <Box mr={2}/>
         <LoadingButton
           size="small"
           color="primary"
           onClick={_onSetOffer}
-          loading={setOfferLoading}
+          loading={setOfferStatus.inProgress}
         >
           <GetAppIcon/>
         </LoadingButton>

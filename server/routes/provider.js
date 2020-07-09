@@ -130,7 +130,6 @@ exports.sendMessage = async (req, res) => {
     throw Boom.internal(err);
   }
 
-  console.log(message);
   res.send(message);
 }
 
@@ -164,7 +163,6 @@ exports.fetchRequest = async (req, res) => {
     message.from = getMessageFromName(message, request.author, provider);
     return message;
   })
-  console.log(request.messages);
 
   res.send({...request, myOffer: myOffer ? myOffer : {price: undefined}})
 }

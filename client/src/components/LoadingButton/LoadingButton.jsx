@@ -2,31 +2,39 @@ import React from "react";
 import PropTypes from "prop-types";
 import {
   Button,
-  CircularProgress
+  CircularProgress,
+  Fab
 } from "@material-ui/core";
 
 import useStyle from "./style";
 
 const propTypes = {
-  loading: PropTypes.string
+  loading: PropTypes.string,
+  fab: PropTypes.bool
+}
+
+const ButtonComponent = props => {
+  return props.fab ?
+  <Fab {...props}/>
+  : <Button {...props}/>;
 }
 
 const LoadingButton = props => {
   const {
     loading,
-    children
+    children,
   } = props;
 
   const classes = useStyle();
 
   return (
     <div className={classes.wrapper}>
-      <Button
+      <ButtonComponent
         {...props}
         disabled={loading}
       >
         {children}
-      </Button>
+      </ButtonComponent>
       {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
     </div>
   )

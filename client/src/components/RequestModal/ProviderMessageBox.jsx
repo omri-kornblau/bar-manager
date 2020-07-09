@@ -56,7 +56,7 @@ const ProviderMessagesBox = props => {
   const {
     messages,
     sendMessage,
-    sendMessageLoading,
+    sendMessageStatus,
   } = props;
 
   const [newMessage, setNewMessage] = useState("");
@@ -102,15 +102,21 @@ const ProviderMessagesBox = props => {
           variant="outlined"
           style={{ flex: 1 }}
           onChange={onMessageChange}
+          error={!_.isNil(sendMessageStatus.error)}
         />
         <Box mr={2}/>
         <LoadingButton
           size="small"
           color="primary"
           onClick={onSendMessage}
-          loading={sendMessageLoading}
+          loading={sendMessageStatus.inProgress}
+          fab
         >
-          <SendIcon/>
+          <SendIcon
+            style={{
+              transform: "rotate(180deg)"
+            }}
+          />
         </LoadingButton>
       </Grid>
     </Box>
