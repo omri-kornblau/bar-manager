@@ -130,6 +130,7 @@ exports.sendMessage = async (req, res) => {
     throw Boom.internal(err);
   }
 
+  console.log(message);
   res.send(message);
 }
 
@@ -139,7 +140,7 @@ const getMessageFromName = (message, author, provider) => {
   } else if (message.from === provider._id) {
     return provider.name;
   } else {
-    "unknown"
+    return "unknown"
   }
 }
 
@@ -159,9 +160,11 @@ exports.fetchRequest = async (req, res) => {
   request.messages = censorMessagesForProvider(request.messages, provider)
   request.offers = censorOffersForProvider(request.offers, provider)
 
-  request.messages = request.messages.map(message =>
-    _.set(message, "from", getMessageFromName(message, request.author, provider))
-  )
+  request.messages = request.messages.map(message => {
+    message.from = getMessageFromName(message, request.author, provider);
+    return message;
+  })
+  console.log(request.messages);
 
   res.send({...request, myOffer: myOffer ? myOffer : {price: undefined}})
 }

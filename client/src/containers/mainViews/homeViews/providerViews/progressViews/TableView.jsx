@@ -6,7 +6,9 @@ import {
   Typography,
   Grid,
   Box,
-  Modal
+  Modal,
+  Fade,
+  Backdrop
 } from "@material-ui/core";
 import { push, getLocation } from "connected-react-router";
 
@@ -105,15 +107,22 @@ const TableView = props => {
           justifyContent: "center",
           alignItems: "center",
         }}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
       >
-        <RequestModal
-          data={requests[openedRequestIdx]}
-          onEnterEdit={onEnterEditMode}
-          onSaveEdit={onSaveEdit}
-          onExitEdit={onExitEditMode}
-          editMode={editMode}
-          updateStatus={updateStatus}
-        />
+        <Fade in={isModalOpen}>
+          <RequestModal
+            data={requests[openedRequestIdx]}
+            onEnterEdit={onEnterEditMode}
+            onSaveEdit={onSaveEdit}
+            onExitEdit={onExitEditMode}
+            editMode={editMode}
+            updateStatus={updateStatus}
+          />
+        </Fade>
       </Modal>
     </Box>
   );

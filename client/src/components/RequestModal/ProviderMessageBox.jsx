@@ -13,39 +13,42 @@ import {
   IconButton,
   InputAdornment,
   Button,
-  Fab
+  Fab,
+  ListItemAvatar
 } from '@material-ui/core';
 import SendIcon from '@material-ui/icons/Send';
 import { GradeRounded } from "@material-ui/icons";
 import { useState } from "react";
 import LoadingButton from "../LoadingButton/LoadingButton";
+import {
+  formatTimeStampMessageTime, formatTextWithLineEnds,
+} from "../../helpers/formats";
+
+import useStyle from "./style";
 
 const Message = ({ from, title,  body, timestamp }) => {
+  const classes = useStyle();
+
   return (
-    <Box>
-      <ListItem alignItems="center">
-        <ListItemText
-          primary={from}
-          secondary={
-            <>
-              <Typography
-                component="span"
-                variant="body2"
-                color="textPrimary"
-              >
-                {title}
-              </Typography>
-              {body}
-            </>
-          }
-        />
+    <Paper className={classes.messageContainer} elevation={1}>
+      <ListItem className={classes.messageContainer}>
         <ListItemText>
-          <Box fontSize="80%" textAlign="right">
-            {timestamp}
-          </Box>
+          <div style={{ overflowWrap: "anywhere"}}>
+            <Typography variant="body2">
+              {formatTextWithLineEnds(body)}
+            </Typography>
+          </div>
         </ListItemText>
+        <Box mr={3}/>
+        <ListItemAvatar>
+          <Typography component="p" variant="caption" align="right">
+            <Box fontWeight="800">
+              {formatTimeStampMessageTime(timestamp)}
+            </Box>
+          </Typography>
+        </ListItemAvatar>
       </ListItem>
-    </Box>
+    </Paper>
   )
 }
 
@@ -71,22 +74,25 @@ const ProviderMessagesBox = props => {
 
   return (
     <Box>
-      {/* <Paper variant="elevated" elevation={2}> */}
-        {_.isEmpty(messages) ?
-          <Typography align="center" variant="subtitle1">
-            שלח הודעה לחברה:
-          </Typography>
-          :
+      <Divider/>
+      <Box mt={1}/>
+      {_.isEmpty(messages) ?
+        <Typography align="left" variant="subtitle1">
+          שלח הודעה לחברה:
+        </Typography>
+        :
+        <>
           <List>
             {messages.map(message =>
               <>
                 <Message {...message} />
-                <Divider/>
+                <Box mt={2}/>
               </>
             )}
           </List>
-        }
-      {/* </Paper> */}
+          <Divider/>
+        </>
+      }
       <Box mt={2}/>
       <Grid container alignItems="center">
         <TextField
