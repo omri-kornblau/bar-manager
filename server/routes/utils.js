@@ -23,6 +23,7 @@ const {
 const {
   findRequestById,
 } = require("../db/request");
+const { censorOffersForProvider, censorMessagesForProvider } = require("../censors");
 
 const UserModel = Mongoose.model("User");
 const ProviderModel = Mongoose.model("Provider");
@@ -112,28 +113,25 @@ exports.createNotification = async (message, requestId, clientId) => {
   return await addNotificationToClientById(clientId, createdNotification._id);
 }
 
-exports.fetchRequestById = async requestId => {
+exports.fetchRequestById = async (requestId, provider={}) => {
   const request = await findRequestById(requestId);
 
-  const author = findClientById(request.author, {fullName: 1});
+  const author = findClientById(request.author, { fullName: 1 });
   const messagesPromises = request.messages.map(findMessageById);
   const offersPromises = request.offers.map(findOfferById);
 
   const result = await Promise.all([author, ...messagesPromises, ...offersPromises]);
 
   const finalRequest = request._doc;
+
   let index = 0
   finalRequest.author = result[index];
+
   index += 1;
+  finalRequest.messages = result.slice(index, index + messagesPromises.length);
 
-  finalRequest.messages = result.length > index
-    ? result.slice(index, index + messagesPromises.length)
-    : [];
   index += messagesPromises.length
-
-  finalRequest.offers = result.length > index
-    ? result.slice(index)
-    : [];
+  finalRequest.offers = result.slice(index);
 
   return finalRequest;
 }

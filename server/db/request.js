@@ -7,10 +7,13 @@ const RequestModel = Mongoose.model("Request");
 
 const { yupUpdateRequestSchema } = require("../models/request");
 
-const { 
+const {
   STATUS_TIMING,
   REQUESTS_POOL_STATUSES,
 } = require("../config/consts");
+const {
+  REQUEST_FOR_PROVIDER_ALL_REQUESTS
+} = require("../config/projections");
 
 exports.createRequest = async requestData => {
   const createdRequest = await RequestModel.create({
@@ -157,7 +160,7 @@ exports.getProviderRequests = async (types, existsRequests, skip, limit) => {
       _id: {
         $nin: existsRequests
       },
-    })
+    }, REQUEST_FOR_PROVIDER_ALL_REQUESTS)
     .skip(skip)
     .limit(limit);
 }

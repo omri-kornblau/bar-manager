@@ -5,7 +5,6 @@ const Boom = require("boom");
 const RequestModel = Mongoose.model("Request");
 const OfferModel = Mongoose.model("Offer");
 
-const { REQUESTS_POOL_STATUSES } = require("../config/consts");
 const {
   getProvider,
   fetchRequestById,
@@ -34,6 +33,10 @@ const {
   addMessage,
   deleteMessage,
 } = require("../db/message");
+const {
+  censorMessagesForProvider,
+  censorOffersForProvider
+} = require("../censors");
 
 exports.getRequests = async (req, res) => {
   const {
@@ -130,6 +133,16 @@ exports.sendMessage = async (req, res) => {
   res.send(message);
 }
 
+const getMessageFromName = (message, author, provider) => {
+  if (message.from === author._id) {
+    return author.name;
+  } else if (message.from === provider._id) {
+    return provider.name;
+  } else {
+    "unknown"
+  }
+}
+
 exports.fetchRequest = async (req, res) => {
   const {
     username
@@ -140,7 +153,15 @@ exports.fetchRequest = async (req, res) => {
   } = req.query;
 
   const [user, provider] = await getProvider(username);
-  const request = await fetchRequestById(requestId);
-  const myOffer = _.find(request.offers, {provider: provider._id.toString()});
+  const request = await fetchRequestById(requestId, provider);
+  const myOffer = _.find(request.offers, { provider: provider._id.toString() });
+
+  request.messages = censorMessagesForProvider(request.messages, provider)
+  request.offers = censorOffersForProvider(request.offers, provider)
+
+  request.messages = request.messages.map(message =>
+    _.set(message, "from", getMessageFromName(message, request.author, provider))
+  )
+
   res.send({...request, myOffer: myOffer ? myOffer : {price: undefined}})
 }
