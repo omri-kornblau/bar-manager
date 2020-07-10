@@ -18,10 +18,10 @@ export const getFetchedRequestErrors = state => {
   return state.app.errors.fetchRequest.inProgress;
 }
 
-export const getSetOfferLoading = state => {
-  return state.app.errors.setOffer.inProgress;
+export const getSetOfferErrors = state => {
+  return state.app.errors.setOffer;
 }
 
-export const getSendMessageLoading = state => {
-  return state.app.errors.sendMessage.inProgress;
+export const getSendMessageErrors = state => {
+  return state.app.errors.sendMessage;
 }

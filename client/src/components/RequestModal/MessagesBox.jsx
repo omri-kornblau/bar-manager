@@ -26,7 +26,11 @@ const Message = ({ author, title, body, time }) => {
               >
                 {title}:{" "}
               </Typography>
-              {body}
+              <div
+                style={{ overflowWrap: "anywhere"}}
+              >
+                {body}
+              </div>
             </>
           }
         />

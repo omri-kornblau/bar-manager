@@ -9,6 +9,8 @@ const unknowErrorData = {
 const errMessageToText = {
   "Policy file must be provided": "יש להעלות קובץ פוליסה",
   "Extra files must be provided": "יש להעלות קבצים נוספים",
+  "Price should be lower then last price": "המחיר החדש לא נמוך מהנוכחי",
+  "Price should be bigger then 0": "נא להכניס מספר חיובי"
 }
 
 const generalErrorToText = ({ message }) => (
@@ -48,6 +50,11 @@ export const parseFormError = err => {
       message: generalErrorToText(errData)
     }
   }
+}
+
+export const parseOfferBoxError = err => {
+  if (_.isNil(err)) return err;
+  return parseFormError(err).message;
 }
 
 export const getAxiosError = err => {

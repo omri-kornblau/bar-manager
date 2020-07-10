@@ -67,9 +67,9 @@ const ProviderRequestModal = props => {
     data,
     onSetOffer,
     provider,
-    setOfferLoading,
+    setOfferStatus,
     sendMessage,
-    sendMessageLoading,
+    sendMessageStatus,
   } = props;
 
   const [selectedTab, setSelectedTab] = useState(0);
@@ -152,7 +152,7 @@ const ProviderRequestModal = props => {
                   myOffer={data.myOffer.price}
                   offers={data.offers}
                   onSetOffer={_onSetOffer}
-                  setOfferLoading={setOfferLoading}
+                  setOfferStatus={setOfferStatus}
                 />
               </Grid>
               <Grid item xs>
@@ -163,7 +163,7 @@ const ProviderRequestModal = props => {
                 <ProviderMessagesBox
                   messages={data.messages}
                   sendMessage={_onSendMessage}
-                  sendMessageLoading={sendMessageLoading}
+                  sendMessageStatus={sendMessageStatus}
                 />
               </Grid>
             </Grid>

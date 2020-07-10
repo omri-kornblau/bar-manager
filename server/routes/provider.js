@@ -139,7 +139,7 @@ const getMessageFromName = (message, author, provider) => {
   } else if (message.from === provider._id) {
     return provider.name;
   } else {
-    "unknown"
+    return "unknown"
   }
 }
 
@@ -159,9 +159,10 @@ exports.fetchRequest = async (req, res) => {
   request.messages = censorMessagesForProvider(request.messages, provider)
   request.offers = censorOffersForProvider(request.offers, provider)
 
-  request.messages = request.messages.map(message =>
-    _.set(message, "from", getMessageFromName(message, request.author, provider))
-  )
+  request.messages = request.messages.map(message => {
+    message.from = getMessageFromName(message, request.author, provider);
+    return message;
+  })
 
   res.send({...request, myOffer: myOffer ? myOffer : {price: undefined}})
 }

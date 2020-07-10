@@ -32,8 +32,8 @@ import ProviderRequestModal from "../../../../components/RequestModal/ProviderRe
 import skylineBack from "../../../../assets/img/skyline-back.png";
 import {
   getFetchedRequestErrors,
-  getSetOfferLoading,
-  getSendMessageLoading,
+  getSetOfferErrors,
+  getSendMessageErrors,
 } from "../../../../redux/selectors/errors";
 import { getUserData } from "../../../../redux/selectors/user";
 
@@ -55,9 +55,9 @@ const ProviderRequestsPool = props => {
     fetchRequestLoading,
     fetchedRequest,
     provider,
-    setOfferLoading,
+    setOfferStatus,
     sendMessage,
-    sendMessageLoading,
+    sendMessageStatus,
   } = props;
 
   const [openedRequestId, setOpenedRequest] = useState(null);
@@ -168,9 +168,9 @@ const ProviderRequestsPool = props => {
                     data={fetchedRequest}
                     onSetOffer={setOffer}
                     provider={provider}
-                    setOfferLoading={setOfferLoading}
+                    setOfferStatus={setOfferStatus}
                     sendMessage={sendMessage}
-                    sendMessageLoading={sendMessageLoading}
+                    sendMessageStatus={sendMessageStatus}
                   />
               }
             </Modal>
@@ -195,8 +195,8 @@ const mapStateToProps = state => ({
   fetchRequestLoading: getFetchedRequestErrors(state),
   fetchedRequest: getFetchedRequest(state),
   provider: getUserData(state),
-  setOfferLoading: getSetOfferLoading(state),
-  sendMessageLoading: getSendMessageLoading(state),
+  setOfferStatus: getSetOfferErrors(state),
+  sendMessageStatus: getSendMessageErrors(state),
 });
 
 const mapDispatchToProps = dispatch => ({
