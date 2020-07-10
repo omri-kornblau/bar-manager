@@ -4,6 +4,9 @@ const Jwt = require("jsonwebtoken");
 const Boom = require("boom");
 
 const Utils = require("../utils");
+const {
+  censorUserForUser
+} = require("../censors");
 
 const UserModel = Mongoose.model("User");
 const CookieModel = Mongoose.model("Cookie");
@@ -12,11 +15,6 @@ const {
   secretTokenKey,
   maxUserLogins
 } = require("../config/server");
-
-const omitSensitiveFields = (user) => {
-  const pickedFields = ["username", "type", "email"];
-  return _.pick(user._doc, pickedFields);
-}
 
 exports.login = async (req, res) => {
   const {
@@ -71,7 +69,7 @@ exports.login = async (req, res) => {
   const token = Jwt.sign(payload, secretTokenKey, tokenOptions);
   return res.cookie("token", token, {
     httpOnly: true
-  }).send(omitSensitiveFields(user));
+  }).send(censorUserForUser(user._doc));
 }
 
 exports.checkToken = async (req, res) => {
@@ -80,7 +78,7 @@ exports.checkToken = async (req, res) => {
     username,
   } = await Jwt.verify(token, secretTokenKey)
   const user = await UserModel.findOne({ username });
-  res.send(omitSensitiveFields(user));
+  res.send(censorUserForUser(user));
 }
 
 exports.logout = async (req, res) => {

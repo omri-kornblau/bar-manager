@@ -9,20 +9,33 @@ import {
   Button,
   Card,
   CardContent,
-  CardHeader,
-  Divider
+  Divider,
+  Container,
+  Paper,
+  CircularProgress,
 } from "@material-ui/core";
 
-import { filterRequests } from "../../../../redux/thunks/provider";
-import { getFilteredRequests } from "../../../../redux/selectors/provider";
+import {
+  filterRequests as filterRequestsThunk,
+  fetchRequest as fetchRequestThunk,
+  setOffer as setOfferThunk,
+  sendMessage,
+} from "../../../../redux/thunks/provider";
+import { getFilteredRequests, getFetchedRequest } from "../../../../redux/selectors/provider";
 
 import { typeButtons } from "../../../../constants/structure/requestsPool";
 import { filterButtons } from "../../../../constants/structure/requestsPool";
 import { providerPoolChosenHeaders as chosenHeaders, tableHeaders } from "../../../../constants/structure/request";
 
 import CustomTable from "../../../../components/Table/Table";
-import RequestModal from "../../../../components/RequestModal/RequestModal";
+import ProviderRequestModal from "../../../../components/RequestModal/ProviderRequestModal";
 import skylineBack from "../../../../assets/img/skyline-back.png";
+import {
+  getFetchedRequestErrors,
+  getSetOfferLoading,
+  getSendMessageLoading,
+} from "../../../../redux/selectors/errors";
+import { getUserData } from "../../../../redux/selectors/user";
 
 const toRequestFilters = filters => (
   _.map(
@@ -37,22 +50,31 @@ const ProviderRequestsPool = props => {
   const {
     requests,
     filterRequests,
-    pushUrl,
-    progress,
-    type,
-    editMode,
+    fetchRequest,
+    setOffer,
+    fetchRequestLoading,
+    fetchedRequest,
+    provider,
+    setOfferLoading,
+    sendMessage,
+    sendMessageLoading,
   } = props;
 
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [openedRequestId, setOpenedRequest] = useState(null);
   const [activeType, setActiveType] = useState(typeButtons[0].id);
   const [activeFilters, setActiveFilters] = useState(_.keyBy(filterButtons, "id"));
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
-    filterRequests(activeType, toRequestFilters(activeFilters));
+    filterRequests(activeType, toRequestFilters(activeFilters), page * rowsPerPage, rowsPerPage);
   }, [activeType, activeFilters])
 
-  const onOpenRequest = () => setModalOpen(true);
-  const onCloseRequest = () => setModalOpen(false);
+  const onOpenRequest = e => {
+    setOpenedRequest(e._id);
+    fetchRequest(e._id)
+  };
+  const onCloseRequest = () => setOpenedRequest(null);
   const onTypeSelect = id => setActiveType(id);
   const onFilterSelect = id => {
     setActiveFilters({
@@ -60,6 +82,8 @@ const ProviderRequestsPool = props => {
       [id]: { isActive: !activeFilters[id].isActive }
     });
   };
+
+  const isModalOpen = !!openedRequestId;
 
   return (
     <>
@@ -111,8 +135,11 @@ const ProviderRequestsPool = props => {
               columns={_.map(chosenHeaders, column => tableHeaders[column])}
               filter
               sort
-              // actions={actions}
               onRowClick={onOpenRequest}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={setRowsPerPage}
+              page={page}
+              onPageChange={setPage}
             />
             <Modal
               open={isModalOpen}
@@ -123,10 +150,29 @@ const ProviderRequestsPool = props => {
                 alignItems: "center",
               }}
             >
-              <RequestModal
-                // data={requests[openedRequestIdx]}
-                editMode={editMode}
-              />
+              {
+                fetchRequestLoading
+                ?
+                  <Paper>
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      width="60vw"
+                      height="90vh"
+                    >
+                      <CircularProgress color="primary" size={80}/>
+                    </Box>
+                  </Paper>
+                : <ProviderRequestModal
+                    data={fetchedRequest}
+                    onSetOffer={setOffer}
+                    provider={provider}
+                    setOfferLoading={setOfferLoading}
+                    sendMessage={sendMessage}
+                    sendMessageLoading={sendMessageLoading}
+                  />
+              }
             </Modal>
           </Box>
         </CardContent>
@@ -145,11 +191,19 @@ const ProviderRequestsPool = props => {
 }
 
 const mapStateToProps = state => ({
-  requests: getFilteredRequests(state)
+  requests: getFilteredRequests(state),
+  fetchRequestLoading: getFetchedRequestErrors(state),
+  fetchedRequest: getFetchedRequest(state),
+  provider: getUserData(state),
+  setOfferLoading: getSetOfferLoading(state),
+  sendMessageLoading: getSendMessageLoading(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  filterRequests: filterRequests(dispatch)
+  filterRequests: filterRequestsThunk(dispatch),
+  fetchRequest: fetchRequestThunk(dispatch),
+  setOffer: setOfferThunk(dispatch),
+  sendMessage: sendMessage(dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProviderRequestsPool);

@@ -24,6 +24,9 @@ router.get("/client/downloadfile", withAuth, ClientRoutes.downloadFile);
 router.post("/client/readnotification", withAuth, ClientRoutes.readNotification);
 
 router.post("/provider/signup", UserRoutes.signupProvider);
-router.post("/provider/filteredrequests", withAuth, ProviderRoutes.getAllRequests);
+router.post("/provider/filteredrequests", withAuth, ProviderRoutes.getRequests);
+router.post("/provider/setoffer", withAuth, ProviderRoutes.setOffer);
+router.post("/provider/sendmessage", withAuth, ProviderRoutes.sendMessage);
+router.get("/provider/fetchrequest", withAuth, ProviderRoutes.fetchRequest);
 
 module.exports = router;

@@ -7,7 +7,13 @@ const RequestModel = Mongoose.model("Request");
 
 const { yupUpdateRequestSchema } = require("../models/request");
 
-const { STATUS_TIMING } = require("../config/consts");
+const {
+  STATUS_TIMING,
+  REQUESTS_POOL_STATUSES,
+} = require("../config/consts");
+const {
+  REQUEST_FOR_PROVIDER_ALL_REQUESTS
+} = require("../config/projections");
 
 exports.createRequest = async requestData => {
   const createdRequest = await RequestModel.create({
@@ -96,4 +102,65 @@ exports.updateSecondAcceptById = async (_id, userId) => {
     },
     true
   );
+}
+
+exports.addOffer = async (requestId, offerId) => {
+  return exports.updateRequestById(
+    requestId,
+    {
+      $addToSet: {
+        offers: offerId,
+      }
+    },
+    true
+  )
+}
+
+exports.removeOffer = async (requestId, offerId) => {
+  return exports.updateRequestById(
+    requestId,
+    {
+      $pull: {
+        offers: offerId,
+      }
+    },
+    true
+  )
+}
+
+exports.addMessage = async (requestId, messageId) => {
+  return exports.updateRequestById(
+    requestId,
+    {
+      $push: {
+        messages: messageId,
+      }
+    },
+    true
+  )
+}
+
+exports.removeMessage = async (requestId, messageId) => {
+  return exports.updateRequestById(
+    requestId,
+    {
+      $pull: {
+        messages: messageId,
+      }
+    },
+    true
+  )
+}
+
+exports.getProviderRequests = async (types, existsRequests, skip, limit) => {
+  return RequestModel
+    .find({
+      status: { $in: REQUESTS_POOL_STATUSES },
+      type: { $in: types },
+      _id: {
+        $nin: existsRequests
+      },
+    }, REQUEST_FOR_PROVIDER_ALL_REQUESTS)
+    .skip(skip)
+    .limit(limit);
 }

@@ -5,10 +5,28 @@ const { Readable } = require("stream");
 const { createNotification } = require("../db/notification");
 const {
   addNotificationToClientById,
-  findClientById
+  findClientById,
 } = require("../db/client");
 
+const {
+  findProviderById,
+} = require("../db/provider");
+
+const {
+  findMessageById,
+} = require("../db/message");
+
+const {
+  findOfferById,
+} = require("../db/offer");
+
+const {
+  findRequestById,
+} = require("../db/request");
+const { censorOffersForProvider, censorMessagesForProvider } = require("../censors");
+
 const UserModel = Mongoose.model("User");
+const ProviderModel = Mongoose.model("Provider");
 const RequestModal = Mongoose.model("Request");
 
 exports.findByIds = async (Model, ids, error) => {
@@ -56,6 +74,17 @@ exports.getClient = async username => {
   return [user, client];
 }
 
+exports.getProvider = async username => {
+  const user = await UserModel.findOne({username});
+  if (!user) {
+    throw Boom.internal("User not found");
+  }
+
+  const provider = await findProviderById(user.clientId);
+
+  return [user, provider];
+}
+
 exports.writerFile = (attachment, file) => {
   return new Promise((resolve, reject) => {
     const readable = Readable.from(Buffer.from(file.content, 'base64'));
@@ -82,4 +111,27 @@ exports.readFile = (attachment, _id) => {
 exports.createNotification = async (message, requestId, clientId) => {
   const createdNotification = await createNotification(message, requestId);
   return await addNotificationToClientById(clientId, createdNotification._id);
+}
+
+exports.fetchRequestById = async (requestId, provider={}) => {
+  const request = await findRequestById(requestId);
+
+  const author = findClientById(request.author, { fullName: 1 });
+  const messagesPromises = request.messages.map(findMessageById);
+  const offersPromises = request.offers.map(findOfferById);
+
+  const result = await Promise.all([author, ...messagesPromises, ...offersPromises]);
+
+  const finalRequest = request._doc;
+
+  let index = 0
+  finalRequest.author = result[index];
+
+  index += 1;
+  finalRequest.messages = result.slice(index, index + messagesPromises.length);
+
+  index += messagesPromises.length
+  finalRequest.offers = result.slice(index);
+
+  return finalRequest;
 }

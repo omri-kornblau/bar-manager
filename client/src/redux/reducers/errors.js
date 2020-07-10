@@ -24,7 +24,16 @@ import {
 import {
   TRY_POST_FILTERED_REQUESTS,
   POST_FILTERED_REQUESTS_SUCCESS,
-  POST_FILTERED_REQUESTS_FAILURE
+  POST_FILTERED_REQUESTS_FAILURE,
+  TRY_FETCH_REQUEST,
+  FETCH_REQUEST_SUCCESS,
+  FETCH_REQUEST_FAILED,
+  TRY_POST_SEND_MESSAGE,
+  POST_SEND_MESSAGE_SUCCESS,
+  POST_SEND_MESSAGE_FAILURE,
+  POST_SET_OFFER_SUCCESS,
+  POST_SET_OFFER_FAILED,
+  TRY_POST_SET_OFFER
 } from "../actions/provider";
 
 const initialState = {
@@ -49,6 +58,21 @@ const initialState = {
     error: undefined
   },
   postFilteredRequests: {
+    inProgress: false,
+    try: false,
+    error: undefined
+  },
+  fetchRequest: {
+    inProgress: false,
+    try: false,
+    error: undefined
+  },
+  setOffer: {
+    inProgress: false,
+    try: false,
+    error: undefined
+  },
+  sendMessage: {
     inProgress: false,
     try: false,
     error: undefined
@@ -147,6 +171,9 @@ const userReducer = (state=initialState, action) => {
     reduceFetch("createRequest", TRY_CREATE_REQUEST, CREATE_REQUEST_SUCCESS, CREATE_REQUEST_FAILURE),
     reduceFetch("updateRequest", TRY_UPDATE_REQUEST, UPDATE_REQUEST_SUCCESS, UPDATE_REQUEST_FAILURE),
     reduceFetch("postFilteredRequests", TRY_POST_FILTERED_REQUESTS, POST_FILTERED_REQUESTS_SUCCESS, POST_FILTERED_REQUESTS_FAILURE),
+    reduceFetch("fetchRequest", TRY_FETCH_REQUEST, FETCH_REQUEST_SUCCESS, FETCH_REQUEST_FAILED),
+    reduceFetch("setOffer", TRY_POST_SET_OFFER, POST_SET_OFFER_SUCCESS, POST_SET_OFFER_FAILED),
+    reduceFetch("sendMessage", TRY_POST_SEND_MESSAGE, POST_SEND_MESSAGE_SUCCESS, POST_SEND_MESSAGE_FAILURE),
     reduceRowFetch("acceptRequest", TRY_ACCEPT_REQUEST, ACCEPT_REQUEST_SUCCESS, ACCEPT_REQUEST_FAILURE),
     reduceRowFetch("cancelRequest", TRY_CANCEL_REQUEST, CANCEL_REQUEST_SUCCESS, CANCEL_REQUEST_FAILURE),
   ]

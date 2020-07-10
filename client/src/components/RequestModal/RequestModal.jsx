@@ -140,6 +140,7 @@ const RequestModal = props => {
       <Paper>
         <Box
           height="inherit"
+          maxHeight="95vh"
           p={4}
           style={{
             overflowY: "auto",

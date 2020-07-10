@@ -72,7 +72,7 @@ exports.signupProvider = async (req, res) => {
       email,
       username,
       password,
-      providerId: createdProvider._id,
+      clientId: createdProvider._id,
       type: USER_TYPES.provider,
     }
 
