@@ -8,7 +8,9 @@ import {
   Box,
   Modal,
   Fade,
-  Backdrop
+  Backdrop,
+  Paper,
+  CircularProgress
 } from "@material-ui/core";
 import { push, getLocation } from "connected-react-router";
 
@@ -16,29 +18,43 @@ import { getProgress } from "../../../../../redux/selectors/progressBar";
 import { getView } from "../../../../../redux/selectors/sidebar"
 import { getOpenedRequest } from "../../../../../redux/selectors/request";
 import { getRequests, getRequestEditMode } from "../../../../../redux/selectors/request";
-
+import { getUserData } from "../../../../../redux/selectors/user";
+import {
+  getSetOfferErrors,
+  getSendMessageErrors,
+  getFetchedRequestErrors
+} from "../../../../../redux/selectors/errors";
+import {
+  setOffer as setOfferThunk,
+  sendMessage as sendMessageThunk,
+  fetchRequest as fetchRequestThunk,
+} from "../../../../../redux/thunks/provider";
 import {
   tableHeaders,
   providerProgressBar as progressBar,
 } from "../../../../../constants/structure/request";
-import { updateRequest as updateRequestThunk } from "../../../../../redux/thunks/client";
 
 import CustomTable from "../../../../../components/Table/Table";
-import RequestModal from "../../../../../components/RequestModal/ClientRequestModal";
-import { getUpdateRequestErrors } from "../../../../../redux/selectors/errors";
+import ProviderRequestModal from "../../../../../components/RequestModal/ProviderRequestModal";
+import { getFetchedRequest } from "../../../../../redux/selectors/provider";
 
 
 const TableView = props => {
   const {
     location,
     openedRequestIdx,
-    editMode,
     requests,
     progress,
     type,
     pushUrl,
-    updateRequest,
-    updateStatus
+    provider,
+    setOffer,
+    setOfferStatus,
+    sendMessage,
+    sendMessageStatus,
+    fetchRequest,
+    fetchedRequest,
+    fetchRequestLoading
   } = props;
 
   const {
@@ -58,23 +74,11 @@ const TableView = props => {
 
   const onOpenRequest = useCallback(requestData => {
     pushUrl(stringifyUrl({ url, query: { ...query, or: requestData._id }}));
+    fetchRequest(requestData._id);
   }, [query])
 
   const onCloseRequest = () => {
     delete query.or;
-    pushUrl(stringifyUrl({ url, query }));
-  }
-
-  const onEnterEditMode = useCallback(() => {
-    pushUrl(stringifyUrl({ url, query: { ...query, em: true }}));
-  }, [query])
-
-  const onSaveEdit = useCallback(editedRequest => {
-    updateRequest(editedRequest);
-  }, [query])
-
-  const onExitEditMode = () => {
-    delete query.em;
     pushUrl(stringifyUrl({ url, query }));
   }
 
@@ -113,16 +117,29 @@ const TableView = props => {
           timeout: 500,
         }}
       >
-        <Fade in={isModalOpen}>
-          <RequestModal
-            data={_.find(requests, obj => obj._id === openedRequestIdx)}
-            onEnterEdit={onEnterEditMode}
-            onSaveEdit={onSaveEdit}
-            onExitEdit={onExitEditMode}
-            editMode={editMode}
-            updateStatus={updateStatus}
+        {fetchRequestLoading ?
+          <Paper>
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              width="60vw"
+              height="90vh"
+            >
+              <CircularProgress color="primary" size={80}/>
+            </Box>
+          </Paper>
+          :
+          <ProviderRequestModal
+            // Small check assure the correct request was opened
+            data={_.get(fetchedRequest, "_id") === openedRequestIdx ? fetchedRequest : null}
+            provider={provider}
+            onSetOffer={setOffer}
+            setOfferStatus={setOfferStatus}
+            sendMessage={sendMessage}
+            sendMessageStatus={sendMessageStatus}
           />
-        </Fade>
+        }
       </Modal>
     </Box>
   );
@@ -133,14 +150,19 @@ const mapStateToProps = state => ({
   type: getView(state),
   requests: getRequests(state),
   openedRequestIdx: getOpenedRequest(state),
-  editMode: getRequestEditMode(state),
   location: getLocation(state),
-  updateStatus: getUpdateRequestErrors(state)
+  provider: getUserData(state),
+  setOfferStatus: getSetOfferErrors(state),
+  sendMessageStatus: getSendMessageErrors(state),
+  fetchRequestLoading: getFetchedRequestErrors(state),
+  fetchedRequest: getFetchedRequest(state),
 })
 
 const mapDispatchToProps = dispatch => ({
   pushUrl: _.flow(push, dispatch),
-  updateRequest: updateRequestThunk(dispatch)
+  setOffer: setOfferThunk(dispatch),
+  fetchRequest: fetchRequestThunk(dispatch),
+  sendMessage: sendMessageThunk(dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TableView);
