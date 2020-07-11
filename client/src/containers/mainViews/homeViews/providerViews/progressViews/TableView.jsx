@@ -37,6 +37,7 @@ import {
 import CustomTable from "../../../../../components/Table/Table";
 import ProviderRequestModal from "../../../../../components/RequestModal/ProviderRequestModal";
 import { getFetchedRequest } from "../../../../../redux/selectors/provider";
+import { useEffect } from "react";
 
 
 const TableView = props => {
@@ -74,8 +75,11 @@ const TableView = props => {
 
   const onOpenRequest = useCallback(requestData => {
     pushUrl(stringifyUrl({ url, query: { ...query, or: requestData._id }}));
-    fetchRequest(requestData._id);
   }, [query])
+
+  useEffect(() => {
+    fetchRequest(openedRequestIdx);
+  }, [query]);
 
   const onCloseRequest = () => {
     delete query.or;
