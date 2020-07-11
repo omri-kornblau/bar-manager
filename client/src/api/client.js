@@ -27,3 +27,7 @@ export const postReadNotification = async notificationId => {
 export const postSendMessage = async (requestId, providerId, body) => {
   return Axios.post("/client/sendmessage", { requestId, providerId, body })
 }
+
+export const getMessages = async requestId => {
+  return Axios.get(`/client/messages?requestId=${requestId}`)
+}

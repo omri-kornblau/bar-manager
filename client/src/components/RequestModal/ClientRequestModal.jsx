@@ -8,7 +8,11 @@ import {
   Container,
   Divider,
   Button,
+  IconButton,
 } from '@material-ui/core';
+import {
+  Refresh as RefreshIcon
+} from "@material-ui/icons";
 
 import { labels } from "../../constants/hebrew/request";
 import {
@@ -132,7 +136,8 @@ const RequestModal = props => {
     onExitEdit,
     updateStatus,
     sendMessage,
-    sendMessageStatus
+    sendMessageStatus,
+    getMessages
   } = props;
 
   if (_.isNil(data)) {
@@ -188,6 +193,9 @@ const RequestModal = props => {
             <Grid item xs={7}>
               <Typography align="center" variant="h5">
                 הודעות ממבטחים
+                <IconButton onClick={() => getMessages(data._id)}>
+                  <RefreshIcon/>
+                </IconButton>
               </Typography>
               <Box mt={1}/>
               <MessagesBox

@@ -22,6 +22,10 @@ export const TRY_POST_SEND_MESSAGE_CLIENT = "TRY_POST_SEND_MESSAGE_CLIENT";
 export const POST_SEND_MESSAGE_SUCCESS_CLIENT = "POST_SEND_MESSAGE_SUCCESS_CLIENT";
 export const POST_SEND_MESSAGE_FAILURE_CLIENT = "POST_SEND_MESSAGE_FAILURE_CLIENT";
 
+export const TRY_GET_MESSAGES = "TRY_GET_MESSAGES";
+export const GET_MESSAGES_SUCCESS = "GET_MESSAGES_SUCCESS";
+export const GET_MESSAGES_FAILURE = "GET_MESSAGES_FAILURE";
+
 export const tryGetClient = () => ({
   type: TRY_GET_CLIENT,
 });
@@ -54,9 +58,12 @@ export const tryUpdateRequest = () => ({
   type: TRY_UPDATE_REQUEST,
 });
 
-export const updateRequestSuccess = request => ({
+export const updateRequestSuccess = (request, _id) => ({
   type: UPDATE_REQUEST_SUCCESS,
-  payload: request,
+  payload: {
+    _id,
+    ...request,
+  }
 });
 
 export const updateRequestFailure = err => ({
@@ -115,4 +122,24 @@ export const postSendMessageFailed = err => ({
   payload: {
     err,
   },
+});
+
+export const tryGetMessages = requestId => ({
+  type: TRY_GET_MESSAGES,
+  payload: {
+    requestId,
+  }
+});
+
+export const getMessagesSuccess = (messages, requestId) => ({
+  type: GET_MESSAGES_SUCCESS,
+  payload: {
+    requestId,
+    messages,
+  }
+});
+
+export const getMessagesFailure = err => ({
+  type: GET_MESSAGES_FAILURE,
+  payload: { err, },
 });

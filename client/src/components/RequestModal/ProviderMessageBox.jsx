@@ -6,15 +6,8 @@ import {
   Grid,
   Typography,
   List,
-  ListItem,
-  ListItemText,
   Divider,
   TextField,
-  IconButton,
-  InputAdornment,
-  Button,
-  Fab,
-  ListItemAvatar
 } from '@material-ui/core';
 import SendIcon from '@material-ui/icons/Send';
 import { useState } from "react";

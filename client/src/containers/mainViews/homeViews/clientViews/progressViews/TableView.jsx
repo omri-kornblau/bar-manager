@@ -26,7 +26,8 @@ import {
 } from "../../../../../redux/selectors/errors";
 import {
   updateRequest as updateRequestThunk,
-  sendMessage as sendMessageThunk
+  sendMessage as sendMessageThunk,
+  getMessagesData as getMessagesThunk
 } from "../../../../../redux/thunks/client";
 
 import {
@@ -36,7 +37,6 @@ import {
 
 import RequestModal from "../../../../../components/RequestModal/ClientRequestModal";
 import CustomTable from "../../../../../components/Table/Table";
-import { getUpdateRequestErrors } from "../../../../../redux/selectors/errors";
 import { getTableHeaders } from "../../../../../helpers/structer";
 
 
@@ -53,7 +53,8 @@ const TableView = props => {
     updateStatus,
     client,
     sendMessage,
-    sendMessageStatus
+    sendMessageStatus,
+    getMessages
   } = props;
 
   const {
@@ -138,6 +139,7 @@ const TableView = props => {
             updateStatus={updateStatus}
             sendMessage={sendMessage}
             sendMessageStatus={sendMessageStatus}
+            getMessages={getMessages}
             client={client}
           />
         {/* </Collapse> */}
@@ -161,7 +163,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   pushUrl: _.flow(push, dispatch),
   updateRequest: updateRequestThunk(dispatch),
-  sendMessage: sendMessageThunk(dispatch)
+  sendMessage: sendMessageThunk(dispatch),
+  getMessages: getMessagesThunk(dispatch)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TableView);

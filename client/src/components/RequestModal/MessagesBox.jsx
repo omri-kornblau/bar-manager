@@ -25,7 +25,6 @@ const MessagesBox = props => {
   } = props;
 
   const [selectedProvider, setSelectedProvider] = useState("");
-
   const [newMessage, setNewMessage] = useState("");
 
   const onMessageChange = e => {

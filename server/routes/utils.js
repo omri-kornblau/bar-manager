@@ -23,11 +23,9 @@ const {
 const {
   findRequestById,
 } = require("../db/request");
-const { censorOffersForProvider, censorMessagesForProvider } = require("../censors");
-const { HASH_LENGTH } = require("../config/consts");
+const { censorMessagesForProvider } = require("../censors");
 
 const UserModel = Mongoose.model("User");
-const ProviderModel = Mongoose.model("Provider");
 const RequestModal = Mongoose.model("Request");
 
 exports.findByIds = async (Model, ids, error) => {
@@ -42,13 +40,7 @@ exports.findByIds = async (Model, ids, error) => {
   return res;
 }
 
-exports.prepareRequests = async requests => {
-  const authorsPromise = requests.map(request =>
-    UserModel.findById(request.author)
-  )
-
-  const authors = await Promise.all(authorsPromise);
-
+exports.prepareRequestsMessages = async requests => {
   const messagesFieldIds = requests.reduce((data, request) => {
     const { messages } = request;
     data.providerIds = data.providerIds.concat(_.keys(messages));
@@ -87,10 +79,24 @@ exports.prepareRequests = async requests => {
         return [name, providerMessagesWithData]
       })
     );
+    return finalMessages;
+  });
+
+}
+
+exports.prepareRequests = async requests => {
+  const authorsPromise = requests.map(request =>
+    UserModel.findById(request.author)
+  )
+
+  const authors = await Promise.all(authorsPromise);
+  const messages = await exports.prepareRequestsMessages(requests);
+
+  return requests.map((request, index) => {
 
     return {
       ...request._doc,
-      messages: finalMessages,
+      messages: messages[index],
       author: authors[index].username
     };
   });

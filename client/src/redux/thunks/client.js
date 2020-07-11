@@ -19,6 +19,9 @@ import {
   tryPostSendMessage,
   postSendMessageSuccess,
   postSendMessageFailed,
+  tryGetMessages,
+  getMessagesSuccess,
+  getMessagesFailure,
 } from "../actions/request";
 import {
   readNotification as readNotificationAction,
@@ -30,7 +33,8 @@ import {
   postAcceptRequest,
   postCancelRequest,
   postReadNotification,
-  postSendMessage
+  postSendMessage,
+  getMessages
 } from "../../api/client"
 import { getCreateRequestLoading } from "../selectors/request";
 
@@ -79,7 +83,7 @@ export const updateRequest = outerDispatch => updatedRequest => {
 
     postUpdateRequest(updatedRequest)
       .then(res => {
-        dispatch(updateRequestSuccess(res.data));
+        dispatch(updateRequestSuccess(res.data, updatedRequest._id));
         dispatch(push(`/home/${type}/${status}?or=${index}&em=false`));
       }).catch(err => {
         dispatch(updateRequestFailure(err));
@@ -132,6 +136,20 @@ export const sendMessage = outerDispatch => (requestId, providerId, message) => 
       })
       .catch(err => {
         dispatch(postSendMessageFailed(err));
+      })
+  })
+}
+
+export const getMessagesData = outerDispatch => requestId => {
+  outerDispatch(dispatch => {
+    dispatch(tryGetMessages(requestId));
+
+    getMessages(requestId)
+      .then(res => {
+        dispatch(getMessagesSuccess(res.data, requestId));
+      })
+      .catch(err => {
+        dispatch(getMessagesFailure(err));
       })
   })
 }

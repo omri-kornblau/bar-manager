@@ -3,7 +3,8 @@ import {
   ACCEPT_REQUEST_SUCCESS,
   CANCEL_REQUEST_SUCCESS,
   UPDATE_REQUEST_SUCCESS,
-  POST_SEND_MESSAGE_SUCCESS_CLIENT
+  POST_SEND_MESSAGE_SUCCESS_CLIENT,
+  GET_MESSAGES_SUCCESS
 } from "../actions/request";
 
 const initialState = {
@@ -70,6 +71,17 @@ const requestReducer = (state=initialState, action) => {
           }
           : request
         })
+      }
+    case GET_MESSAGES_SUCCESS:
+      return {
+        ...state,
+        requests: state.requests.map(request => (
+          request._id === action.payload.requestId ?
+          {
+            ...request,
+            messages: action.payload.messages
+          } : request
+        )),
       }
 
     default:

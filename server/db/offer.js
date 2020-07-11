@@ -41,7 +41,6 @@ exports.findOfferById = async _id => {
 }
 
 exports.findOffer = async (requestId, providerId) => {
-  console.log(requestId, providerId)
   const offer = await OfferModel.findOne({request: requestId, provider: providerId});
 
   if (_.isNil(offer)) {

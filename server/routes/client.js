@@ -15,6 +15,7 @@ const {
   prepareNotifications,
   getClient,
   getProvider,
+  prepareRequestsMessages,
 } = require("./utils");
 
 const {
@@ -332,4 +333,24 @@ exports.readNotification = async (req, res) => {
     throw Boom.internal(err);
   }
   res.sendStatus(204)
+}
+
+exports.getMessages = async (req, res) => {
+  const {
+    username
+  } = req;
+
+  const {
+    requestId,
+  } = req.query;
+
+  const [user, client] = await getClient(username);
+  const request = await findRequestById(requestId)
+  if (request.author !== client._id.toString()) {
+    throw Boom.unauthorized("_id not belong to client");
+  }
+
+  const messages = await prepareRequestsMessages([ request ]);
+
+  res.send(_.first(messages));
 }
