@@ -20,7 +20,7 @@ exports.createRequest = async requestData => {
     createdTime: new Date(),
     startDate: undefined,
     activeTime: undefined,
-    messages: [],
+    messages: {},
     offers: [],
     firstAccept: "",
     secondAccept: "",
@@ -128,24 +128,26 @@ exports.removeOffer = async (requestId, offerId) => {
   )
 }
 
-exports.addMessage = async (requestId, messageId) => {
+exports.addMessage = async (requestId, messageId, providerId) => {
+  const messagesPath = `messages.${providerId}`;
   return exports.updateRequestById(
     requestId,
     {
       $push: {
-        messages: messageId,
+        [messagesPath]: messageId
       }
     },
     true
   )
 }
 
-exports.removeMessage = async (requestId, messageId) => {
+exports.removeMessage = async (requestId, messageId, providerId) => {
+  const messagesPath = `messages.${providerId}`;
   return exports.updateRequestById(
     requestId,
     {
       $pull: {
-        messages: messageId,
+        [messagesPath]: messageId
       }
     },
     true

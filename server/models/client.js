@@ -14,9 +14,13 @@ const yupClientSchema = Yup.object().shape({
   readNotifications: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   requests: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   oldRequests: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
+  name: Yup.string()
 });
 
 const mongoFormat = {
+  name: {
+    type: String
+  },
   unreadNotifications: {
     type: Array
   },

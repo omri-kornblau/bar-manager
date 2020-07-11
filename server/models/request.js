@@ -25,7 +25,7 @@ const yupCreateRequestSchema = Yup.object().shape({
   activeTime: Yup.date(),
   policy: Yup.string().length(OBJECT_ID_LENGTH),
   extraFiles: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
-  messages: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
+  messages: Yup.object(),
   offers: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   firstAccept: Yup.string().test('len', 'Must be "" or object id length', val => val.length === OBJECT_ID_LENGTH || val.length === 0),
   secondAccept: Yup.string().test('len', 'Must be "" or object id length', val => val.length === OBJECT_ID_LENGTH || val.length === 0),
@@ -80,7 +80,7 @@ const mongoFormat = {
     type: Array,
   },
   messages: {
-    type: Array,
+    type: Object,
   },
   offers: {
     type: Array,
@@ -99,7 +99,8 @@ const mongoFormat = {
   },
 };
 
-const requestScheme = new Mongoose.Schema(mongoFormat);
+// Set 'minimize: false' to allow empty objects in
+const requestScheme = new Mongoose.Schema(mongoFormat, { minimize: false });
 
 requestScheme.pre("save", async function () {
   await yupCreateRequestSchema.validate(this);

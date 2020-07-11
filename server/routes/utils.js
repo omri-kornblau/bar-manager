@@ -2,31 +2,30 @@ const _ = require("lodash");
 const Mongoose = require("mongoose");
 const Boom = require("boom");
 const { Readable } = require("stream");
-const { createNotification } = require("../db/notification");
+
+const {
+  createNotification
+} = require("../db/notification");
 const {
   addNotificationToClientById,
   findClientById,
 } = require("../db/client");
-
 const {
+  addNotificationToProviderById,
   findProviderById,
 } = require("../db/provider");
-
 const {
   findMessageById,
 } = require("../db/message");
-
 const {
   findOfferById,
 } = require("../db/offer");
-
 const {
   findRequestById,
 } = require("../db/request");
-const { censorOffersForProvider, censorMessagesForProvider } = require("../censors");
+const { censorMessagesForProvider } = require("../censors");
 
 const UserModel = Mongoose.model("User");
-const ProviderModel = Mongoose.model("Provider");
 const RequestModal = Mongoose.model("Request");
 
 exports.findByIds = async (Model, ids, error) => {
@@ -41,14 +40,65 @@ exports.findByIds = async (Model, ids, error) => {
   return res;
 }
 
-exports.prepareRequests = async requests => {
-  const promise = requests.map(request => (
-    UserModel.findById(request.author)
-  ))
+exports.prepareRequestsMessages = async requests => {
+  const messagesFieldIds = requests.reduce((data, request) => {
+    const { messages } = request;
+    data.providerIds = data.providerIds.concat(_.keys(messages));
+    data.messageIds = data.messageIds.concat(_.flatMap(messages));
 
-  const authors = await Promise.all(promise);
+    return data;
+  }, {
+    providerIds: [],
+    messageIds: []
+  });
+
+  messagesFieldIds.providerIds = _.uniq(messagesFieldIds.providerIds);
+
+  const {
+    providerIds,
+    messageIds
+  } = messagesFieldIds;
+
+  const providersPromise = providerIds.map(findProviderById);
+  const messagesPromise = messageIds.map(findMessageById);
+
+  const providersById =
+    _.zipObject(providerIds, await Promise.all(providersPromise))
+  const messagesById =
+    _.zipObject(messageIds, await Promise.all(messagesPromise))
+
   return requests.map((request, index) => {
-    return {...request._doc, author: authors[index].username};
+    const { messages } = request._doc;
+    const messagesKeys = _.keys(messages);
+    const finalMessages = _.zipObject(messagesKeys,
+      _.toPairs(messages).map(pair => {
+        const [providerId, providerMessages] = pair;
+        const { name } = providersById[providerId];
+        const providerMessagesWithData =
+          providerMessages.map(messageId => messagesById[messageId]);
+        return [name, providerMessagesWithData]
+      })
+    );
+    return finalMessages;
+  });
+
+}
+
+exports.prepareRequests = async requests => {
+  const authorsPromise = requests.map(request =>
+    UserModel.findById(request.author)
+  )
+
+  const authors = await Promise.all(authorsPromise);
+  const messages = await exports.prepareRequestsMessages(requests);
+
+  return requests.map((request, index) => {
+
+    return {
+      ...request._doc,
+      messages: messages[index],
+      author: authors[index].username
+    };
   });
 }
 
@@ -108,16 +158,25 @@ exports.readFile = (attachment, _id) => {
   })
 }
 
-exports.createNotification = async (message, requestId, clientId) => {
+exports.createClientNotification = async (message, requestId, clientId) => {
   const createdNotification = await createNotification(message, requestId);
   return await addNotificationToClientById(clientId, createdNotification._id);
 }
 
-exports.fetchRequestById = async (requestId, provider={}) => {
+exports.createProviderNotification = async (message, requestId, providerId) => {
+  const createdNotification = await createNotification(message, requestId);
+  return await addNotificationToProviderById(providerId, createdNotification._id);
+}
+
+exports.fetchRequestById = async (requestId, providerId) => {
   const request = await findRequestById(requestId);
 
   const author = findClientById(request.author, { fullName: 1 });
-  const messagesPromises = request.messages.map(findMessageById);
+  const providerMessages = !_.isNil(providerId) ?
+    censorMessagesForProvider(request.messages, providerId)
+    : [];
+
+  const messagesPromises = providerMessages.map(findMessageById);
   const offersPromises = request.offers.map(findOfferById);
 
   const result = await Promise.all([author, ...messagesPromises, ...offersPromises]);

@@ -23,3 +23,11 @@ export const postCancelRequest = async _id => {
 export const postReadNotification = async notificationId => {
   return Axios.post("/client/readnotification", {notificationId})
 }
+
+export const postSendMessage = async (requestId, providerId, body) => {
+  return Axios.post("/client/sendmessage", { requestId, providerId, body })
+}
+
+export const getMessages = async requestId => {
+  return Axios.get(`/client/messages?requestId=${requestId}`)
+}

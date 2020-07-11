@@ -8,7 +8,11 @@ import {
   Container,
   Divider,
   Button,
+  IconButton,
 } from '@material-ui/core';
+import {
+  Refresh as RefreshIcon
+} from "@material-ui/icons";
 
 import { labels } from "../../constants/hebrew/request";
 import {
@@ -23,10 +27,9 @@ import { parseFormError } from "../../helpers/errors";
 import ErrorMessage from "../LoadingButton/ErrorMessage";
 
 import {
-  ClinetProgressBar as progressBar,
+  clientProgressBar as progressBar,
 } from "../../constants/structure/request"
 import {formatActions} from "../../helpers/formats"
-import { cloneElement } from "react";
 
 const DataList = ({ data }) => (
   modalChosenHeaders.map(headStruct => {
@@ -126,15 +129,23 @@ const NoDataModal = () =>
 const RequestModal = props => {
   const {
     data,
+    client,
     editMode,
     onEnterEdit,
     onSaveEdit,
     onExitEdit,
-    updateStatus
+    updateStatus,
+    sendMessage,
+    sendMessageStatus,
+    getMessages
   } = props;
 
   if (_.isNil(data)) {
     return <NoDataModal/>
+  }
+
+  const onSendMessage = (value, providerId) => {
+    sendMessage(data._id, providerId, value);
   }
 
   return (
@@ -182,9 +193,17 @@ const RequestModal = props => {
             <Grid item xs={7}>
               <Typography align="center" variant="h5">
                 הודעות ממבטחים
+                <IconButton onClick={() => getMessages(data._id)}>
+                  <RefreshIcon/>
+                </IconButton>
               </Typography>
-              <Box mt={2}/>
-              <MessagesBox messages={data.messages}/>
+              <Box mt={1}/>
+              <MessagesBox
+                client={client}
+                messages={data.messages}
+                onSendMessage={onSendMessage}
+                sendMessageStatus={sendMessageStatus}
+              />
             </Grid>
           </Grid>
         </Box>

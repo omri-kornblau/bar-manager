@@ -170,7 +170,7 @@ const downloadActions = [
   />,
 ]
 
-export const ClinetProgressBar = {
+export const clientProgressBar = {
   waitingForApproval: {
     label: "בקשות המחכות לאישור מורשה חתימה",
     description: "",
@@ -354,3 +354,18 @@ export const modalEditFormStructure = [
     },
   ]
 ];
+
+export const providerModalFeatures = {
+  inTenderProcedure: {
+    offer: true,
+    messages: true
+  },
+  waitingForSign: {
+    offer: false,
+    messages: true
+  },
+  active: {
+    offer: false,
+    messages: true
+  }
+}

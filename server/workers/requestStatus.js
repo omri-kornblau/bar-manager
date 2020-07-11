@@ -9,7 +9,7 @@ const {
   SHORT_SAMPLE_INTERVAL,
   LONG_SAMPLE_INTERVAL
 } = require("../config/consts");
-const { createNotification } = require("../routes/utils");
+const { createClientNotification } = require("../routes/utils");
 
 const { updateRequestById } = require("../db/request");
 
@@ -66,7 +66,7 @@ const sampleRequestsOften = async () => {
       await moveMongoDocument(updatedProjection, OftenSampledModel, SampledModel)
       console.log(`Moved request [${requestId}] to sampled`);
 
-      await createNotification({
+      await createClientNotification({
         type: "Status updated",
         status: targetStatus
       }, requestId, updatedRequest.author);
