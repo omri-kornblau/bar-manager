@@ -29,6 +29,7 @@ exports.STATUS_UPDATE_ALLOWED_FIELDS = {
 }
 
 exports.ALLOW_ACCEPT_CANCEL_STATUSES = ["waitingForApproval"];
+exports.ALLOW_SET_OFFER_STATUSES = ["inTenderProcedure"];
 
 // Request Status Worker
 exports.LONG_SAMPLE_INTERVAL = Moment.duration(10, "seconds");
@@ -41,12 +42,12 @@ exports.STATUS_TIMING = {
   },
   inTenderProcedure: {
     endTimeKey: "startDate",
-    duration: Moment.duration(10, "days"),
+    duration: Moment.duration(30, "minutes"),
     targetStatus: "waitingForSign"
   },
   waitingForSign: {
     endTimeKey: "activeTime",
-    duration: Moment.duration(10, "seconds"),
+    duration: Moment.duration(30, "minutes"),
     targetStatus: "active"
   }
 };

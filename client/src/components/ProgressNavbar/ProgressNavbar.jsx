@@ -60,6 +60,7 @@ const ProgressNavbar = props => {
     step,
     steps,
     view,
+    newRequest,
   } = props;
 
   const [stepIndex, setStepIndex] = useState(-1);
@@ -90,11 +91,15 @@ const ProgressNavbar = props => {
         connector={ <PositionedStepConnector/> }
         className={classes.paper}
       >
-        <Step>
-          <StepLabel StepIconComponent={AddRequestButtonStep}>
-            הגש בקשה חדשה
-          </StepLabel>
-        </Step>
+        {
+          newRequest
+          ? <Step>
+              <StepLabel StepIconComponent={AddRequestButtonStep}>
+                הגש בקשה חדשה
+              </StepLabel>
+            </Step>
+          : <></>
+        }
         {
           steps.map(step => (
             <Step key={step.id}>

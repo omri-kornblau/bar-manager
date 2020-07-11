@@ -14,6 +14,7 @@ const {
   prepareRequests,
   prepareNotifications,
   getClient,
+  getProvider,
 } = require("./utils");
 
 const {
@@ -35,7 +36,9 @@ const {
 const {
   readNotification,
 } = require("../db/notification")
-
+const {
+  readNotificationInProviderById,
+} = require("../db/provider");
 
 const {
   REQUEST_STATUSES,
@@ -220,9 +223,17 @@ exports.downloadFile = async (req, res) => {
   } = req.query;
   const { Attachment } = internals;
 
-  const [user, client] = await getClient(username);
-  if (!client.requests.includes(requestId) && !client.oldRequests.includes(requestId)) {
-    throw Boom.badRequest("Request not belong to client");
+  let user;
+  let client;
+  try {
+    [user, client] = await getClient(username);
+  } catch {
+    [user, client] = await getProvider(username);
+  }
+
+  if (!client.requests.includes(requestId)
+  && !client.oldRequests.includes(requestId)) {
+    throw Boom.badRequest("Request not belong to client or provider");
   }
 
   const request = await findRequestById(requestId)
@@ -250,14 +261,28 @@ exports.readNotification = async (req, res) => {
     notificationId,
   } = req.body;
 
-  const [user, client] = await getClient(username);
+  let user;
+  let client;
+  let type;
+  try {
+    [user, client] = await getClient(username);
+    type = "client";
+  } catch {
+    [user, client] = await getProvider(username);
+    type = "provider";
+  }
+
   if (!client.unreadNotifications.includes(notificationId)) {
     throw Boom.badRequest("Notification not belong to client");
   }
 
   await readNotification(notificationId, true)
   try {
-    await readNotificationInClientById(client._id, notificationId);
+    if (type === "client") {
+      await readNotificationInClientById(client._id, notificationId);
+    } else {
+      await readNotificationInProviderById(client._id, notificationId);
+    }
   } catch (err) {
     await readNotification(notificationId, false)
     throw Boom.internal(err);

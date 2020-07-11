@@ -20,7 +20,7 @@ import CustomTable from "../../../../components/Table/Table";
 import skylineBack from "../../../../assets/img/skyline-back.png";
 import useStyles from "./style";
 import {
-  progressBar,
+  ClinetProgressBar as progressBar,
   tableHeaders as requestTableHeaders,
 } from "../../../../constants/structure/request";
 import {

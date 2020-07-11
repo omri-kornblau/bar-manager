@@ -1,3 +1,7 @@
+export const TRY_GET_PROVIDER = "TRY_GET_PROVIDER";
+export const GET_PROVIDER_SUCCESS = "GET_PROVIDER_SUCCESS";
+export const GET_PROVIDER_FAILED = "GET_PROVIDER_FAILED";
+
 export const TRY_POST_FILTERED_REQUESTS = "TRY_POST_FILTERED_REQUESTS";
 export const POST_FILTERED_REQUESTS_SUCCESS = "POST_FILTERED_REQUESTS_SUCCESS";
 export const POST_FILTERED_REQUESTS_FAILURE = "POST_FILTERED_REQUESTS_FAILURE";
@@ -13,6 +17,19 @@ export const POST_SET_OFFER_FAILED = "POST_SET_OFFER_FAILED";
 export const TRY_POST_SEND_MESSAGE = "TRY_POST_SEND_MESSAGE";
 export const POST_SEND_MESSAGE_SUCCESS = "POST_SEND_MESSAGE_SUCCESS";
 export const POST_SEND_MESSAGE_FAILURE = "POST_SEND_MESSAGE_FAILURE";
+
+export const tryGetProvider = ()=> ({
+  type: TRY_GET_PROVIDER,
+});
+
+export const getProviderSuccess = provider => ({
+  type: GET_PROVIDER_SUCCESS,
+  payload: provider,
+});
+
+export const getProviderFailed = () => ({
+  type: GET_PROVIDER_FAILED,
+});
 
 export const tryPostFilteredRequests = () => ({
   type: TRY_POST_FILTERED_REQUESTS,

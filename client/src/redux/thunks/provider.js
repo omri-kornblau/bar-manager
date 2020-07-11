@@ -11,10 +11,31 @@ import {
   postSendMessageSuccess,
   postSendMessageFailed,
   postSetOfferFailed,
+  tryGetProvider,
+  getProviderSuccess,
+  getProviderFailed,
 } from "../actions/provider";
 import {
-  postFilteredRequests, getFetchRequest, postSetOffer, postSendMessage,
+  getProvider,
+  postFilteredRequests,
+  getFetchRequest,
+  postSetOffer,
+  postSendMessage,
 } from "../../api/provider";
+
+export const getProviderData = outerDispatch => () => {
+  outerDispatch(dispatch => {
+    dispatch(tryGetProvider());
+
+    getProvider()
+      .then(res => {
+        dispatch(getProviderSuccess(res.data));
+      })
+      .catch(err => {
+        dispatch(getProviderFailed(err));
+      })
+  })
+}
 
 export const filterRequests = outerDispatch => (type, filters, skip, limit) => {
   outerDispatch(dispatch => {

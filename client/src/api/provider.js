@@ -1,7 +1,11 @@
 import Axios from "axios";
 
+export const getProvider = async () => {
+  return Axios.get("/provider/get");
+}
+
 export const postFilteredRequests = async (type, filters, skip, limit) => {
-  return Axios.post("/provider/filteredrequests", { type, filters, skip, limit })
+  return Axios.post("/provider/filteredrequests", { type, filters, skip, limit });
 }
 
 export const getFetchRequest = async requestId => {
