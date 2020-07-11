@@ -44,17 +44,33 @@ export const parseFormError = err => {
   if (_.isNil(err)) return err;
 
   const errData = getAxiosError(err);
-
   if (errData.name === "ValidationError") {
     return {
       key: errData.path,
       message: yupErrorToText(errData)
     }
   } else {
-    return {
-      key: null,
-      message: generalErrorToText(errData)
+    try {
+      return parseBoomError(errData);
+    } catch {
+      return {
+        key: null,
+        message: generalErrorToText(errData)
+      };
     }
+  }
+}
+
+export const parseBoomError = err => {
+  const errData = JSON.parse(err.message);
+  const initErr = {key: errData.path};
+  switch (errData.message) {
+    case "Password to short":
+      return {...initErr, message: `הסיסמה צריכה להכיל לפחות ${errData.min} תווים`};
+    case "Password to long":
+      return {...initErr, message: `הסיסמה צריכה להכיל פחות מ${errData.max} תווים`};
+    case "Incorrect password":
+      return {...initErr, message: "הסיסמה לא נכונה"};
   }
 }
 

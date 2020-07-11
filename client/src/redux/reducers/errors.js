@@ -9,6 +9,11 @@ import {
   TRY_LOGIN
 } from "../actions/login";
 import {
+  TRY_CHANGE_PASSWORD,
+  CHANGE_PASSWORD_SUCCESS,
+  CHANGE_PASSWORD_FAILURE,
+} from "../actions/settings";
+import {
   TRY_GET_CLIENT,
   GET_CLIENT_SUCCESS,
   GET_CLIENT_FAILURE,
@@ -53,6 +58,11 @@ const initialState = {
     error: undefined
   },
   login: {
+    inProgress: false,
+    try: false,
+    error: undefined
+  },
+  changePassword: {
     inProgress: false,
     try: false,
     error: undefined
@@ -193,6 +203,7 @@ const userReducer = (state=initialState, action) => {
   const fetchReducers = [
     reduceFetch("signup", TRY_SIGNUP, SIGNUP_SUCCESS, SIGNUP_FAILURE),
     reduceFetch("login", TRY_LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE),
+    reduceFetch("changePassword", TRY_CHANGE_PASSWORD, CHANGE_PASSWORD_SUCCESS, CHANGE_PASSWORD_FAILURE),
     reduceFetch("getClient", TRY_GET_CLIENT, GET_CLIENT_SUCCESS, GET_CLIENT_FAILURE),
     reduceFetch("getProvider", TRY_GET_PROVIDER, GET_PROVIDER_SUCCESS, GET_PROVIDER_FAILED),
     reduceFetch("createRequest", TRY_CREATE_REQUEST, CREATE_REQUEST_SUCCESS, CREATE_REQUEST_FAILURE),

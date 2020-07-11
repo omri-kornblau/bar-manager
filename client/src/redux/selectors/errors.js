@@ -2,6 +2,10 @@ export const getErrors = state => {
   return state.app.errors
 }
 
+export const getChangePasswordErrors = state => {
+  return state.app.errors.changePassword;
+}
+
 export const getSignupErrors = state => {
   return state.app.errors.signup;
 }

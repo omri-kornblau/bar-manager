@@ -2,11 +2,25 @@ const _ = require("lodash");
 const Mongoose = require("mongoose");
 const Jwt = require("jsonwebtoken");
 const Boom = require("boom");
+const Bcrypt = require("bcrypt");
+const promisify = require("util").promisify;
+const hash = promisify(Bcrypt.hash);
 
 const Utils = require("../utils");
 const {
   censorUserForUser
 } = require("../censors");
+
+const {
+  PASSWORD_MIN_LENGTH,
+  PASSWORD_MAX_LENGTH,
+  SALT_ROUNDS,
+} = require("../config/consts")
+
+const {
+  findUser,
+  changePassword,
+} = require("../db/user");
 
 const UserModel = Mongoose.model("User");
 const CookieModel = Mongoose.model("Cookie");
@@ -99,4 +113,44 @@ exports.logout = async (req, res) => {
   const foundCookieIdx = _.findIndex(cookieValids);
   await CookieModel.remove(userCookies[foundCookieIdx]);
   res.send();
+}
+
+exports.changePassword = async (req, res) => {
+  const {
+    username
+  } = req;
+
+  const {
+    previosPassword,
+    newPassword,
+  } = req.body;
+
+  if (newPassword.length < PASSWORD_MIN_LENGTH) {
+    throw Boom.badRequest(JSON.stringify({
+      message: "Password to short",
+      min: PASSWORD_MIN_LENGTH,
+      path: "newPassword",
+    }));
+  }
+  if (newPassword.length > PASSWORD_MAX_LENGTH) {
+    throw Boom.badRequest(JSON.stringify({
+      message: "Password to long",
+      max: PASSWORD_MAX_LENGTH,
+      path: "newPassword",
+    }));
+  }
+
+  const user = await findUser(username);
+  const isCorrect = await user.isCorrectPassword(previosPassword);
+  if (!isCorrect) {
+    throw Boom.badRequest(JSON.stringify({
+      message: "Incorrect password",
+      path: "previosPassword",
+    }));
+  }
+
+  const password = await hash(newPassword, SALT_ROUNDS);
+  await changePassword(user._id, password);
+
+  res.sendStatus(204);
 }
