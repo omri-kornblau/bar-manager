@@ -2,24 +2,24 @@ const _ = require("lodash");
 const Mongoose = require("mongoose");
 const Boom = require("boom");
 const { Readable } = require("stream");
-const { createNotification } = require("../db/notification");
+
+const {
+  createNotification
+} = require("../db/notification");
 const {
   addNotificationToClientById,
   findClientById,
 } = require("../db/client");
-
 const {
+  addNotificationToProviderById,
   findProviderById,
 } = require("../db/provider");
-
 const {
   findMessageById,
 } = require("../db/message");
-
 const {
   findOfferById,
 } = require("../db/offer");
-
 const {
   findRequestById,
 } = require("../db/request");
@@ -158,9 +158,14 @@ exports.readFile = (attachment, _id) => {
   })
 }
 
-exports.createNotification = async (message, requestId, clientId) => {
+exports.createClientNotification = async (message, requestId, clientId) => {
   const createdNotification = await createNotification(message, requestId);
   return await addNotificationToClientById(clientId, createdNotification._id);
+}
+
+exports.createProviderNotification = async (message, requestId, providerId) => {
+  const createdNotification = await createNotification(message, requestId);
+  return await addNotificationToProviderById(providerId, createdNotification._id);
 }
 
 exports.fetchRequestById = async (requestId, providerId) => {

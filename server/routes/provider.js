@@ -5,13 +5,13 @@ const Boom = require("boom");
 const RequestModel = Mongoose.model("Request");
 const OldRequestModel = Mongoose.model("OldRequest");
 const NotificationModel = Mongoose.model("Notification");
-const OfferModel = Mongoose.model("Offer");
 
 const {
   getProvider,
   fetchRequestById,
   findByIds,
   prepareNotifications,
+  createClientNotification,
 } = require("./utils");
 
 const {
@@ -153,6 +153,10 @@ exports.sendMessage = async (req, res) => {
   let request;
   try {
     request = await addMessageToRequest(requestId, message._id, provider._id);
+    await createClientNotification({
+      type: "New Message",
+      from: provider.name
+    }, requestId, request.author)
   } catch (err) {
     try {
       if (!_.isNil(request)) {

@@ -16,6 +16,7 @@ const {
   getClient,
   getProvider,
   prepareRequestsMessages,
+  createProviderNotification,
 } = require("./utils");
 
 const {
@@ -148,6 +149,10 @@ exports.sendMessage = async (req, res) => {
   let request;
   try {
     request = await addMessageToRequest(requestId, message._id, providerId);
+    await createProviderNotification({
+      type: "New Message",
+      from: client.name
+    }, requestId, providerId)
   } catch (err) {
     try {
       if (!_.isNil(request)) {

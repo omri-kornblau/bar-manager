@@ -47,6 +47,14 @@ exports.removRequest = async (providerId, requestId) => {
   )
 }
 
+exports.addNotificationToProviderById = async (_id, notificationId) => {
+  return exports.updateProviderById(
+    _id,
+    { $push: { unreadNotifications: notificationId } },
+    true
+  );
+}
+
 exports.readNotificationInProviderById = async (_id, notificationId) => {
   return exports.updateProviderById(
     _id,
