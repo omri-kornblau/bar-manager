@@ -9,7 +9,10 @@ import {
 
 import pages from "./mainViews";
 import { getPage } from "../redux/selectors/navbar";
-import { getUserLoggedIn } from "../redux/selectors/user";
+import {
+  getUserLoggedIn,
+  isProvider,
+} from "../redux/selectors/user";
 import {
   checkToken as checkTokenThunk,
   logout as logoutThunk
@@ -18,6 +21,10 @@ import {
 import {
   getClientData,
 } from "../redux/thunks/client"
+
+import {
+  getProviderData,
+} from "../redux/thunks/provider"
 
 import AppNavbar from "../components/AppNavbar/AppNavbar";
 import { getLocation } from "connected-react-router";
@@ -32,15 +39,17 @@ const Main = props => {
     checkToken,
     logout,
     getClient,
-    location
+    getProvider,
+    isProvider,
+    location,
   } = props;
 
   const { pathname, search, hash } = location;
 
   useEffect(() => {
     checkToken(`${pathname}${search}${hash}`);
-    getClient();
-  }, []);
+    isProvider ? getProvider() : getClient();
+  }, [isProvider]);
 
   return (
     <>
@@ -66,13 +75,15 @@ const Main = props => {
 const mapStateToProps = state => ({
   page: getPage(state),
   isLoggedIn: getUserLoggedIn(state),
-  location: getLocation(state)
+  location: getLocation(state),
+  isProvider: isProvider(state),
 })
 
 const mapDispatchToProps = dispatch => ({
   checkToken: checkTokenThunk(dispatch),
   logout: logoutThunk(dispatch),
   getClient: getClientData(dispatch),
+  getProvider: getProviderData(dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

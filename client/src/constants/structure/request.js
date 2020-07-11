@@ -170,7 +170,7 @@ const downloadActions = [
   />,
 ]
 
-export const progressBar = {
+export const ClinetProgressBar = {
   waitingForApproval: {
     label: "בקשות המחכות לאישור מורשה חתימה",
     description: "",
@@ -211,6 +211,32 @@ export const progressBar = {
         color="primary"
       />,
     ],
+  },
+  waitingForSign: {
+    label: "פוליסות שאושרו ומחכות לחתימה",
+    description: "",
+    chosenHeaders: ["type", "startDate", "maxPrice"],
+    actions: downloadActions,
+  },
+  active: {
+    label: "פוליסות פעילות",
+    description: "",
+    chosenHeaders: ["type", "startDate", "activeTime"],
+    actions: downloadActions,
+  },
+  history: {
+    label: "היסטוריה",
+    description: "",
+    chosenHeaders: ["index", "startDate", "activeTime", "maxPrice"],
+    actions: downloadActions,
+  },
+}
+
+export const providerProgressBar = {
+  inTenderProcedure: {
+    label: "פוליסות בהליך מכרזי",
+    description: "",
+    chosenHeaders: ["index", "type", "activeTime", "startDate", "maxPrice"],
   },
   waitingForSign: {
     label: "פוליסות שאושרו ומחכות לחתימה",

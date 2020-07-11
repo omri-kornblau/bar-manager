@@ -1,5 +1,9 @@
 import {
-  POST_FILTERED_REQUESTS_SUCCESS, FETCH_REQUEST_SUCCESS, POST_SEND_MESSAGE_SUCCESS, POST_SET_OFFER_SUCCESS
+  POST_FILTERED_REQUESTS_SUCCESS,
+  FETCH_REQUEST_SUCCESS,
+  POST_SEND_MESSAGE_SUCCESS,
+  POST_SET_OFFER_SUCCESS,
+  GET_PROVIDER_SUCCESS,
 } from "../actions/provider";
 
 const initialState = {
@@ -26,6 +30,12 @@ const createOffersFromOffer = (oldOffers, offer) => {
 
 const providerReducer = (state=initialState, action) => {
   switch(action.type) {
+    case GET_PROVIDER_SUCCESS:
+      return {
+        ...state,
+        requests: action.payload.requests,
+        oldRequests: action.payload.oldRequests,
+      };
     case POST_FILTERED_REQUESTS_SUCCESS:
       return {
         ...state,

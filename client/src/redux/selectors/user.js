@@ -13,3 +13,7 @@ export const getUserData = state => {
 export const getUserType = state => {
   return state.app.user.data.type;
 }
+
+export const isProvider = state => {
+  return getUserType(state) === "provider"
+}

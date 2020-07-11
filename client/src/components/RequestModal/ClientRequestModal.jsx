@@ -22,7 +22,9 @@ import LoadingButton from "../LoadingButton/LoadingButton";
 import { parseFormError } from "../../helpers/errors";
 import ErrorMessage from "../LoadingButton/ErrorMessage";
 
-import { progressBar } from "../../constants/structure/request"
+import {
+  ClinetProgressBar as progressBar,
+} from "../../constants/structure/request"
 import {formatActions} from "../../helpers/formats"
 import { cloneElement } from "react";
 

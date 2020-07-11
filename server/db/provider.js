@@ -23,26 +23,37 @@ exports.updateProviderById = async (_id, action, returnNew=false) => {
   return updatedProvider;
 }
 
-exports.addOffer = async (providerId, offerId) => {
+exports.addRequest = async (providerId, requestId) => {
   return exports.updateProviderById(
     providerId,
     {
       $addToSet: {
-        offers: offerId
+        requests: requestId
       }
     },
     true
   )
 }
 
-exports.removeOffer = async (providerId, offerId) => {
+exports.removRequest = async (providerId, requestId) => {
   return exports.updateProviderById(
     providerId,
     {
       $pull: {
-        offers: offerId
+        requests: requestId
       }
     },
     true
   )
+}
+
+exports.readNotificationInProviderById = async (_id, notificationId) => {
+  return exports.updateProviderById(
+    _id,
+    {
+      $pull: { unreadNotifications: Mongoose.mongo.ObjectId(notificationId) },
+      $push: { readNotifications: notificationId }
+    },
+    true
+  );
 }

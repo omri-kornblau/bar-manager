@@ -1,3 +1,5 @@
+import { getUserType } from "./user";
+
 export const getLoading = state => {
   return state.app.errors.getClient.inProgress;
 }
@@ -7,7 +9,8 @@ export const getCreateRequestLoading = state => {
 }
 
 export const getRequests = state => {
-  return state.app.client.requests;
+  const type = getUserType(state);
+  return type ? state.app[type].requests : [];
 }
 
 export const getOpenedRequest = state => {

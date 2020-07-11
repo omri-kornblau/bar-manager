@@ -22,12 +22,12 @@ import {
 
 import {
   tableHeaders,
-  progressBar,
+  ClinetProgressBar as progressBar,
 } from "../../../../../constants/structure/request";
 import { updateRequest as updateRequestThunk } from "../../../../../redux/thunks/client";
 
 import CustomTable from "../../../../../components/Table/Table";
-import RequestModal from "../../../../../components/RequestModal/RequestModal";
+import RequestModal from "../../../../../components/RequestModal/ClientRequestModal";
 import { getUpdateRequestErrors } from "../../../../../redux/selectors/errors";
 import { getTableHeaders } from "../../../../../helpers/structer";
 

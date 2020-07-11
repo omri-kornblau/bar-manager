@@ -24,6 +24,7 @@ router.get("/client/downloadfile", withAuth, ClientRoutes.downloadFile);
 router.post("/client/readnotification", withAuth, ClientRoutes.readNotification);
 
 router.post("/provider/signup", UserRoutes.signupProvider);
+router.get("/provider/get", withAuth, ProviderRoutes.getAll);
 router.post("/provider/filteredrequests", withAuth, ProviderRoutes.getRequests);
 router.post("/provider/setoffer", withAuth, ProviderRoutes.setOffer);
 router.post("/provider/sendmessage", withAuth, ProviderRoutes.sendMessage);

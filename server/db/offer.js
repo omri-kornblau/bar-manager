@@ -40,11 +40,16 @@ exports.findOfferById = async _id => {
   return offer;
 }
 
-exports.findOfferByProviderId = async (providerId, checkNil=true) => {
-  const offer = await OfferModel.findOne({provider: Mongoose.mongo.ObjectID(providerId)});
+exports.findOffer = async (requestId, providerId) => {
+  console.log(requestId, providerId)
+  const offer = await OfferModel.findOne({request: requestId, provider: providerId});
 
-  if (checkNil && _.isNil(offer)) {
+  if (_.isNil(offer)) {
     throw Boom.internal("Offer not found");
   }
   return offer;
+}
+
+exports.unsafeFindOffer = async (requestId, providerId) => {
+  return await OfferModel.findOne({request: requestId, provider: providerId});
 }

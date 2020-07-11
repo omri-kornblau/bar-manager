@@ -33,7 +33,10 @@ import {
   POST_SEND_MESSAGE_FAILURE,
   POST_SET_OFFER_SUCCESS,
   POST_SET_OFFER_FAILED,
-  TRY_POST_SET_OFFER
+  TRY_POST_SET_OFFER,
+  TRY_GET_PROVIDER,
+  GET_PROVIDER_SUCCESS,
+  GET_PROVIDER_FAILED,
 } from "../actions/provider";
 
 const initialState = {
@@ -168,6 +171,7 @@ const userReducer = (state=initialState, action) => {
   const fetchReducers = [
     reduceFetch("login", TRY_LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE),
     reduceFetch("getClient", TRY_GET_CLIENT, GET_CLIENT_SUCCESS, GET_CLIENT_FAILURE),
+    reduceFetch("getProvider", TRY_GET_PROVIDER, GET_PROVIDER_SUCCESS, GET_PROVIDER_FAILED),
     reduceFetch("createRequest", TRY_CREATE_REQUEST, CREATE_REQUEST_SUCCESS, CREATE_REQUEST_FAILURE),
     reduceFetch("updateRequest", TRY_UPDATE_REQUEST, UPDATE_REQUEST_SUCCESS, UPDATE_REQUEST_FAILURE),
     reduceFetch("postFilteredRequests", TRY_POST_FILTERED_REQUESTS, POST_FILTERED_REQUESTS_SUCCESS, POST_FILTERED_REQUESTS_FAILURE),

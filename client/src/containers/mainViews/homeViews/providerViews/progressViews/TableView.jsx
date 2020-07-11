@@ -19,12 +19,12 @@ import { getRequests, getRequestEditMode } from "../../../../../redux/selectors/
 
 import {
   tableHeaders,
-  progressBar,
+  providerProgressBar as progressBar,
 } from "../../../../../constants/structure/request";
 import { updateRequest as updateRequestThunk } from "../../../../../redux/thunks/client";
 
 import CustomTable from "../../../../../components/Table/Table";
-import RequestModal from "../../../../../components/RequestModal/RequestModal";
+import RequestModal from "../../../../../components/RequestModal/ClientRequestModal";
 import { getUpdateRequestErrors } from "../../../../../redux/selectors/errors";
 
 
@@ -57,7 +57,7 @@ const TableView = props => {
   ), [requests, progress]);
 
   const onOpenRequest = useCallback(requestData => {
-    pushUrl(stringifyUrl({ url, query: { ...query, or: requestData.index }}));
+    pushUrl(stringifyUrl({ url, query: { ...query, or: requestData._id }}));
   }, [query])
 
   const onCloseRequest = () => {
@@ -115,7 +115,7 @@ const TableView = props => {
       >
         <Fade in={isModalOpen}>
           <RequestModal
-            data={requests[openedRequestIdx]}
+            data={_.find(requests, obj => obj._id === openedRequestIdx)}
             onEnterEdit={onEnterEditMode}
             onSaveEdit={onSaveEdit}
             onExitEdit={onExitEditMode}

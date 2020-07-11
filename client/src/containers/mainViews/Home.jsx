@@ -18,7 +18,11 @@ import ClientViews from "./homeViews/homeClientViews";
 import ProviderViews from "./homeViews/homeProviderViews";
 import LoggedOutViews from "./homeViews/loggedOutViews";
 import { getView, getClosed } from "../../redux/selectors/sidebar";
-import { getUserType, getUserLoggedIn } from "../../redux/selectors/user";
+import {
+  getUserLoggedIn,
+  isProvider,
+  getUserType
+} from "../../redux/selectors/user";
 import { setSidebarClosed } from "../../redux/actions/sidebar";
 
 import useStyles from "./style";
@@ -44,13 +48,13 @@ const Home = props => {
     getProgressWithView,
     isLoggedIn,
     isLoading,
-    type
+    isProvider,
   } = props;
 
   const match = useRouteMatch();
   const classes = useStyles();
 
-  const userViews = type === "provider" ? ProviderViews : ClientViews;
+  const userViews = isProvider ? ProviderViews : ClientViews;
   const views = isLoggedIn ? userViews : LoggedOutViews;
 
   return (
@@ -102,7 +106,7 @@ const mapStateToProps = state => ({
   getProgressWithView: view => getProgress(state, view),
   sidebarClosed: getClosed(state),
   isLoggedIn: getUserLoggedIn(state),
-  type: getUserType(state),
+  isProvider: isProvider(state),
   isLoading: getLoading(state)
 })
 
