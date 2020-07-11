@@ -2,16 +2,20 @@ export const getErrors = state => {
   return state.app.errors
 }
 
+export const getSignupErrors = state => {
+  return state.app.errors.signup;
+}
+
 export const getLoginErrors = state => {
-  return state.app.errors.login
+  return state.app.errors.login;
 }
 
 export const getCreateRequestErrors = state => {
-  return state.app.errors.createRequest
+  return state.app.errors.createRequest;
 }
 
 export const getUpdateRequestErrors = state => {
-  return state.app.errors.updateRequest
+  return state.app.errors.updateRequest;
 }
 
 export const getFetchedRequestErrors = state => {

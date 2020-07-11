@@ -15,4 +15,5 @@ export const labels = {
   activeTime: "תאריך העמדה",
   firstAccept: "אישור A",
   secondAccept: "אישור B",
+  password: "סיסמה"
 }

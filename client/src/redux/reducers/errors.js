@@ -1,4 +1,8 @@
-
+import {
+  TRY_SIGNUP,
+  SIGNUP_SUCCESS,
+  SIGNUP_FAILURE,
+} from "../actions/signup";
 import {
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
@@ -43,6 +47,11 @@ import {
 } from "../actions/provider";
 
 const initialState = {
+  signup: {
+    inProgress: false,
+    try: false,
+    error: undefined
+  },
   login: {
     inProgress: false,
     try: false,
@@ -182,6 +191,7 @@ const reduceRowFetch = (prop, TRY, SUCCESS, FAILURE) => (state, action) => {
 
 const userReducer = (state=initialState, action) => {
   const fetchReducers = [
+    reduceFetch("signup", TRY_SIGNUP, SIGNUP_SUCCESS, SIGNUP_FAILURE),
     reduceFetch("login", TRY_LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE),
     reduceFetch("getClient", TRY_GET_CLIENT, GET_CLIENT_SUCCESS, GET_CLIENT_FAILURE),
     reduceFetch("getProvider", TRY_GET_PROVIDER, GET_PROVIDER_SUCCESS, GET_PROVIDER_FAILED),

@@ -1,3 +1,4 @@
+import _ from "lodash";
 import React, { useState } from "react";
 import {
   Container,
@@ -10,6 +11,18 @@ import {
 } from "@material-ui/core";
 
 import useStyle from "./style";
+import FormBody from "../../../../components/Form/FormBody";
+
+import {
+  clientForm,
+  providerForm,
+} from "../../../../constants/structure/signup";
+import { parseFormError } from "../../../../helpers/errors";
+import { connect } from "react-redux";
+import { getSignupErrors } from "../../../../redux/selectors/errors"
+import { signup } from "../../../../redux/thunks/signup";
+import { useEffect } from "react";
+import LoadingButton from "../../../../components/LoadingButton/LoadingButton";
 
 const SignupTypeSwitch = props => {
   const {
@@ -44,8 +57,42 @@ const SignupTypeSwitch = props => {
 }
 
 const Signup = props => {
-  const [isClient, setIsClient] = useState(true);
+  const {
+    status,
+    signup,
+  } = props;
+
   const classes = useStyle();
+
+  const [isClient, setIsClient] = useState(true);
+  const [form, setForm] = useState({});
+  const [error, setError] = useState({});
+
+  useEffect(() => {
+    setError(parseFormError(status.error));
+  }, [status]);
+
+  const structure = isClient ? clientForm : providerForm;
+
+  const onChange = e => {
+    const {
+      name,
+      value,
+    } = e.target;
+
+    setForm({ ...form, [name]: value });
+  };
+
+  const onSubmit = async e => {
+    e.preventDefault();
+    
+    if (form.password !== form.rePassword) {
+      setError({key: "rePassword", message: "הסיסמאות לא תואמות"});
+      return;
+    }
+
+    signup(isClient, _.omit(form, ["rePassword"]));
+  };
 
   return (
     <main className={classes.container}>
@@ -62,7 +109,25 @@ const Signup = props => {
             </Typography>
             <Box mt={1}/>
             <SignupTypeSwitch onChange={setIsClient} isClient={isClient}/>
-            <form>
+            <form onSubmit={onSubmit}>
+              <FormBody
+                formStructure={structure}
+                spacing={3}
+                onChange={onChange}
+                margin="dense"
+                error={error}
+              />
+              <Box mt={7}/>
+              <Grid justify="center" container>
+                <LoadingButton
+                  onClick={onSubmit}
+                  variant="contained"
+                  color="primary"
+                  loading={status.inProgress}
+                >
+                  הירשם
+                </LoadingButton>
+              </Grid>
             </form>
           </Box>
         </Paper>
@@ -71,4 +136,12 @@ const Signup = props => {
   );
 }
 
-export default Signup;
+const mapStateToProps = state => ({
+  status: getSignupErrors(state)
+})
+
+const mapDispatchToProps = dispatch => ({
+  signup: signup(dispatch),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);

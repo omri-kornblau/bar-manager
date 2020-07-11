@@ -1,9 +1,14 @@
 const Mongoose = require("mongoose");
 const Yup = require("yup");
 
-const { OBJECT_ID_LENGTH } = require("../config/consts");
+const {
+  OBJECT_ID_LENGTH,
+  NAME_MIN_LENGTH,
+  NAME_MAX_LENGTH,
+} = require("../config/consts");
 
 const yupClientSchema = Yup.object().shape({
+  name: Yup.string().min(NAME_MIN_LENGTH).max(NAME_MAX_LENGTH),
   unreadNotifications: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   readNotifications: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   requests: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),

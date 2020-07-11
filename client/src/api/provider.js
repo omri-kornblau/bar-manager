@@ -1,5 +1,9 @@
 import Axios from "axios";
 
+export const postSignup = async data => {
+  return Axios.post("/provider/signup", data);
+}
+
 export const getProvider = async () => {
   return Axios.get("/provider/get");
 }

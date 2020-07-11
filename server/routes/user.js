@@ -12,7 +12,7 @@ exports.signupClient = async (req, res) => {
     email,
     username,
     password,
-    name
+    name,
   } = req.body;
 
   let createdClient;
@@ -20,6 +20,7 @@ exports.signupClient = async (req, res) => {
 
   try {
     const emptyClient = {
+      name,
       unreadNotifications: [],
       readNotifications: [],
       requests: [],
@@ -55,13 +56,14 @@ exports.signupProvider = async (req, res) => {
     email,
     username,
     password,
-    name
+    name,
   } = req.body;
 
   let createdProvider = undefined;
 
   try {
     const emptyProvider = {
+      name,
       unreadNotifications: [],
       readNotifications: [],
       requests: [],

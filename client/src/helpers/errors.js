@@ -10,7 +10,7 @@ const errMessageToText = {
   "Policy file must be provided": "יש להעלות קובץ פוליסה",
   "Extra files must be provided": "יש להעלות קבצים נוספים",
   "Price should be lower then last price": "המחיר החדש לא נמוך מהנוכחי",
-  "Price should be bigger then 0": "נא להכניס מספר חיובי"
+  "Price should be bigger then 0": "נא להכניס מספר חיובי",
 }
 
 const generalErrorToText = ({ message }) => (
@@ -24,9 +24,15 @@ const yupErrorToText = errData => {
 
   switch(errData.type) {
     case "min":
-      return `סעיף ${label} חייב להיות גדול מ${errData.params.more}`
+      const min = _.isNil(errData.params.more)
+        ? errData.params.more
+        : `${errData.params.min} תווים`;
+      return `סעיף ${label} חייב להיות גדול מ${min}`
     case "max":
-      return `סעיף ${label} חייב להיות קטן מ${errData.params.more}`
+      const max = _.isNil(errData.params.more)
+        ? errData.params.more
+        : `${errData.params.max} תווים`;
+      return `סעיף ${label} חייב להיות קטן מ${max}`
     case "required":
       return `יש למלא את סעיף ${label}`
     default:

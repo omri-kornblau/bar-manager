@@ -86,7 +86,7 @@ const FormBody = props => {
               required={field.required}
               defaultValue={field.defaultValue}
               onChange={onChange}
-              error={field.name === error.key}
+              error={!_.isNil(error.key) && field.name === error.key}
               value={values[field.name]}
             />
           </Grid>
