@@ -79,7 +79,7 @@ const TableView = props => {
 
   useEffect(() => {
     fetchRequest(openedRequestIdx);
-  }, [query]);
+  }, [openedRequestIdx]);
 
   const onCloseRequest = () => {
     delete query.or;

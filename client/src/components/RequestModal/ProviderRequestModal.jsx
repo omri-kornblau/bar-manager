@@ -16,19 +16,14 @@ import {
 import { labels } from "../../constants/hebrew/request";
 import {
   modalChosenHeaders,
-  modalEditFormStructure,
   providerModalFeatures
 } from "../../constants/structure/request"
-import { applyFormat } from "../../helpers/formats";
-import LoadingButton from "../LoadingButton/LoadingButton";
-import { parseFormError } from "../../helpers/errors";
-import ErrorMessage from "../LoadingButton/ErrorMessage";
-
-import { progressBar } from "../../constants/structure/request"
-import {formatActions} from "../../helpers/formats"
-import { cloneElement } from "react";
-import ProviderMessagesBox from "./ProviderMessageBox";
+import { applyFormat, formatActions } from "../../helpers/formats";
+import {
+  clientProgressBar
+} from "../../constants/structure/request"
 import ProviderOfferBox from "./ProviderOfferBox";
+import ProviderMessageBox from "./ProviderMessageBox";
 
 const DataList = ({ data }) => (
   modalChosenHeaders.map(headStruct => {
@@ -142,6 +137,7 @@ const ProviderRequestModal = props => {
                 <DataList data={data.author}/>
               </Grid>
             </Grid>
+            {formatActions(clientProgressBar.active.actions, data)}
           </TabPanel>
           <TabPanel value={selectedTab} index={0}>
             <Grid container spacing={4}>
@@ -149,7 +145,6 @@ const ProviderRequestModal = props => {
                 <Typography align="center" variant="h6">
                   הגש הצעה
                 </Typography>
-                <Box mt={1}/>
                 <ProviderOfferBox
                   provider={provider}
                   myOffer={data.myOffer.price}
@@ -158,13 +153,14 @@ const ProviderRequestModal = props => {
                   setOfferStatus={setOfferStatus}
                   allowOffer={allowOffer}
                 />
+                <Box mt={1}/>
               </Grid>
               <Grid item xs>
                 <Typography align="center" variant="h6">
                   הודעות
                 </Typography>
                 <Box mt={2}/>
-                <ProviderMessagesBox
+                <ProviderMessageBox
                   provider={provider}
                   messages={data.messages}
                   onSendMessage={onSendMessage}

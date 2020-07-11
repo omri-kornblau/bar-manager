@@ -27,7 +27,7 @@ import { parseFormError } from "../../helpers/errors";
 import ErrorMessage from "../LoadingButton/ErrorMessage";
 
 import {
-  ClinetProgressBar as progressBar,
+  clientProgressBar as progressBar,
 } from "../../constants/structure/request"
 import {formatActions} from "../../helpers/formats"
 

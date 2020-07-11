@@ -32,7 +32,7 @@ import {
 
 import {
   tableHeaders,
-  ClinetProgressBar as progressBar,
+  clientProgressBar as progressBar,
 } from "../../../../../constants/structure/request";
 
 import RequestModal from "../../../../../components/RequestModal/ClientRequestModal";

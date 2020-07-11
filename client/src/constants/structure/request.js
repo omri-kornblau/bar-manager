@@ -170,7 +170,7 @@ const downloadActions = [
   />,
 ]
 
-export const ClinetProgressBar = {
+export const clientProgressBar = {
   waitingForApproval: {
     label: "בקשות המחכות לאישור מורשה חתימה",
     description: "",
