@@ -2,6 +2,8 @@ const _ = require("lodash");
 const Mongoose = require("mongoose");
 const Boom = require("boom");
 
+const UserModel = Mongoose.model("User");
+const ProviderModel = Mongoose.model("Provider");
 const RequestModel = Mongoose.model("Request");
 const OldRequestModel = Mongoose.model("OldRequest");
 const NotificationModel = Mongoose.model("Notification");
@@ -34,12 +36,17 @@ const {
   addRequest: addRequestToProvider,
   removRequest: removeRequestFromProvider,
   readNotificationInProviderById,
+  updateProviderById,
 } = require("../db/provider");
 
 const {
   addMessage,
   deleteMessage,
 } = require("../db/message");
+
+const {
+  updateUserById
+} = require("../db/user");
 
 const {
   censorMessagesForProvider,
@@ -241,4 +248,21 @@ exports.readNotification = async (req, res) => {
 
   await readNotification(provider, notificationId, readNotificationInProviderById);
   res.sendStatus(204)
+}
+
+exports.updatesDetailes = async (req, res) => {
+  const {
+    username
+  } = req;
+
+  const [user, provider] = await getProvider(username);
+
+  const newProvider = _.pick(req.body, ["name"]);
+  await ProviderModel.yupProviderSchema.validate(newProvider);
+  const newUser = _.pick(req.body, ["email"]);
+  await UserModel.yupUserSchema.validate(newUser);
+
+  await updateProviderById(provider._id, {$set: newProvider});
+  await updateUserById(user._id, {$set: newUser});
+  res.sendStatus(204);
 }

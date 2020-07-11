@@ -17,7 +17,7 @@ const {
 
 exports.createRequest = async requestData => {
   const createdRequest = await RequestModel.create({
-    createdTime: new Date(),
+    createdAt: new Date(),
     startDate: new Date,
     activeTime:  new Date,
     messages: {},

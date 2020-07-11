@@ -24,3 +24,21 @@ export const changePassword =
     },
   ]
 ];
+
+export const updateAccountDetaild =
+  [[
+    {
+      label: "שם",
+      fullWidth: true,
+      name: "name",
+    },
+  ],
+  [
+    {
+      label: "אימייל",
+      name: "email",
+      type: "email",
+      fullWidth: true,
+    },
+  ],
+];

@@ -3,6 +3,8 @@ const Mongoose = require("mongoose");
 const Boom = require("boom");
 
 const RequestModel = Mongoose.model("Request");
+const ClientModel = Mongoose.model("Client");
+const UserModel = Mongoose.model("User");
 const OldRequestModel = Mongoose.model("OldRequest");
 const NotificationModel = Mongoose.model("Notification");
 
@@ -34,6 +36,7 @@ const {
   addRequestToClientById,
   removeRequestFromClientById,
   readNotificationInClientById,
+  updateClientById,
 } = require("../db/client");
 const {
   createSampledFromRequest
@@ -44,7 +47,12 @@ const {
 const {
   findFileById,
 } = require("../db/attachment");
-
+const {
+  updateUserById,
+} = require("../db/user")
+const {
+  readNotificationInProviderById,
+} = require("../db/provider");
 
 const {
   REQUEST_STATUSES,
@@ -328,4 +336,22 @@ exports.getMessages = async (req, res) => {
   const messages = await prepareRequestsMessages([ request ]);
 
   res.send(_.first(messages));
+  res.sendStatus(204);
+}
+
+exports.updatesDetailes = async (req, res) => {
+  const {
+    username
+  } = req;
+
+  const [user, client] = await getClient(username);
+
+  const newClient = _.pick(req.body, ["name"]);
+  await ClientModel.yupClientSchema.validate(newClient);
+  const newUser = _.pick(req.body, ["email"]);
+  await UserModel.yupUserSchema.validate(newUser);
+
+  await updateClientById(client._id, {$set: newClient});
+  await updateUserById(user._id, {$set: newUser});
+  res.sendStatus(204);
 }

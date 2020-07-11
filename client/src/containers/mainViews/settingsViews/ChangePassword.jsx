@@ -26,13 +26,16 @@ const ChangePassword = props => {
 
   const [form, setForm] = useState({});
   const [error, setError] = useState({});
-
   useEffect(() => {
     setError(parseFormError(status.error));
-    if (status.try === true && _.isNil(status.error)) {
-      setForm({})
-    }
   }, [status]);
+
+  const [isDiff, setIsDiff] = useState(true);
+  useEffect(() => {
+    if (status.try && !status.inProgress) {
+      setIsDiff(!_.isNil(status.error));
+    }
+  }, [status])
 
   const onChange = useCallback(e => {
     const {
@@ -40,6 +43,7 @@ const ChangePassword = props => {
       value,
     } = e.target;
 
+    setIsDiff(true);
     setForm(form => ({ ...form, [name]: value }));
   }, []);
 
@@ -53,9 +57,9 @@ const ChangePassword = props => {
     changePassword(form.previosPassword, form.newPassword)
   }, [form]);
 
-  const label = status.try === true && _.isNil(status.error)
-    ? "הסיסמה עודכנה"
-    : "עדכן סיסמה"
+  const label = isDiff
+    ? "עדכן סיסמה"
+    : "הסיסמה עודכנה";
 
   return (
     <Container>

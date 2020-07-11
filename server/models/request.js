@@ -20,7 +20,6 @@ const yupCreateRequestSchema = Yup.object().shape({
   isCurrentlyInsured: Yup.boolean(),
   maxPrice: Yup.number().positive().required(),
   comments: Yup.string(),
-  createdTime: Yup.date(),
   startDate: Yup.date(),
   activeTime: Yup.date(),
   policy: Yup.string().length(OBJECT_ID_LENGTH),
@@ -63,9 +62,6 @@ const mongoFormat = {
   },
   comments: {
     type: String,
-  },
-  createdTime: {
-    type: Date,
   },
   startDate: {
     type: Date,

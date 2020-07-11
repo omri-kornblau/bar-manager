@@ -87,9 +87,9 @@ export const tableHeaders = {
         type: "bool"
       }
     },
-    createdTime: {
-      id: "createdTime",
-      label: labels.createdTime,
+    createdAt: {
+      id: "createdAt",
+      label: labels.createdAt,
       formatter: formatTimeStampRTL,
       filter: {
         // type: "date"
@@ -228,7 +228,7 @@ export const providerProgressBar = {
 }
 
 export const providerPoolChosenHeaders = [
-  "type", "createdTime", "maxPrice", "insuranceDuration", "author"
+  "type", "createdAt", "maxPrice", "insuranceDuration", "author"
 ];
 
 export const modalChosenHeaders = [
@@ -236,7 +236,7 @@ export const modalChosenHeaders = [
     id: "type"
   },
   {
-    id: "createdTime",
+    id: "createdAt",
     formatter: formatTimeStampRTL
   },
   {

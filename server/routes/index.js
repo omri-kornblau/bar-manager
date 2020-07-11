@@ -16,6 +16,7 @@ router.get("/auth/logout", withAuth, AuthRoutes.logout);
 router.post("/auth/changepassword", withAuth, AuthRoutes.changePassword);
 
 router.post("/client/signup", UserRoutes.signupClient);
+router.post("/client/updatedetailes", withAuth, ClientRoutes.updatesDetailes);
 router.get("/client/get", withAuth, ClientRoutes.getAll);
 router.post("/client/newrequest", withAuth, ClientRoutes.createRequest);
 router.post("/client/updaterequest", withAuth, ClientRoutes.updateRequest);
@@ -27,7 +28,7 @@ router.post("/client/sendmessage", withAuth, ClientRoutes.sendMessage);
 router.get("/client/messages", withAuth, ClientRoutes.getMessages);
 
 router.post("/provider/signup", UserRoutes.signupProvider);
-router.post("/provider/changeDetailed", UserRoutes.signupProvider);
+router.post("/provider/updatedetailes", withAuth, ProviderRoutes.updatesDetailes);
 router.get("/provider/get", withAuth, ProviderRoutes.getAll);
 router.post("/provider/filteredrequests", withAuth, ProviderRoutes.getRequests);
 router.post("/provider/setoffer", withAuth, ProviderRoutes.setOffer);
