@@ -21,9 +21,10 @@ exports.login = async (req, res) => {
     username,
     password
   } = req.body;
-  const user = await UserModel.findOne({
-    username
-  });
+  const user = await UserModel.findOne({$or: [
+    {username},
+    {email: username},
+  ]});
   if (!user) {
     throw Boom.badRequest("Incorrect username or password", {
       appCode: 2100
