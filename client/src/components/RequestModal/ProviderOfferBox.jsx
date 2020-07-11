@@ -32,6 +32,7 @@ const ProviderOfferBox = props => {
     offers,
     onSetOffer,
     setOfferStatus,
+    allowOffer
   } = props;
 
   offers.sort((a, b) => a.price - b.price);
@@ -56,7 +57,7 @@ const ProviderOfferBox = props => {
     <Box>
       <Typography align="center" variant="subtitle1">
         <Box display="inline" mr={1} fontWeight={900}>
-          הצעה נוכחית:
+          { allowOffer ? "הצעה נוכחית:" : "מחיר סופי:" }
         </Box>
         <Chip
           label={myOffer ? `${myOffer} ש"ח` : "אין הצעה נוכחית"}
@@ -65,47 +66,51 @@ const ProviderOfferBox = props => {
         />
       </Typography>
       <Box mt={1}/>
-      <Grid justify="center" container alignItems="center">
-        <TextField
-          label="סכום הצעה חדש"
-          variant="outlined"
-          margin="dense"
-          type="number"
-          value={newOffer}
-          onChange={onOfferChange}
-          error={!_.isNil(setOfferStatus.error)}
-          inputProps={{
-            min: 1
-          }}
-          helperText={parseOfferBoxError(setOfferStatus.error)}
-        />
-        <Box mr={2}/>
-        <LoadingButton
-          size="small"
-          color="primary"
-          onClick={_onSetOffer}
-          loading={setOfferStatus.inProgress}
-        >
-          <GetAppIcon/>
-        </LoadingButton>
-        <Typography align="left" variant="caption">
-          *לאחר הגשת ההצעה לא ניתן לבטלה
-        </Typography>
-      </Grid>
-      <Box mt={4}/>
-      {_.isEmpty(offers) ?
-        <Typography align="center" variant="subtitle1">
-          אין עדיין הצעות לבקשה זו
-        </Typography>
-        :
-        <CustomTable
-          rows={offers}
-          columns={[
-            { id: "provider", label: "חברה" },
-            { id: "price", label: "מחיר מוצע" },
-          ]}
-          pagination={false}
-        />
+      {allowOffer &&
+        <>
+          <Grid justify="center" container alignItems="center">
+            <TextField
+              label="סכום הצעה חדש"
+              variant="outlined"
+              margin="dense"
+              type="number"
+              value={newOffer}
+              onChange={onOfferChange}
+              error={!_.isNil(setOfferStatus.error)}
+              inputProps={{
+                min: 1
+              }}
+              helperText={parseOfferBoxError(setOfferStatus.error)}
+            />
+            <Box mr={2}/>
+            <LoadingButton
+              size="small"
+              color="primary"
+              onClick={_onSetOffer}
+              loading={setOfferStatus.inProgress}
+            >
+              <GetAppIcon/>
+            </LoadingButton>
+            <Typography align="left" variant="caption">
+              *לאחר הגשת ההצעה לא ניתן לבטלה
+            </Typography>
+          </Grid>
+          <Box mt={4}/>
+          {_.isEmpty(offers) ?
+            <Typography align="center" variant="subtitle1">
+              אין עדיין הצעות לבקשה זו
+            </Typography>
+            :
+            <CustomTable
+              rows={offers}
+              columns={[
+                { id: "provider", label: "חברה" },
+                { id: "price", label: "מחיר מוצע" },
+              ]}
+              pagination={false}
+            />
+          }
+        </>
       }
     </Box>
   );

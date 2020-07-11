@@ -16,7 +16,8 @@ import {
 import { labels } from "../../constants/hebrew/request";
 import {
   modalChosenHeaders,
-  modalEditFormStructure
+  modalEditFormStructure,
+  providerModalFeatures
 } from "../../constants/structure/request"
 import { applyFormat } from "../../helpers/formats";
 import LoadingButton from "../LoadingButton/LoadingButton";
@@ -88,6 +89,8 @@ const ProviderRequestModal = props => {
     sendMessage(data._id, value);
   }
 
+  const allowOffer = _.get(providerModalFeatures[data.status], "offer");
+
   return (
     <Container maxWidth="md">
       <Paper>
@@ -153,6 +156,7 @@ const ProviderRequestModal = props => {
                   offers={data.offers}
                   onSetOffer={_onSetOffer}
                   setOfferStatus={setOfferStatus}
+                  allowOffer={allowOffer}
                 />
               </Grid>
               <Grid item xs>
