@@ -14,20 +14,28 @@ import { push, getLocation } from "connected-react-router";
 
 import { getProgress } from "../../../../../redux/selectors/progressBar";
 import { getView } from "../../../../../redux/selectors/sidebar"
+import { getUserData } from "../../../../../redux/selectors/user";
 import {
   getOpenedRequest,
   getRequests,
   getRequestEditMode
 } from "../../../../../redux/selectors/request";
+import {
+  getUpdateRequestErrors,
+  getSendMessageErrorsClient
+} from "../../../../../redux/selectors/errors";
+import {
+  updateRequest as updateRequestThunk,
+  sendMessage as sendMessageThunk
+} from "../../../../../redux/thunks/client";
 
 import {
   tableHeaders,
   ClinetProgressBar as progressBar,
 } from "../../../../../constants/structure/request";
-import { updateRequest as updateRequestThunk } from "../../../../../redux/thunks/client";
 
-import CustomTable from "../../../../../components/Table/Table";
 import RequestModal from "../../../../../components/RequestModal/ClientRequestModal";
+import CustomTable from "../../../../../components/Table/Table";
 import { getUpdateRequestErrors } from "../../../../../redux/selectors/errors";
 import { getTableHeaders } from "../../../../../helpers/structer";
 
@@ -42,7 +50,10 @@ const TableView = props => {
     type,
     pushUrl,
     updateRequest,
-    updateStatus
+    updateStatus,
+    client,
+    sendMessage,
+    sendMessageStatus
   } = props;
 
   const {
@@ -117,7 +128,7 @@ const TableView = props => {
           timeout: 300
         }}
       >
-        <Collapse mountOnEnter unmountOnExit in={isModalOpen}>
+        {/* <Collapse mountOnEnter unmountOnExit in={isModalOpen}> */}
           <RequestModal
             data={requests[openedRequestIdx]}
             onEnterEdit={onEnterEditMode}
@@ -125,8 +136,11 @@ const TableView = props => {
             onExitEdit={onExitEditMode}
             editMode={editMode}
             updateStatus={updateStatus}
+            sendMessage={sendMessage}
+            sendMessageStatus={sendMessageStatus}
+            client={client}
           />
-        </Collapse>
+        {/* </Collapse> */}
       </Modal>
     </Box>
   );
@@ -139,12 +153,15 @@ const mapStateToProps = state => ({
   openedRequestIdx: getOpenedRequest(state),
   editMode: getRequestEditMode(state),
   location: getLocation(state),
-  updateStatus: getUpdateRequestErrors(state)
+  updateStatus: getUpdateRequestErrors(state),
+  sendMessageStatus: getSendMessageErrorsClient(state),
+  client: getUserData(state),
 })
 
 const mapDispatchToProps = dispatch => ({
   pushUrl: _.flow(push, dispatch),
-  updateRequest: updateRequestThunk(dispatch)
+  updateRequest: updateRequestThunk(dispatch),
+  sendMessage: sendMessageThunk(dispatch)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TableView);

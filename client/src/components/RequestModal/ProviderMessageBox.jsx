@@ -17,59 +17,28 @@ import {
   ListItemAvatar
 } from '@material-ui/core';
 import SendIcon from '@material-ui/icons/Send';
-import { GradeRounded } from "@material-ui/icons";
 import { useState } from "react";
 import LoadingButton from "../LoadingButton/LoadingButton";
-import {
-  formatTimeStampMessageTime, formatTextWithLineEnds,
-} from "../../helpers/formats";
 
-import useStyle from "./style";
-
-const Message = ({ from, title,  body, timestamp }) => {
-  const classes = useStyle();
-
-  return (
-    <Paper className={classes.messageContainer} elevation={1}>
-      <ListItem className={classes.messageContainer}>
-        <ListItemText>
-          <div style={{ overflowWrap: "anywhere"}}>
-            <Typography variant="body2">
-              {formatTextWithLineEnds(body)}
-            </Typography>
-          </div>
-        </ListItemText>
-        <Box mr={3}/>
-        <ListItemAvatar>
-          <Typography component="p" variant="caption" align="right">
-            <Box fontWeight="800">
-              {formatTimeStampMessageTime(timestamp)}
-            </Box>
-          </Typography>
-        </ListItemAvatar>
-      </ListItem>
-    </Paper>
-  )
-}
+import Message from "./Message";
 
 const ProviderMessagesBox = props => {
   const {
     messages,
-    sendMessage,
+    onSendMessage,
     sendMessageStatus,
+    provider
   } = props;
 
   const [newMessage, setNewMessage] = useState("");
 
   const onMessageChange = e => {
-    const {
-      value
-    } = e.target;
+    const { value } = e.target;
     setNewMessage(value);
   }
 
-  const onSendMessage = () => {
-    sendMessage(newMessage.trim());
+  const _onSendMessage = () => {
+    onSendMessage(newMessage.trim());
   }
 
   return (
@@ -85,7 +54,10 @@ const ProviderMessagesBox = props => {
           <List>
             {messages.map(message =>
               <>
-                <Message {...message} />
+                <Message
+                  data={message}
+                  own={provider._id === message.from}
+                />
                 <Box mt={2}/>
               </>
             )}
@@ -108,7 +80,7 @@ const ProviderMessagesBox = props => {
         <LoadingButton
           size="small"
           color="primary"
-          onClick={onSendMessage}
+          onClick={_onSendMessage}
           loading={sendMessageStatus.inProgress}
           fab
         >

@@ -25,6 +25,15 @@ exports.censorOffersForProvider = (offers, provider) => {
   });
 }
 
-exports.censorMessagesForProvider = (messages, provider) => {
-  return messages.filter(message => message.from === provider._id.toString())
+exports.censorMessagesForProvider = (messages, providerId) => {
+  if (_.isNil(providerId)) {
+    console.error("Provider ID is undefined");
+    return [];
+  }
+  const providerMessages = messages[providerId];
+  if (_.isNil(providerMessages)) {
+    console.error("No messages for this provider");
+    return [];
+  }
+  return providerMessages;
 }

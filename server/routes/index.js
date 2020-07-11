@@ -22,6 +22,7 @@ router.post("/client/acceptrequest", withAuth, ClientRoutes.acceptRequest);
 router.post("/client/cancelrequest", withAuth, ClientRoutes.cancelRequest);
 router.get("/client/downloadfile", withAuth, ClientRoutes.downloadFile);
 router.post("/client/readnotification", withAuth, ClientRoutes.readNotification);
+router.post("/client/sendmessage", withAuth, ClientRoutes.sendMessage);
 
 router.post("/provider/signup", UserRoutes.signupProvider);
 router.get("/provider/get", withAuth, ProviderRoutes.getAll);

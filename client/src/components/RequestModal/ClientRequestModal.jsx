@@ -26,7 +26,6 @@ import {
   ClinetProgressBar as progressBar,
 } from "../../constants/structure/request"
 import {formatActions} from "../../helpers/formats"
-import { cloneElement } from "react";
 
 const DataList = ({ data }) => (
   modalChosenHeaders.map(headStruct => {
@@ -126,15 +125,22 @@ const NoDataModal = () =>
 const RequestModal = props => {
   const {
     data,
+    client,
     editMode,
     onEnterEdit,
     onSaveEdit,
     onExitEdit,
-    updateStatus
+    updateStatus,
+    sendMessage,
+    sendMessageStatus
   } = props;
 
   if (_.isNil(data)) {
     return <NoDataModal/>
+  }
+
+  const onSendMessage = (value, providerId) => {
+    sendMessage(data._id, providerId, value);
   }
 
   return (
@@ -183,8 +189,13 @@ const RequestModal = props => {
               <Typography align="center" variant="h5">
                 הודעות ממבטחים
               </Typography>
-              <Box mt={2}/>
-              <MessagesBox messages={data.messages}/>
+              <Box mt={1}/>
+              <MessagesBox
+                client={client}
+                messages={data.messages}
+                onSendMessage={onSendMessage}
+                sendMessageStatus={sendMessageStatus}
+              />
             </Grid>
           </Grid>
         </Box>

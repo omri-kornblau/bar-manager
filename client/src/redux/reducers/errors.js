@@ -20,6 +20,9 @@ import {
   TRY_CANCEL_REQUEST,
   CANCEL_REQUEST_SUCCESS,
   CANCEL_REQUEST_FAILURE,
+  TRY_POST_SEND_MESSAGE_CLIENT,
+  POST_SEND_MESSAGE_SUCCESS_CLIENT,
+  POST_SEND_MESSAGE_FAILURE_CLIENT,
 } from "../actions/request";
 import {
   TRY_POST_FILTERED_REQUESTS,
@@ -76,6 +79,11 @@ const initialState = {
     error: undefined
   },
   sendMessage: {
+    inProgress: false,
+    try: false,
+    error: undefined
+  },
+  sendMessageClient: {
     inProgress: false,
     try: false,
     error: undefined
@@ -178,6 +186,7 @@ const userReducer = (state=initialState, action) => {
     reduceFetch("fetchRequest", TRY_FETCH_REQUEST, FETCH_REQUEST_SUCCESS, FETCH_REQUEST_FAILED),
     reduceFetch("setOffer", TRY_POST_SET_OFFER, POST_SET_OFFER_SUCCESS, POST_SET_OFFER_FAILED),
     reduceFetch("sendMessage", TRY_POST_SEND_MESSAGE, POST_SEND_MESSAGE_SUCCESS, POST_SEND_MESSAGE_FAILURE),
+    reduceFetch("sendMessageClient", TRY_POST_SEND_MESSAGE_CLIENT, POST_SEND_MESSAGE_SUCCESS_CLIENT, POST_SEND_MESSAGE_FAILURE_CLIENT),
     reduceRowFetch("acceptRequest", TRY_ACCEPT_REQUEST, ACCEPT_REQUEST_SUCCESS, ACCEPT_REQUEST_FAILURE),
     reduceRowFetch("cancelRequest", TRY_CANCEL_REQUEST, CANCEL_REQUEST_SUCCESS, CANCEL_REQUEST_FAILURE),
   ]

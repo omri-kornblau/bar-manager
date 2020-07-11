@@ -25,3 +25,7 @@ export const getSetOfferErrors = state => {
 export const getSendMessageErrors = state => {
   return state.app.errors.sendMessage;
 }
+
+export const getSendMessageErrorsClient = state => {
+  return state.app.errors.sendMessageClient;
+}

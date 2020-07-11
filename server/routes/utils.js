@@ -24,6 +24,7 @@ const {
   findRequestById,
 } = require("../db/request");
 const { censorOffersForProvider, censorMessagesForProvider } = require("../censors");
+const { HASH_LENGTH } = require("../config/consts");
 
 const UserModel = Mongoose.model("User");
 const ProviderModel = Mongoose.model("Provider");
@@ -42,13 +43,56 @@ exports.findByIds = async (Model, ids, error) => {
 }
 
 exports.prepareRequests = async requests => {
-  const promise = requests.map(request => (
+  const authorsPromise = requests.map(request =>
     UserModel.findById(request.author)
-  ))
+  )
 
-  const authors = await Promise.all(promise);
+  const authors = await Promise.all(authorsPromise);
+
+  const messagesFieldIds = requests.reduce((data, request) => {
+    const { messages } = request;
+    data.providerIds = data.providerIds.concat(_.keys(messages));
+    data.messageIds = data.messageIds.concat(_.flatMap(messages));
+
+    return data;
+  }, {
+    providerIds: [],
+    messageIds: []
+  });
+
+  messagesFieldIds.providerIds = _.uniq(messagesFieldIds.providerIds);
+
+  const {
+    providerIds,
+    messageIds
+  } = messagesFieldIds;
+
+  const providersPromise = providerIds.map(findProviderById);
+  const messagesPromise = messageIds.map(findMessageById);
+
+  const providersById =
+    _.zipObject(providerIds, await Promise.all(providersPromise))
+  const messagesById =
+    _.zipObject(messageIds, await Promise.all(messagesPromise))
+
   return requests.map((request, index) => {
-    return {...request._doc, author: authors[index].username};
+    const { messages } = request._doc;
+    const messagesKeys = _.keys(messages);
+    const finalMessages = _.zipObject(messagesKeys,
+      _.toPairs(messages).map(pair => {
+        const [providerId, providerMessages] = pair;
+        const { name } = providersById[providerId];
+        const providerMessagesWithData =
+          providerMessages.map(messageId => messagesById[messageId]);
+        return [name, providerMessagesWithData]
+      })
+    );
+
+    return {
+      ...request._doc,
+      messages: finalMessages,
+      author: authors[index].username
+    };
   });
 }
 
@@ -113,11 +157,15 @@ exports.createNotification = async (message, requestId, clientId) => {
   return await addNotificationToClientById(clientId, createdNotification._id);
 }
 
-exports.fetchRequestById = async (requestId, provider={}) => {
+exports.fetchRequestById = async (requestId, providerId) => {
   const request = await findRequestById(requestId);
 
   const author = findClientById(request.author, { fullName: 1 });
-  const messagesPromises = request.messages.map(findMessageById);
+  const providerMessages = !_.isNil(providerId) ?
+    censorMessagesForProvider(request.messages, providerId)
+    : [];
+
+  const messagesPromises = providerMessages.map(findMessageById);
   const offersPromises = request.offers.map(findOfferById);
 
   const result = await Promise.all([author, ...messagesPromises, ...offersPromises]);

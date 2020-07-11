@@ -84,7 +84,7 @@ const ProviderRequestModal = props => {
     onSetOffer(data._id, value);
   }
 
-  const _onSendMessage = value => {
+  const onSendMessage = value => {
     sendMessage(data._id, value);
   }
 
@@ -161,8 +161,9 @@ const ProviderRequestModal = props => {
                 </Typography>
                 <Box mt={2}/>
                 <ProviderMessagesBox
+                  provider={provider}
                   messages={data.messages}
-                  sendMessage={_onSendMessage}
+                  onSendMessage={onSendMessage}
                   sendMessageStatus={sendMessageStatus}
                 />
               </Grid>

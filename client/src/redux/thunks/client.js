@@ -16,6 +16,9 @@ import {
   tryCancelRequest,
   canceleRequestSuccess,
   canceleRequestFailure,
+  tryPostSendMessage,
+  postSendMessageSuccess,
+  postSendMessageFailed,
 } from "../actions/request";
 import {
   readNotification as readNotificationAction,
@@ -27,6 +30,7 @@ import {
   postAcceptRequest,
   postCancelRequest,
   postReadNotification,
+  postSendMessage
 } from "../../api/client"
 import { getCreateRequestLoading } from "../selectors/request";
 
@@ -116,4 +120,18 @@ export const readNotification = outerDispatch => notificationId => {
         dispatch(readNotificationAction(notificationId));
       })
     })
+}
+
+export const sendMessage = outerDispatch => (requestId, providerId, message) => {
+  outerDispatch(dispatch => {
+    dispatch(tryPostSendMessage(requestId));
+
+    postSendMessage(requestId, providerId, message)
+      .then(res => {
+        dispatch(postSendMessageSuccess(requestId, providerId, res.data));
+      })
+      .catch(err => {
+        dispatch(postSendMessageFailed(err));
+      })
+  })
 }

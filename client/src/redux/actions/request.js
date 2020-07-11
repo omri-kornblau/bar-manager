@@ -18,6 +18,10 @@ export const TRY_CANCEL_REQUEST = "TRY_CANCEL_REQUEST";
 export const CANCEL_REQUEST_SUCCESS = "ACCEPT_CANCEL_SUCCESS";
 export const CANCEL_REQUEST_FAILURE = "ACCEPT_CANCEL_FAILURE";
 
+export const TRY_POST_SEND_MESSAGE_CLIENT = "TRY_POST_SEND_MESSAGE_CLIENT";
+export const POST_SEND_MESSAGE_SUCCESS_CLIENT = "POST_SEND_MESSAGE_SUCCESS_CLIENT";
+export const POST_SEND_MESSAGE_FAILURE_CLIENT = "POST_SEND_MESSAGE_FAILURE_CLIENT";
+
 export const tryGetClient = () => ({
   type: TRY_GET_CLIENT,
 });
@@ -88,4 +92,27 @@ export const canceleRequestSuccess = request => ({
 export const canceleRequestFailure = (request, err) => ({
   type: CANCEL_REQUEST_FAILURE,
   payload: { ...request, err },
+});
+
+export const tryPostSendMessage = requestId => ({
+  type: TRY_POST_SEND_MESSAGE_CLIENT,
+  payload: {
+    requestId,
+  }
+});
+
+export const postSendMessageSuccess = (requestId, providerId, message) => ({
+  type: POST_SEND_MESSAGE_SUCCESS_CLIENT,
+  payload: {
+    requestId,
+    providerId,
+    message,
+  }
+});
+
+export const postSendMessageFailed = err => ({
+  type: POST_SEND_MESSAGE_FAILURE_CLIENT,
+  payload: {
+    err,
+  },
 });

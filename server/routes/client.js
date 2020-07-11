@@ -24,6 +24,7 @@ const {
   updateRequestFieldsById,
   updateFirstAcceptById,
   updateSecondAcceptById,
+  addMessage: addMessageToRequest
 } = require("../db/request");
 const {
   addRequestToClientById,
@@ -39,6 +40,10 @@ const {
 const {
   readNotificationInProviderById,
 } = require("../db/provider");
+const {
+  addMessage
+} = require("../db/message");
+
 
 const {
   REQUEST_STATUSES,
@@ -48,6 +53,7 @@ const {
   STATUS_UPDATE_ALLOWED_FIELDS,
   ALLOW_ACCEPT_CANCEL_STATUSES,
 } = require("../config/consts");
+const { findProviderById } = require("../db/provider");
 
 exports.getAll = async (req, res) => {
   const {
@@ -119,6 +125,44 @@ exports.createRequest = async (req, res) => {
   res.status(200).send(createdRequest);
 }
 
+exports.sendMessage = async (req, res) => {
+  const {
+    username
+  } = req;
+
+  const {
+    requestId,
+    providerId,
+    body,
+  } = req.body;
+
+  const provider = await findProviderById(providerId);
+  if (_.isNil(provider)) {
+    throw Boom.badRequest("No such provider");
+  }
+
+  const [user, client] = await getClient(username)
+  const message = await addMessage(body, client._id);
+
+  let request;
+  try {
+    request = await addMessageToRequest(requestId, message._id, providerId);
+  } catch (err) {
+    try {
+      if (!_.isNil(request)) {
+        await removeMessageFromRequest(requestId, message._id, providerId);
+      }
+      await deleteMessage(message._id);
+    } catch(err) {
+      console.error(err);
+    }
+
+    throw Boom.internal(err);
+  }
+
+  res.send(message);
+}
+
 exports.updateRequest = async (req, res) => {
   const {
     username
@@ -142,7 +186,7 @@ exports.updateRequest = async (req, res) => {
   const cleanData = _.pick(data, STATUS_UPDATE_ALLOWED_FIELDS[data.status]);
   const updatedRequest = await updateRequestFieldsById(_id, cleanData, true);
 
-  res.send(updatedRequest);
+  res.send(cleanData);
 }
 
 exports.acceptRequest = async (req, res) => {

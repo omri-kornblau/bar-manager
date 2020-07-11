@@ -152,11 +152,11 @@ exports.sendMessage = async (req, res) => {
   const message = await addMessage(body, provider._id);
   let request;
   try {
-    request = await addMessageToRequest(requestId, message._id);
+    request = await addMessageToRequest(requestId, message._id, provider._id);
   } catch (err) {
     try {
       if (!_.isNil(request)) {
-        await removeMessageFromRequest(requestId, message._id);
+        await removeMessageFromRequest(requestId, message._id, provider._id);
       }
       await deleteMessage(message._id);
     } catch(err) {
@@ -188,15 +188,17 @@ exports.fetchRequest = async (req, res) => {
     requestId,
   } = req.query;
 
-  const [user, provider] = await getProvider(username);
-  const request = await fetchRequestById(requestId, provider);
-  const myOffer = _.find(request.offers, { provider: provider._id.toString() });
 
-  request.messages = censorMessagesForProvider(request.messages, provider)
+  const [user, provider] = await getProvider(username);
+  const providerId = provider._id.toString()
+  const request = await fetchRequestById(requestId, providerId);
+  const myOffer = _.find(request.offers, { provider: providerId });
+
   request.offers = censorOffersForProvider(request.offers, provider)
 
+  // Now messages is an array (after censor)
   request.messages = request.messages.map(message => {
-    message.from = getMessageFromName(message, request.author, provider);
+    message.fromName = getMessageFromName(message, request.author, provider);
     return message;
   })
 

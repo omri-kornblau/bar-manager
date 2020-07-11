@@ -12,6 +12,7 @@ exports.signupClient = async (req, res) => {
     email,
     username,
     password,
+    name
   } = req.body;
 
   let createdClient;
@@ -23,6 +24,7 @@ exports.signupClient = async (req, res) => {
       readNotifications: [],
       requests: [],
       oldRequests: [],
+      name
     }
 
     createdClient = await ClientModel.create(emptyClient);
@@ -53,6 +55,7 @@ exports.signupProvider = async (req, res) => {
     email,
     username,
     password,
+    name
   } = req.body;
 
   let createdProvider = undefined;
@@ -63,6 +66,7 @@ exports.signupProvider = async (req, res) => {
       readNotifications: [],
       requests: [],
       oldRequests: [],
+      name
     }
 
     createdProvider = await ProviderModel.create(emptyProvider);
