@@ -117,6 +117,10 @@ const CustomTable = props => {
               return true;
             }
 
+            if (_.isNil(value)) {
+              return true;
+            }
+
             switch (_.isNil(column.filter) ? "" : column.filter.type) {
               case "":
               case "text":
@@ -130,7 +134,7 @@ const CustomTable = props => {
                 return (min === "" || min < value) && (max === "" || max > value);
 
               case "bool":
-                return _.isNil(currentOptions.value) || currentOptions.value === value;
+                return  _.isNil(currentOptions.value) || currentOptions.value === value;
             }
           })
       })

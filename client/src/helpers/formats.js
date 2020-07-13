@@ -1,3 +1,4 @@
+import _ from "lodash";
 import React, { cloneElement } from "react";
 import Moment from "moment";
 import {
@@ -9,7 +10,7 @@ import {
   Grid,
 } from "@material-ui/core";
 export const applyFormat = (value, formatter, other) => {
-  return !!formatter ? formatter(value, other) : value
+  return !!formatter ? formatter(value, other) : _.isNil(value) ? "<Blank>" : value;
 }
 
 export const formatYesNo = val => val ? "כן" : "לא";
