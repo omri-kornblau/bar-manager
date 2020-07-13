@@ -24,8 +24,6 @@ const {
   deleteRequestById,
   findRequestById,
   updateRequestFieldsById,
-  updateFirstAcceptById,
-  updateSecondAcceptById,
   addMessage: addMessageToRequest
 } = require("../db/request");
 const {
@@ -193,40 +191,6 @@ exports.updateRequest = async (req, res) => {
   const updatedRequest = await updateRequestFieldsById(_id, cleanData, true);
 
   res.send(cleanData);
-}
-
-exports.acceptRequest = async (req, res) => {
-  const {
-    username
-  } = req;
-
-  const {
-    _id,
-  } = req.body;
-
-  const [user, client] = await getClient(username);
-  if (!client.requests.includes(_id) && !client.oldRequests.includes(_id)) {
-    throw Boom.badRequest("_id not belong to client");
-  }
-
-  const currentRequest = await findRequestById(_id);
-  if (!_.includes(ALLOW_ACCEPT_CANCEL_STATUSES, currentRequest.status)) {
-    throw Boom.badRequest("Cannot update request with such status");
-  }
-
-  const { firstAccept, secondAccept } = currentRequest;
-  let updatedRequest;
-  if (firstAccept === "") {
-    updatedRequest = await updateFirstAcceptById(_id, user._id)
-  } else if (secondAccept === "") {
-    updatedRequest = await updateSecondAcceptById(_id, user._id)
-    // TODO: Handle throw here
-    await createSampledFromRequest(updatedRequest);
-  } else {
-    throw Boom.badRequest("Cannot update request with current accepts statuses");
-  }
-
-  res.send(updatedRequest);
 }
 
 exports.cancelRequest = async (req, res) => {

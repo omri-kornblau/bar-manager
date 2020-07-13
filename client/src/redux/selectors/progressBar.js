@@ -3,5 +3,5 @@ export const getProgresses = state => {
 }
 
 export const getProgress = (state, view) => {
-  return state.app.progressBar[view] ? state.app.progressBar[view] : "waitingForApproval"
+  return state.app.progressBar[view] ? state.app.progressBar[view] : "inTenderProcedure"
 }

@@ -10,7 +10,6 @@ import { labels } from "../hebrew/request";
 import ConnectedButton from "../../components/ConnectedButtons/ConnectedButton";
 import ConnectedLink from "../../components/ConnectedButtons/ConnectedLink";
 import {
-  acceptRequest,
   cancelRequest,
 } from "../../redux/thunks/client"
 
@@ -114,22 +113,6 @@ export const tableHeaders = {
         type: "text"
       }
     },
-    firstAccept: {
-      id: "firstAccept",
-      label: labels.firstAccept,
-      formatter: formatAccept,
-      filter: {
-        type: "bool",
-      },
-    },
-    secondAccept: {
-      id: "secondAccept",
-      label: labels.secondAccept,
-      formatter: formatAccept,
-      filter: {
-        type: "bool",
-      },
-    },
     actions: {
       id: "actions",
       label: "פעולות",
@@ -171,31 +154,6 @@ const downloadActions = [
 ]
 
 export const clientProgressBar = {
-  waitingForApproval: {
-    label: "בקשות המחכות לאישור מורשה חתימה",
-    description: "",
-    chosenHeaders: ["index", "maxPrice", "firstAccept", "secondAccept"],
-    actions: [
-      <ConnectedButton
-        label="אשר"
-        action={(dispatch, row) =>
-          acceptRequest(dispatch)(row)
-        }
-        className="success"
-        progressName="acceptRequest"
-      />,
-      <ConnectedButton
-        label="בטל"
-        action={(dispatch, row) => {
-          if (window.confirm("אתה בטוח שאתה רוצה למחוק את הבקשה?")) {
-            cancelRequest(dispatch)(row)
-          }
-        }}
-        progressName="cancelRequest"
-        className="failed"
-      />,
-    ],
-  },
   inTenderProcedure: {
     label: "פוליסות בהליך מכרזי",
     description: "",
@@ -209,6 +167,16 @@ export const clientProgressBar = {
           )
         }}
         color="primary"
+      />,
+      <ConnectedButton
+        label="בטל"
+        action={(dispatch, row) => {
+          if (window.confirm("אתה בטוח שאתה רוצה למחוק את הבקשה?")) {
+            cancelRequest(dispatch)(row)
+          }
+        }}
+        progressName="cancelRequest"
+        className="failed"
       />,
     ],
   },

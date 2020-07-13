@@ -76,34 +76,6 @@ exports.updateRequestById = async (_id, action, returnNew=false) => {
   return updatedRequest;
 }
 
-exports.updateFirstAcceptById = async (_id, userId) => {
-  return exports.updateRequestById(
-    _id,
-    { $set: { firstAccept: userId } },
-    true
-  );
-}
-
-exports.updateSecondAcceptById = async (_id, userId) => {
-  const now = Moment();
-
-  return exports.updateRequestById(
-    _id,
-    {
-      $set: {
-        secondAccept: userId,
-        status: "inTenderProcedure",
-        startDate: now.clone()
-          .add(STATUS_TIMING.inTenderProcedure.duration),
-        activeTime: now.clone()
-          .add(STATUS_TIMING.inTenderProcedure.duration)
-          .add(STATUS_TIMING.waitingForSign.duration),
-      }
-    },
-    true
-  );
-}
-
 exports.addOffer = async (requestId, offerId) => {
   return exports.updateRequestById(
     requestId,

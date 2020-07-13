@@ -91,19 +91,6 @@ export const updateRequest = outerDispatch => updatedRequest => {
   })
 }
 
-export const acceptRequest = outerDispatch => request => {
-  outerDispatch(dispatch => {
-    dispatch(tryAcceptRequest(request));
-
-    postAcceptRequest(request._id)
-      .then(res => {
-        dispatch(acceptRequestSuccess(res.data));
-      }).catch(err => {
-        dispatch(acceptRequestFailure(request, err));
-      })
-  })
-}
-
 export const cancelRequest = outerDispatch => request => {
   outerDispatch(dispatch => {
     dispatch(tryCancelRequest(request));
