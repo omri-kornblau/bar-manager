@@ -42,7 +42,7 @@ exports.STATUS_TIMING = {
   },
   inTenderProcedure: {
     endTimeKey: "startDate",
-    duration: Moment.duration(30, "minutes"),
+    duration: Moment.duration(3, "minutes"),
     targetStatus: "waitingForSign"
   },
   waitingForSign: {

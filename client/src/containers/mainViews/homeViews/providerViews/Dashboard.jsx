@@ -113,7 +113,8 @@ const ClientDashboardMainView = props => {
 
   const onOpenNotification = useCallback(notificationData => {
     readNotification(notificationData._id);
-    pushUrl(`/home/${notificationData.request.type}/${notificationData.request.status}?or=${notificationData.request.index}`);
+    const { type, status, _id } = notificationData.request;
+    pushUrl(`/home/${type}/${status}?or=${_id}`);
   })
 
   return (
