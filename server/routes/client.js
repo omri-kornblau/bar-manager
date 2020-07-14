@@ -23,7 +23,9 @@ const {
   createRequest,
   deleteRequestById,
   findRequestById,
+  findRequestByExtraFileId,
   updateRequestFieldsById,
+  removeFileFromExtraFiles,
   addMessage: addMessageToRequest
 } = require("../db/request");
 const {
@@ -43,6 +45,9 @@ const {
 const {
   addMessage
 } = require("../db/message");
+const {
+  findFileById,
+} = require("../db/attachment");
 
 
 const {
@@ -174,8 +179,12 @@ exports.updateRequest = async (req, res) => {
   const data = req.body;
 
   const {
-    _id
+    _id,
+    policy,
+    extraFiles,
   } = data;
+
+  const { Attachment } = internals;
 
   const [user, client] = await getClient(username);
   if (!client.requests.includes(_id) && !client.oldRequests.includes(_id)) {
@@ -187,10 +196,29 @@ exports.updateRequest = async (req, res) => {
     throw Boom.badRequest("Cannot update request with such status");
   }
 
+  if (_.isArray(policy) && policy.length > 0) {
+    data.policy = await writerFile(Attachment, policy[0]);;
+  } else {
+    delete data.policy;
+  }
+
+  const filesIds = await Promise.all(extraFiles
+    .filter(file => !_.isNil(file.content))
+    .map(file =>
+      writerFile(Attachment, file)
+  ));
+
+  data.extraFiles = data.extraFiles.
+    filter(
+      file => !_.isNil(file._id)
+    ).map(
+      file => file._id
+    ).concat(filesIds);
+
   const cleanData = _.pick(data, STATUS_UPDATE_ALLOWED_FIELDS[data.status]);
   const updatedRequest = await updateRequestFieldsById(_id, cleanData, true);
 
-  res.send(cleanData);
+  res.send({...cleanData, extraFiles});
 }
 
 exports.cancelRequest = async (req, res) => {
@@ -255,15 +283,43 @@ exports.downloadFile = async (req, res) => {
     throw Boom.badRequest("File not belong to request")
   }
 
-  const file = await Attachment.findById(fileId);
-  if (_.isNil(file)) {
-    throw Boom.internal("File not found");
-  }
+  const file = await findFileById(fileId);
 
   const readStream = Attachment.read({_id: Mongoose.mongo.ObjectID(fileId)});
   res.set("Content-Type", "application/octet-stream");
   res.set("Content-Disposition", `attachment; filename=\"${file.filename}\"`);
   readStream.pipe(res);
+}
+
+exports.deleteFile = async (req, res) => {
+  const {
+    username
+  } =  req;
+
+  const {
+    fileId,
+  } = req.body;
+  const { Attachment } = internals;
+
+  const [user, client] = await getClient(username);
+  const request = await findRequestByExtraFileId(fileId);
+  if (!client.requests.includes(request._id)
+  && !client.oldRequests.includes(request._id)) {
+    throw Boom.badRequest("Request not belong to client");
+  }
+
+  if (request.extraFiles.length === 1) {
+    throw Boom.unauthorized("Extra files must include atleast one file");
+  }
+
+  await removeFileFromExtraFiles(request._id, fileId);
+  Attachment.unlink({_id: fileId}, err => {
+    if (!_.isNil(err)) {
+      console.error("Failed deleting file", fileId, err);
+    }
+  });
+
+  res.sendStatus(204);
 }
 
 exports.readNotification = async (req, res) => {

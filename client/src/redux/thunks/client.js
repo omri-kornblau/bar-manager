@@ -140,3 +140,17 @@ export const getMessagesData = outerDispatch => requestId => {
       })
   })
 }
+
+export const deleteFile = outerDispatch => requestId => {
+  outerDispatch(dispatch => {
+    dispatch(tryGetMessages(requestId));
+
+    getMessages(requestId)
+      .then(res => {
+        dispatch(getMessagesSuccess(res.data, requestId));
+      })
+      .catch(err => {
+        dispatch(getMessagesFailure(err));
+      })
+  })
+}

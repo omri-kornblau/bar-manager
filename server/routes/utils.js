@@ -23,6 +23,9 @@ const {
 const {
   findRequestById,
 } = require("../db/request");
+const {
+  findFileById,
+} = require("../db/attachment");
 const { censorMessagesForProvider } = require("../censors");
 
 const UserModel = Mongoose.model("User");
@@ -84,20 +87,44 @@ exports.prepareRequestsMessages = async requests => {
 
 }
 
-exports.prepareRequests = async requests => {
-  const authorsPromise = requests.map(request =>
-    UserModel.findById(request.author)
-  )
+exports.prepareRequestFiles = async request => {
+  const policy = findFileById(request.policy);
+  const extraFiles = request.extraFiles.map(fileId =>
+    findFileById(fileId)
+  );
+  const files = await Promise.all([policy, ...extraFiles]);
 
-  const authors = await Promise.all(authorsPromise);
+  return {
+    policy: files[0],
+    extraFiles: files.slice(1),
+  };
+}
+
+exports.prepareRequestsFiles = async requests => {
+  return await Promise.all(requests.map(request => (
+    exports.prepareRequestFiles(request)
+  )));
+}
+
+exports.prepareRequestsAuthors = async requests => {
+  return await Promise.all(requests.map(request =>
+    UserModel.findById(request.author)
+  ));
+}
+
+exports.prepareRequests = async requests => {
+  // TODO: run all the requests async
+  const authors = await exports.prepareRequestsAuthors(requests);
   const messages = await exports.prepareRequestsMessages(requests);
+  const files = await exports.prepareRequestsFiles(requests);
 
   return requests.map((request, index) => {
-
     return {
       ...request._doc,
+      author: authors[index].username,
       messages: messages[index],
-      author: authors[index].username
+      policy: files[index].policy,
+      extraFiles: files[index].extraFiles,
     };
   });
 }

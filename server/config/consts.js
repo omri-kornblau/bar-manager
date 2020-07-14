@@ -24,7 +24,9 @@ exports.STATUS_UPDATE_ALLOWED_FIELDS = {
     "insuranceDuration",
     "assetDescription",
     "companyDescription",
-    "isCurrentlyInsured"
+    "isCurrentlyInsured",
+    "policy",
+    "extraFiles",
   ]
 }
 

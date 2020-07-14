@@ -48,6 +48,33 @@ exports.findRequestById = async _id => {
   return request;
 }
 
+exports.findRequest = async query => {
+  const request = await RequestModel.findOne(query);
+
+  if (_.isNil(request)) {
+    throw Boom.internal("Request not found");
+  }
+  return request;
+}
+
+exports.findRequestByFileId = async fileId => {
+  return await exports.findRequest({
+    $or: [
+      {
+        policy: Mongoose.Types.ObjectId(fileId)
+      }, {
+        extraFiles: Mongoose.Types.ObjectId(fileId)
+      }
+    ]
+  });
+}
+
+exports.findRequestByExtraFileId = async fileId => {
+  return await exports.findRequest({
+    extraFiles: Mongoose.Types.ObjectId(fileId)
+  });
+}
+
 exports.updateRequestFieldsById = async (_id, data, validate=true) => {
   if (validate) {
     await yupUpdateRequestSchema.validate(data);
@@ -94,6 +121,18 @@ exports.removeOffer = async (requestId, offerId) => {
     {
       $pull: {
         offers: offerId,
+      }
+    },
+    true
+  )
+}
+
+exports.removeFileFromExtraFiles = async (requestId, fileId) => {
+  return exports.updateRequestById(
+    requestId,
+    {
+      $pull: {
+        extraFiles: Mongoose.Types.ObjectId(fileId)
       }
     },
     true

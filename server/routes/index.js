@@ -20,6 +20,7 @@ router.post("/client/newrequest", withAuth, ClientRoutes.createRequest);
 router.post("/client/updaterequest", withAuth, ClientRoutes.updateRequest);
 router.post("/client/cancelrequest", withAuth, ClientRoutes.cancelRequest);
 router.get("/client/downloadfile", withAuth, ClientRoutes.downloadFile);
+router.post("/client/deletefile", withAuth, ClientRoutes.deleteFile);
 router.post("/client/readnotification", withAuth, ClientRoutes.readNotification);
 router.post("/client/sendmessage", withAuth, ClientRoutes.sendMessage);
 router.get("/client/messages", withAuth, ClientRoutes.getMessages);

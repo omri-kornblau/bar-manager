@@ -5,29 +5,33 @@ export const getClient = async () => {
 }
 
 export const postCreateRequest = async request => {
-  return Axios.post("/client/newrequest", request)
+  return Axios.post("/client/newrequest", request);
 }
 
 export const postUpdateRequest = async request => {
-  return Axios.post("/client/updaterequest", request)
+  return Axios.post("/client/updaterequest", request);
 }
 
 export const postAcceptRequest = async _id => {
-  return Axios.post("/client/acceptrequest", {_id})
+  return Axios.post("/client/acceptrequest", {_id});
 }
 
 export const postCancelRequest = async _id => {
-  return Axios.post("/client/cancelrequest", {_id})
+  return Axios.post("/client/cancelrequest", {_id});
 }
 
 export const postReadNotification = async notificationId => {
-  return Axios.post("/client/readnotification", {notificationId})
+  return Axios.post("/client/readnotification", {notificationId});
 }
 
 export const postSendMessage = async (requestId, providerId, body) => {
-  return Axios.post("/client/sendmessage", { requestId, providerId, body })
+  return Axios.post("/client/sendmessage", { requestId, providerId, body });
 }
 
 export const getMessages = async requestId => {
-  return Axios.get(`/client/messages?requestId=${requestId}`)
+  return Axios.get(`/client/messages?requestId=${requestId}`);
+}
+
+export const postDeleteFile = async fileId => {
+  return Axios.post("/client/deletefile", {fileId});
 }

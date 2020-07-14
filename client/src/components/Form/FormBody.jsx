@@ -71,7 +71,7 @@ const FormBody = props => {
 
   return (
     formStructure.map((row, idx) =>
-      <Grid key={idx} container spacing={spacing} direction="row">
+      <Grid key={idx} container spacing={spacing} direction="row" alignItems="flex-start">
         {row.map(field =>
           <Grid key={field.label} xs item container justify={field.justify || justify}>
             <Input

@@ -21,6 +21,7 @@ import {
   formatShekel,
   formatMonths,
 } from "../../helpers/formats";
+import { postDeleteFile } from "../../api/client";
 
 
 export const tableHeaders = {
@@ -320,7 +321,27 @@ export const modalEditFormStructure = [
       name: "isCurrentlyInsured",
       type: "checkbox",
     },
-  ]
+  ],[
+    {
+      label: "העלה פוליסה",
+      name: "policy",
+      type: "file",
+      justify: "center",
+      enableDelete: true,
+    },{
+      label: "קבצים נוספים",
+      name: "extraFiles",
+      type: "file",
+      justify: "center",
+      multiple: true,
+      enableDelete: true,
+      onDeletePredefinedFile: fileId => {
+        if (window.confirm("אתה בטוח שאתה רוצה למחוק קובץ זה?")) {
+          postDeleteFile(fileId)
+        }
+      }
+    },
+  ],
 ];
 
 export const providerModalFeatures = {
