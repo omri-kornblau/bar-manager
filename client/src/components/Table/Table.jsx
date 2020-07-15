@@ -155,7 +155,7 @@ const CustomTable = props => {
     }
 
     return pagination ? filteredRows.slice(_page * _rowsPerPage, (_page + 1) * _rowsPerPage) : filteredRows;
-  }, [options, filter, sort, sortBy, rows]);
+  }, [options, filter, sort, sortBy, rows, _rowsPerPage, _page]);
 
   const headerRefs = columns.map(() => useRef(null));
 
@@ -237,9 +237,9 @@ const CustomTable = props => {
       </TableContainer>
       { pagination ?
        <TablePagination
-          rowsPerPageOptions={[5,10,25,100]}
+          rowsPerPageOptions={[3,5,10,25,100]}
           component="div"
-          count={finalRows.length}
+          count={rows.length}
           rowsPerPage={_rowsPerPage}
           page={_page}
           onChangePage={_onPageChange}
