@@ -21,7 +21,11 @@ import {
   setOffer as setOfferThunk,
   sendMessage,
 } from "../../../../redux/thunks/provider";
-import { getFilteredRequests, getFetchedRequest } from "../../../../redux/selectors/provider";
+import {
+  getFilteredRequests,
+  getFetchedRequest,
+  getTotalRequests,
+} from "../../../../redux/selectors/provider";
 
 import { typeButtons } from "../../../../constants/structure/requestsPool";
 import { filterButtons } from "../../../../constants/structure/requestsPool";
@@ -49,6 +53,7 @@ const toRequestFilters = filters => (
 const ProviderRequestsPool = props => {
   const {
     requests,
+    totalRequests,
     filterRequests,
     fetchRequest,
     setOffer,
@@ -68,7 +73,7 @@ const ProviderRequestsPool = props => {
 
   useEffect(() => {
     filterRequests(activeType, toRequestFilters(activeFilters), page * rowsPerPage, rowsPerPage);
-  }, [activeType, activeFilters])
+  }, [activeType, activeFilters, page, rowsPerPage])
 
   const onOpenRequest = e => {
     setOpenedRequest(e._id);
@@ -140,6 +145,8 @@ const ProviderRequestsPool = props => {
               onRowsPerPageChange={setRowsPerPage}
               page={page}
               onPageChange={setPage}
+              totalRows={totalRequests}
+              manualSkip
             />
             <Modal
               open={isModalOpen}
@@ -192,6 +199,7 @@ const ProviderRequestsPool = props => {
 
 const mapStateToProps = state => ({
   requests: getFilteredRequests(state),
+  totalRequests: getTotalRequests(state),
   fetchRequestLoading: getFetchedRequestErrors(state),
   fetchedRequest: getFetchedRequest(state),
   provider: getUserData(state),

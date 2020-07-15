@@ -166,14 +166,18 @@ exports.removeMessage = async (requestId, messageId, providerId) => {
 }
 
 exports.getProviderRequests = async (types, existsRequests, skip, limit) => {
-  return RequestModel
-    .find({
-      status: { $in: REQUESTS_POOL_STATUSES },
-      type: { $in: types },
-      _id: {
-        $nin: existsRequests
-      },
-    }, REQUEST_FOR_PROVIDER_ALL_REQUESTS)
-    .skip(skip)
-    .limit(limit);
+  const query = {
+    status: { $in: REQUESTS_POOL_STATUSES },
+    type: { $in: types },
+    _id: {
+      $nin: existsRequests
+    },
+  };
+  return await Promise.all([
+    RequestModel
+      .find(query, REQUEST_FOR_PROVIDER_ALL_REQUESTS)
+      .skip(skip)
+      .limit(limit),
+    RequestModel.count(query),
+  ])
 }

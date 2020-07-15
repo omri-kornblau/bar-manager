@@ -8,7 +8,8 @@ import {
 
 const initialState = {
   requests: [],
-  filteredRequests: []
+  filteredRequests: [],
+  totalRequests: 0,
 };
 
 const createOffersFromOffer = (oldOffers, offer) => {
@@ -39,7 +40,8 @@ const providerReducer = (state=initialState, action) => {
     case POST_FILTERED_REQUESTS_SUCCESS:
       return {
         ...state,
-        filteredRequests: action.payload
+        filteredRequests: action.payload.requests,
+        totalRequests: action.payload.totalRequests,
       };
 
     case FETCH_REQUEST_SUCCESS:

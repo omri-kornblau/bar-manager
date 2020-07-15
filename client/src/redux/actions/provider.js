@@ -35,9 +35,9 @@ export const tryPostFilteredRequests = () => ({
   type: TRY_POST_FILTERED_REQUESTS,
 });
 
-export const postFilteredRequestsSuccess = requests => ({
+export const postFilteredRequestsSuccess = data => ({
   type: POST_FILTERED_REQUESTS_SUCCESS,
-  payload: requests,
+  payload: data,
 });
 
 export const postFilteredRequestsFailure = err => ({

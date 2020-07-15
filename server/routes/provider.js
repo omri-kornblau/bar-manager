@@ -77,8 +77,11 @@ exports.getRequests = async (req, res) => {
   const types = _.flattenDeep([type]);
   const [user, provider] = await getProvider(username);
 
-  const requests = await getProviderRequests(types, provider.requests, skip, limit);
-  res.send(requests);
+  const [requests, totalRequests] = await getProviderRequests(types, provider.requests, skip, limit);
+  res.send({
+    requests,
+    totalRequests,
+  });
 }
 
 exports.setOffer = async (req, res) => {
