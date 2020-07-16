@@ -35,7 +35,7 @@ import {
   postReadNotification,
   postSendMessage,
   getMessages
-} from "../../api/client"
+} from "../../api/client";
 import { getCreateRequestLoading } from "../selectors/request";
 
 import store from "../store";

@@ -16,11 +16,15 @@ import {
   getProviderFailed,
 } from "../actions/provider";
 import {
+  readNotification as readNotificationAction,
+} from "../actions/notification";
+import {
   getProvider,
   postFilteredRequests,
   getFetchRequest,
   postSetOffer,
   postSendMessage,
+  postReadNotification,
 } from "../../api/provider";
 
 export const getProviderData = outerDispatch => () => {
@@ -91,4 +95,13 @@ export const sendMessage = outerDispatch => (requestId, message) => {
         dispatch(postSendMessageFailed(err));
       })
   })
+}
+
+export const readNotification = outerDispatch => notificationId => {
+  outerDispatch(dispatch => {
+    postReadNotification(notificationId)
+      .then(res => {
+        dispatch(readNotificationAction(notificationId));
+      })
+    })
 }

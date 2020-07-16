@@ -17,6 +17,8 @@ const {
   getProvider,
   prepareRequestsMessages,
   createProviderNotification,
+  downloadFile,
+  readNotification,
 } = require("./utils");
 
 const {
@@ -36,12 +38,6 @@ const {
 const {
   createSampledFromRequest
 } = require("../db/sampledRequest");
-const {
-  readNotification,
-} = require("../db/notification")
-const {
-  readNotificationInProviderById,
-} = require("../db/provider");
 const {
   addMessage
 } = require("../db/message");
@@ -263,32 +259,9 @@ exports.downloadFile = async (req, res) => {
     requestId,
     fileId,
   } = req.query;
-  const { Attachment } = internals;
 
-  let user;
-  let client;
-  try {
-    [user, client] = await getClient(username);
-  } catch {
-    [user, client] = await getProvider(username);
-  }
-
-  if (!client.requests.includes(requestId)
-  && !client.oldRequests.includes(requestId)) {
-    throw Boom.badRequest("Request not belong to client or provider");
-  }
-
-  const request = await findRequestById(requestId)
-  if (!request.extraFiles.includes(fileId) && fileId !== request.policy) {
-    throw Boom.badRequest("File not belong to request")
-  }
-
-  const file = await findFileById(fileId);
-
-  const readStream = Attachment.read({_id: Mongoose.mongo.ObjectID(fileId)});
-  res.set("Content-Type", "application/octet-stream");
-  res.set("Content-Disposition", `attachment; filename=\"${file.filename}\"`);
-  readStream.pipe(res);
+  const [user, client] = await getClient(username);
+  await downloadFile(client, requestId, fileId, res);
 }
 
 exports.deleteFile = async (req, res) => {
@@ -331,32 +304,9 @@ exports.readNotification = async (req, res) => {
     notificationId,
   } = req.body;
 
-  let user;
-  let client;
-  let type;
-  try {
-    [user, client] = await getClient(username);
-    type = "client";
-  } catch {
-    [user, client] = await getProvider(username);
-    type = "provider";
-  }
+  const [user, client] = await getClient(username);
 
-  if (!client.unreadNotifications.includes(notificationId)) {
-    throw Boom.badRequest("Notification not belong to client");
-  }
-
-  await readNotification(notificationId, true)
-  try {
-    if (type === "client") {
-      await readNotificationInClientById(client._id, notificationId);
-    } else {
-      await readNotificationInProviderById(client._id, notificationId);
-    }
-  } catch (err) {
-    await readNotification(notificationId, false)
-    throw Boom.internal(err);
-  }
+  await readNotification(client, notificationId, readNotificationInClientById);
   res.sendStatus(204)
 }
 

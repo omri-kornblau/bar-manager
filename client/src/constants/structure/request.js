@@ -123,7 +123,7 @@ export const tableHeaders = {
     },
 }
 
-const downloadActions = [
+const downloadActions = prefix => [
   <ConnectedLink
     label={
         <Grid container>
@@ -132,7 +132,7 @@ const downloadActions = [
         </Grid>
     }
     action={(_, row) => {
-      window.open(`/client/downloadfile?fileId=${row.policy}&requestId=${row._id}`, "_self");
+      window.open(`/${prefix}/downloadfile?fileId=${row.policy}&requestId=${row._id}`, "_self");
     }}
     color="primary"
   />,
@@ -148,7 +148,7 @@ const downloadActions = [
         const action = index + 1 === row.extraFiles.length
         ? "_self"
         : "blank";
-        window.open(`/client/downloadfile?fileId=${fileId}&requestId=${row._id}`, action);
+        window.open(`/${prefix}/downloadfile?fileId=${fileId}&requestId=${row._id}`, action);
       })
     }}
   />,
@@ -185,19 +185,19 @@ export const clientProgressBar = {
     label: "פוליסות שאושרו ומחכות לחתימה",
     description: "",
     chosenHeaders: ["type", "startDate", "maxPrice"],
-    actions: downloadActions,
+    actions: downloadActions("client"),
   },
   active: {
     label: "פוליסות פעילות",
     description: "",
     chosenHeaders: ["type", "startDate", "activeTime"],
-    actions: downloadActions,
+    actions: downloadActions("client"),
   },
   history: {
     label: "היסטוריה",
     description: "",
     chosenHeaders: ["index", "startDate", "activeTime", "maxPrice"],
-    actions: downloadActions,
+    actions: downloadActions("client"),
   },
 }
 
@@ -211,19 +211,19 @@ export const providerProgressBar = {
     label: "פוליסות שאושרו ומחכות לחתימה",
     description: "",
     chosenHeaders: ["type", "startDate", "maxPrice"],
-    actions: downloadActions,
+    actions: downloadActions("provider"),
   },
   active: {
     label: "פוליסות פעילות",
     description: "",
     chosenHeaders: ["type", "startDate", "activeTime"],
-    actions: downloadActions,
+    actions: downloadActions("provider"),
   },
   history: {
     label: "היסטוריה",
     description: "",
     chosenHeaders: ["index", "startDate", "activeTime", "maxPrice"],
-    actions: downloadActions,
+    actions: downloadActions("provider"),
   },
 }
 

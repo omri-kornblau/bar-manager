@@ -12,6 +12,7 @@ const {
   findByIds,
   prepareNotifications,
   createClientNotification,
+  downloadFile,
 } = require("./utils");
 
 const {
@@ -32,6 +33,7 @@ const {
 const {
   addRequest: addRequestToProvider,
   removRequest: removeRequestFromProvider,
+  readNotificationInProviderById,
 } = require("../db/provider");
 
 const {
@@ -210,4 +212,33 @@ exports.fetchRequest = async (req, res) => {
   })
 
   res.send({...request, myOffer: myOffer ? myOffer : {price: undefined}})
+}
+
+exports.downloadFile = async (req, res) => {
+  const {
+    username
+  } =  req;
+
+  const {
+    requestId,
+    fileId,
+  } = req.query;
+
+  const [user, provider] = await getProvider(username);
+  await downloadFile(provider, requestId, fileId, res);
+}
+
+exports.readNotification = async (req, res) => {
+  const {
+    username
+  } =  req;
+
+  const {
+    notificationId,
+  } = req.body;
+
+  const [user, provider] = await getProvider(username);
+
+  await readNotification(provider, notificationId, readNotificationInProviderById);
+  res.sendStatus(204)
 }

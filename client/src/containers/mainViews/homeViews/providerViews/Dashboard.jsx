@@ -31,7 +31,7 @@ import { getTableHeaders } from "../../../../helpers/structer";
 import { connect } from "react-redux";
 import { getRequests } from "../../../../redux/selectors/request";
 import { getNotifications } from "../../../../redux/selectors/notification";
-import { readNotification } from "../../../../redux/thunks/client";
+import { readNotification } from "../../../../redux/thunks/provider";
 
 const DashboardTable = props => {
   const {

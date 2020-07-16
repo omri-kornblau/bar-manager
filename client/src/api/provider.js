@@ -19,3 +19,7 @@ export const postSetOffer = async (requestId, price) => {
 export const postSendMessage = async (requestId, body) => {
   return Axios.post("/provider/sendmessage", { requestId, body })
 }
+
+export const postReadNotification = async notificationId => {
+  return Axios.post("/provider/readnotification", {notificationId});
+}

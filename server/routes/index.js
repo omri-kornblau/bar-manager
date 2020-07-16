@@ -31,5 +31,7 @@ router.post("/provider/filteredrequests", withAuth, ProviderRoutes.getRequests);
 router.post("/provider/setoffer", withAuth, ProviderRoutes.setOffer);
 router.post("/provider/sendmessage", withAuth, ProviderRoutes.sendMessage);
 router.get("/provider/fetchrequest", withAuth, ProviderRoutes.fetchRequest);
+router.get("/provider/downloadfile", withAuth, ProviderRoutes.downloadFile);
+router.post("/provider/readnotification", withAuth, ProviderRoutes.readNotification);
 
 module.exports = router;
