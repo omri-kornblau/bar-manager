@@ -27,9 +27,11 @@ import {
   postReadNotification,
 } from "../../api/provider";
 
-export const getProviderData = outerDispatch => () => {
+export const getProviderData = outerDispatch => (isLoading=true) => {
   outerDispatch(dispatch => {
-    dispatch(tryGetProvider());
+    if (isLoading) {
+      dispatch(tryGetProvider());
+    }
 
     getProvider()
       .then(res => {
@@ -41,9 +43,11 @@ export const getProviderData = outerDispatch => () => {
   })
 }
 
-export const filterRequests = outerDispatch => (type, filters, skip, limit) => {
+export const filterRequests = outerDispatch => (type, filters, skip, limit, isLoading=true) => {
   outerDispatch(dispatch => {
-    dispatch(tryPostFilteredRequests());
+    if (isLoading) {
+      dispatch(tryPostFilteredRequests());
+    }
 
     postFilteredRequests(type, filters, skip, limit)
       .then(res => {
@@ -55,9 +59,11 @@ export const filterRequests = outerDispatch => (type, filters, skip, limit) => {
   })
 }
 
-export const fetchRequest = outerDispatch => requestId => {
+export const fetchRequest = outerDispatch => (requestId, isLoading=true) => {
   outerDispatch(dispatch => {
-    dispatch(tryFetchRequest());
+    if (isLoading) {
+      dispatch(tryFetchRequest());
+    }
 
     getFetchRequest(requestId)
       .then(res => {

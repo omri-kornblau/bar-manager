@@ -24,6 +24,7 @@ import {
 import CustomTable from "../Table/Table";
 import LoadingButton from "../LoadingButton/LoadingButton";
 import { parseOfferBoxError } from "../../helpers/errors";
+import { useEffect } from "react";
 
 const ProviderOfferBox = props => {
   const {

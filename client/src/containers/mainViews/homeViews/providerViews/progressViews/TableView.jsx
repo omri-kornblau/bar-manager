@@ -38,6 +38,8 @@ import CustomTable from "../../../../../components/Table/Table";
 import ProviderRequestModal from "../../../../../components/RequestModal/ProviderRequestModal";
 import { getFetchedRequest } from "../../../../../redux/selectors/provider";
 import { useEffect } from "react";
+import { removeInterval, addInterval } from "../../../../../redux/thunks/interval";
+import { GET_FETCHED_REQUEST } from "../../../../../constants/intervals";
 
 
 const TableView = props => {
@@ -55,7 +57,9 @@ const TableView = props => {
     sendMessageStatus,
     fetchRequest,
     fetchedRequest,
-    fetchRequestLoading
+    fetchRequestLoading,
+    addInterval,
+    removeInterval,
   } = props;
 
   const {
@@ -79,11 +83,13 @@ const TableView = props => {
 
   useEffect(() => {
     fetchRequest(openedRequestIdx);
+    addInterval(GET_FETCHED_REQUEST, [openedRequestIdx, false]);
   }, [openedRequestIdx]);
 
   const onCloseRequest = () => {
     delete query.or;
     pushUrl(stringifyUrl({ url, query }));
+    removeInterval(GET_FETCHED_REQUEST);
   }
 
   return (
@@ -167,6 +173,8 @@ const mapDispatchToProps = dispatch => ({
   setOffer: setOfferThunk(dispatch),
   fetchRequest: fetchRequestThunk(dispatch),
   sendMessage: sendMessageThunk(dispatch),
+  addInterval: addInterval(dispatch),
+  removeInterval: removeInterval(dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TableView);

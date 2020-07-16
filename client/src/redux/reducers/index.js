@@ -10,6 +10,7 @@ import errorsReducer from "./errors";
 import notificationReducer from "./notification";
 import clientReducer from "./client";
 import providerReducer from "./provider";
+import intervalReducer from "./interval";
 
 export default combineReducers({
   navbar: navbarReducer,
@@ -22,4 +23,5 @@ export default combineReducers({
   client: clientReducer,
   notifications: notificationReducer,
   provider: providerReducer,
+  interval: intervalReducer,
 });

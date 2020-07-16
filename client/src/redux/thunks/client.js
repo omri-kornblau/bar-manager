@@ -40,9 +40,11 @@ import { getCreateRequestLoading } from "../selectors/request";
 
 import store from "../store";
 
-export const getClientData = outerDispatch => () => {
+export const getClientData = outerDispatch => (isLoading=true) => {
   outerDispatch(dispatch => {
-    dispatch(tryGetClient());
+    if (isLoading) {
+      dispatch(tryGetClient());
+    }
 
     getClient()
       .then(res => {
