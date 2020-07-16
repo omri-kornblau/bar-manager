@@ -3,18 +3,12 @@ const Yup = require("yup");
 
 const { OBJECT_ID_LENGTH } = require("../config/consts");
 
-const yupNotifictionSchema = Yup.object().shape({
-  message: Yup.string(),
-  time: Yup.date(),
-  url: Yup.string(),
-});
-
 const yupClientSchema = Yup.object().shape({
   unreadNotifications: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   readNotifications: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   requests: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   oldRequests: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
-  name: Yup.string()
+  name: Yup.string(),
 });
 
 const mongoFormat = {
@@ -43,5 +37,4 @@ clientSchema.pre("save", async function () {
 
 const Client = Mongoose.model("Client", clientSchema)
 
-// exports.ClientSchema = clientSchema
 module.exports = Client;
