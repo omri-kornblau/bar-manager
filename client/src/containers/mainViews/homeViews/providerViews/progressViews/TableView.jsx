@@ -82,8 +82,10 @@ const TableView = props => {
   }, [query])
 
   useEffect(() => {
-    fetchRequest(openedRequestIdx);
-    addInterval(GET_FETCHED_REQUEST, [openedRequestIdx, false]);
+    if (!_.isNil(openedRequestIdx)) {
+      fetchRequest(openedRequestIdx);
+      addInterval(GET_FETCHED_REQUEST, [openedRequestIdx, false]);
+    }
   }, [openedRequestIdx]);
 
   const onCloseRequest = () => {
