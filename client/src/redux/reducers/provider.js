@@ -66,9 +66,10 @@ const providerReducer = (state=initialState, action) => {
             offers: createOffersFromOffer(state.fetchedRequest.offers, action.payload.offer)
           }
         ],
-        filteredRequsets: state.filteredRequests.filter(request =>
+        filteredRequests: state.filteredRequests.filter(request =>
           request._id !== action.payload.requestId
-        )
+        ),
+        totalRequests: state.totalRequests - 1,
       }
       : state
     case POST_SEND_MESSAGE_SUCCESS:

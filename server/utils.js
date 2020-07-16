@@ -13,3 +13,7 @@ exports.moveMongoDocument = async (doc, sourceModel, destModel) => {
 
   await sourceModel.findByIdAndRemove(doc._id);
 }
+
+console.log("###################################");
+console.log("# REMEBER TO UNCOMMENT THE WORKER #");
+console.log("###################################");
