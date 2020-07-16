@@ -1,5 +1,5 @@
 import _ from "lodash";
-import {Mutex} from 'async-mutex';
+import RWMutex from "rwmutex";
 import {
   interval,
 } from "../../helpers/interval";
@@ -12,11 +12,11 @@ import {
 } from "../actions/interval";
 import { REFRESH_INTERVAL } from "../../constants/intervals";
 
-const mutex = new Mutex();
+const mutex = new RWMutex();
 
 export const addInterval = outerDispatch => (intervalName, params) => {
   outerDispatch((dispatch, getState) => {
-    mutex.acquire().then(release => {
+    mutex.lock().then(release => {
       const state = getState();
       const intervals = [
           ...getIntervals(state),
@@ -42,7 +42,7 @@ export const addInterval = outerDispatch => (intervalName, params) => {
 
 export const removeInterval = outerDispatch => intervalName => {
   outerDispatch((dispatch, getState) => {
-    mutex.acquire().then(release => {
+    mutex.lock().then(release => {
       const state = getState();
       let intervals = getIntervals(state);
       let intervalId = getIntervalId(state);

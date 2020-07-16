@@ -8,5 +8,5 @@ export const interval = (intervals, dispatch) => {
     _.isNil(interval.params)
       ? func()
       : func(...interval.params)
-  })   
+  });
 }
