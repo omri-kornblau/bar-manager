@@ -91,16 +91,15 @@ const mongoFormat = {
   index: {
     type: Number,
   },
-  firstAccept: {
-    type: String,
-  },
-  secondAccept: {
-    type: String,
-  },
+};
+
+const mongoOptions = {
+  timestamps: true,
+  minimize: false,
 };
 
 // Set 'minimize: false' to allow empty objects in
-const requestScheme = new Mongoose.Schema(mongoFormat, { minimize: false });
+const requestScheme = new Mongoose.Schema(mongoFormat, mongoOptions);
 
 requestScheme.pre("save", async function () {
   await yupCreateRequestSchema.validate(this);

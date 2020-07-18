@@ -29,7 +29,11 @@ const mongoFormat = {
   }
 };
 
-const clientSchema = new Mongoose.Schema(mongoFormat)
+const mongoOptions = {
+  timestamps: true,
+};
+
+const clientSchema = new Mongoose.Schema(mongoFormat, mongoOptions);
 
 clientSchema.pre("save", async function () {
   await yupClientSchema.validate(this);
