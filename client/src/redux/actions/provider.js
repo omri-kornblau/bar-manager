@@ -27,8 +27,9 @@ export const getProviderSuccess = provider => ({
   payload: provider,
 });
 
-export const getProviderFailed = () => ({
+export const getProviderFailed = err => ({
   type: GET_PROVIDER_FAILED,
+  payload: { err }
 });
 
 export const tryPostFilteredRequests = () => ({
