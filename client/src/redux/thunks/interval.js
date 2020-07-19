@@ -16,49 +16,45 @@ const mutex = new RWMutex();
 
 export const addInterval = outerDispatch => (intervalName, params) => {
   outerDispatch((dispatch, getState) => {
-    mutex.lock().then(release => {
-      const state = getState();
-      const intervals = [
-          ...getIntervals(state),
-          {
-            name: intervalName,
-            params: params
-          }
-        ];
-      let intervalId = getIntervalId(state);
+    const state = getState();
+    const intervals = [
+        ...getIntervals(state),
+        {
+          name: intervalName,
+          params: params
+        }
+      ];
+    let intervalId = getIntervalId(state);
 
-      if (!_.isNil(intervalId)) {
-        clearInterval(intervalId);
-      }
+    if (!_.isNil(intervalId)) {
+      clearInterval(intervalId);
+    }
 
-      intervalId = setInterval(
-        () => interval(intervals, dispatch),
-        REFRESH_INTERVAL);
+    intervalId = setInterval(
+      () => interval(intervals, dispatch)
+    ,REFRESH_INTERVAL);
 
-      dispatch(setIntervalsAction(intervals, intervalId, release));
-    });
+    dispatch(setIntervalsAction(intervals, intervalId));
   })
 }
 
 export const removeInterval = outerDispatch => intervalName => {
   outerDispatch((dispatch, getState) => {
-    mutex.lock().then(release => {
-      const state = getState();
-      let intervals = getIntervals(state);
-      let intervalId = getIntervalId(state);
+    const state = getState();
+    let intervals = getIntervals(state);
+    let intervalId = getIntervalId(state);
 
-      if (!_.isNil(intervalId)) {
-        clearInterval(intervalId);
-      }
+    if (!_.isNil(intervalId)) {
+      clearInterval(intervalId);
+    }
 
-      intervals = _.remove(state.intervals, {name: intervalName});
-      intervalId = intervals.length > 0
-        ? setInterval(
-            () => interval(intervals, dispatch),
-            REFRESH_INTERVAL)
-        : undefined;
+    intervals = _.remove(state.intervals, {name: intervalName});
+    intervalId = intervals.length > 0
+      ? setInterval(
+          () => interval(intervals, dispatch),
+          REFRESH_INTERVAL)
+      : undefined;
 
-      dispatch(setIntervalsAction(intervals, intervalId, release));
-    });
+    dispatch(setIntervalsAction(intervals, intervalId));
   })
 }

@@ -11,7 +11,6 @@ const initialState = {
 const intervalReducer = (state=initialState, action) => {
   switch(action.type) {
     case SET_INTERVALS:
-      action.payload.release();
       return {
         intervals: action.payload.intervals,
         intervalId: action.payload.intervalId,
