@@ -137,9 +137,12 @@ exports.prepareNotifications = async notifications => {
   ))
 
   const requests = await Promise.all(promise);
-  return notifications.map((notification, index) => {
-    return {...notification._doc, request: requests[index]._doc};
-  });
+  return notifications
+    .map((notification, index) => {
+      if (_.isNil(requests[index])) return null;
+      return {...notification._doc, request: requests[index]._doc};
+    })
+    .filter(notification => !_.isNil(notification));
 }
 
 exports.getClient = async username => {
