@@ -16,16 +16,21 @@ const {
 } = require("../config/projections");
 
 exports.createRequest = async requestData => {
+    const now = Moment();
+
   const createdRequest = await RequestModel.create({
-    createdAt: new Date(),
-    startDate: new Date,
-    activeTime:  new Date,
+    createdAt: now,
+    startDate: now.clone()
+      .add(STATUS_TIMING.inTenderProcedure.duration),
+    activeTime: now.clone()
+      .add(STATUS_TIMING.inTenderProcedure.duration)
+      .add(STATUS_TIMING.waitingForSign.duration),
     messages: {},
     offers: [],
     firstAccept: "",
     secondAccept: "",
     ...requestData
-  })
+  });
 
   if (_.isNil(createdRequest)) {
     console.error(`Failed creating request for user ${requestData.author}`)

@@ -26,8 +26,8 @@ const yupCreateRequestSchema = Yup.object().shape({
   extraFiles: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   messages: Yup.object(),
   offers: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
-  firstAccept: Yup.string().test('len', 'Must be "" or object id length', val => val.length === OBJECT_ID_LENGTH || val.length === 0),
-  secondAccept: Yup.string().test('len', 'Must be "" or object id length', val => val.length === OBJECT_ID_LENGTH || val.length === 0),
+  // firstAccept: Yup.string().test('len', 'Must be "" or object id length', val => val.length === OBJECT_ID_LENGTH || val.length === 0),
+  // secondAccept: Yup.string().test('len', 'Must be "" or object id length', val => val.length === OBJECT_ID_LENGTH || val.length === 0),
 });
 
 const yupUpdateRequestSchema = Yup.object().shape({
