@@ -38,7 +38,7 @@ Mongoose
   })
   .then(() => {
     console.log("MongoDB Connected");
-    // StatusWorker.init();
+    StatusWorker.init();
     console.log("Started request status worker")
   })
   .catch(err => console.log(err));
