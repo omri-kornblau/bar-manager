@@ -102,9 +102,6 @@ const ProviderRequestModal = props => {
         >
           <Box fontWeight="900">
             <Typography align="center" variant="h5">
-              {data._id}
-            </Typography>
-            <Typography align="center" variant="subtitle2">
               בקשה מאת
               {" "}{data.author.name}
             </Typography>

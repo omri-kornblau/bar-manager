@@ -16,8 +16,8 @@ exports.censorUserForUser = userDoc => {
 exports.censorOffersForProvider = (offers, provider) => {
   return offers.map((offer, key) => {
     const censoredProviderName = provider._id.toString() === offer.provider
-      ? provider._id.toString()
-      : `Company ${key}`;
+      ? provider.name
+      : `#${key}`;
     const pickedFieldsOffer = applyProjection(offer, OFFER_FOR_PROVIDER);
     pickedFieldsOffer.provider = censoredProviderName;
 
