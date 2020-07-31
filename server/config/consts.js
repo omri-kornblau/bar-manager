@@ -51,6 +51,10 @@ exports.STATUS_TIMING = {
     endTimeKey: "activeTime",
     duration: Moment.duration(30, "minutes"),
     targetStatus: "active"
+  },
+  active: {
+    endTimeKey: "endTime",
+    targetStatus: "history"
   }
 };
 

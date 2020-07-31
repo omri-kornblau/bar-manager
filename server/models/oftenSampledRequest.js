@@ -14,6 +14,7 @@ const yupOftenSampledRequestSchema = Yup.object().shape({
   status: Yup.mixed().oneOf(REQUEST_STATUSES).required(),
   startDate: Yup.date().required(),
   activeTime: Yup.date().required(),
+  endTime: Yup.date().required(),
 });
 
 const mongoFormat = {
@@ -27,6 +28,9 @@ const mongoFormat = {
     type: String
   },
   activeTime: {
+    type: String
+  },
+  endTime: {
     type: String
   }
 };

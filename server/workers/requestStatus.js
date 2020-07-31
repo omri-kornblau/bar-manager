@@ -11,13 +11,20 @@ const {
 } = require("../config/consts");
 const { createClientNotification } = require("../routes/utils");
 
-const { updateRequestById, findRequestById, deleteRequestById, removeAllOffersButOne } = require("../db/request");
+const {
+  updateRequestById,
+  findRequestById,
+  deleteRequestById,
+  removeAllOffersButOne
+} = require("../db/request");
 const { removeRequestFromClientById } = require("../db/client");
 const { findOfferById } = require("../db/offer");
 const { removeRequestFromProviderById } = require("../db/provider");
 
 const SampledModel = Mongoose.model("SampledRequest");
 const OftenSampledModel = Mongoose.model("OftenSampledRequest");
+const RequestModel = Mongoose.model("Request");
+const OldRequestModel = Mongoose.model("OldRequest");
 
 const StatusWorker = {};
 
@@ -25,10 +32,53 @@ const isProcedureEnd = targetStatus => {
   return targetStatus !== "inTenderProcedure";
 }
 
+const isPolicyEnd = targetStatus => {
+  return targetStatus !== "history";
+}
+
+const findRequestAndDeleteIfMissing = async (requestId, sampledId) => {
+  try {
+    const request = await findRequestById(requestId);
+    return request
+  } catch (err) {
+    if (err.message === "Request not found") {
+      console.error(`No request for sampled request [${sampledId}]`)
+      return await OftenSampledModel.findByIdAndRemove(sampledId);
+    }
+    throw err;
+  }
+}
+
 const updateProjectionById = async (id, updateOp) => {
   const updatedProjection = await OftenSampledModel.findByIdAndUpdate(id, updateOp, { new: true });
   if (_.isNil(updatedProjection)) return console.error(`Failed updating status of projection [${id}]`);
   return updatedProjection;
+}
+
+const endNoOffersProcedure = async (request, sampledId) => {
+  await OftenSampledModel.findByIdAndRemove(sampledId);
+  await deleteRequestById(request._id);
+  await removeRequestFromClientById(request.author, request._id);
+}
+
+const endProcedureWithOffers = async request => {
+  const offers = await Promise.all(request.offers.map(findOfferById));
+  const minOffer = _.minBy(offers, "price");
+  await Promise.all(offers
+    .filter(({ _id }) => _id !== minOffer._id)
+    .map(({ provider }) => removeRequestFromProviderById(provider, request._id)
+  ));
+  await removeAllOffersButOne(request._id, minOffer._id);
+}
+
+const endPolicy = async (request, sampledId) => {
+  await OftenSampledModel.findByIdAndRemove(sampledId);
+  await moveMongoDocument(request, RequestModel, OldRequestModel);
+  await removeRequestFromClientById(request.author, request._id)
+  const offers = await Promise.all(request.offers.map(findOfferById));
+  await Promise.all(offers.map(({ provider }) =>
+    removeRequestFromProviderById(provider, request._id)
+  ));
 }
 
 const sampleRequestsOften = async () => {
@@ -58,27 +108,26 @@ const sampleRequestsOften = async () => {
     const endTime = Moment(projection[endTimeKey]);
     console.log(`sampleOften: [${_id}] ${now.diff(endTime)}`);
 
-    const updateStatusOp = { $set: { status: targetStatus } };
-    const restoreStatusOp = { $set: { status } };
-
     if (now.isAfter(endTime)) {
+      const request = await findRequestAndDeleteIfMissing(requestId);
+
       if (isProcedureEnd(targetStatus)) {
-        const { offers: offersIds, author } = await findRequestById(requestId);
-        if (_.isEmpty(offersIds)) {
-          await deleteRequestById(requestId);
-          await removeRequestFromClientById(author, requestId);
-          await OftenSampledModel.findByIdAndRemove(_id);
-          return;
+        if (_.isEmpty(request.offers)) {
+          console.log(`Ended request [${requestId}] procedure with no offers`);
+          return await endNoOffersProcedure(request, _id);
         } else {
-          const offers = await Promise.all(offersIds.map(findOfferById));
-          const minOffer = _.minBy(offers, "price");
-          await Promise.all(offers
-            .filter(offer => offer._id !== minOffer._id)
-            .map(offer => removeRequestFromProviderById(offer.provider, requestId)
-          ));
-          await removeAllOffersButOne(requestId, minOffer._id);
+          await endProcedureWithOffers(request);
         }
       }
+
+      if (isPolicyEnd(targetStatus)) {
+        await endPolicy(request, _id);
+        console.log(`Moved request [${requestId}] to old reqeusts`);
+        return
+      }
+
+      const updateStatusOp = { $set: { status: targetStatus } };
+      const restoreStatusOp = { $set: { status } };
 
       const updatedRequest = await updateRequestById(requestId, updateStatusOp, true);
 
