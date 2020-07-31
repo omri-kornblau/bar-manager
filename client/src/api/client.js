@@ -4,8 +4,9 @@ export const postSignup = async data => {
   return Axios.post("/client/signup", data);
 }
 
-export const getClient = async () => {
-  return Axios.get("/client/get");
+export const getClient = async (forceRequest=false) => {
+  const data = forceRequest ? { force: true } : {};
+  return Axios.get("/client/get", { params: data });
 }
 
 export const postCreateRequest = async request => {

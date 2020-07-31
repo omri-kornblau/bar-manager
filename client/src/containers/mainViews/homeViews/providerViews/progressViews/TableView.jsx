@@ -83,8 +83,8 @@ const TableView = props => {
 
   useEffect(() => {
     if (!_.isNil(openedRequestIdx)) {
-      fetchRequest(openedRequestIdx);
-      addInterval(GET_FETCHED_REQUEST, [openedRequestIdx, false]);
+      fetchRequest({requestId: openedRequestIdx, isForce: true});
+      addInterval(GET_FETCHED_REQUEST, [{requestId: openedRequestIdx, isLoading: false}]);
     }
   }, [openedRequestIdx]);
 

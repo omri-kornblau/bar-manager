@@ -41,7 +41,7 @@ import { requestsMutex } from "../store";
 
 import store from "../store";
 
-export const getClientData = outerDispatch => (isLoading=true) => {
+export const getClientData = outerDispatch => ({isLoading=true, isForce=false} = {}) => {
   outerDispatch(dispatch => {
     requestsMutex.lockFunc = isLoading ? requestsMutex.rlock : requestsMutex.lock;
     requestsMutex.lockFunc().then(release => {
@@ -49,7 +49,7 @@ export const getClientData = outerDispatch => (isLoading=true) => {
         dispatch(tryGetClient());
       }
 
-      getClient()
+      getClient(isForce)
         .then(res => {
           dispatch(getClientSuccess(res.data));
         })

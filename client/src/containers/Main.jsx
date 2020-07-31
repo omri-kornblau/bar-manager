@@ -53,7 +53,7 @@ const Main = props => {
 
   useEffect(() => {
     checkToken(`${pathname}${search}${hash}`);
-    isProvider ? getProvider() : getClient();
+    isProvider ? getProvider({isForce: true}) : getClient({isForce: true});
     addInterval(isProvider)
     return () => removeInterval(isProvider);
   }, [isProvider]);
@@ -93,7 +93,7 @@ const mapDispatchToProps = dispatch => ({
   getClient: getClientData(dispatch),
   getProvider: getProviderData(dispatch),
   addInterval: isProvider =>
-    addInterval(dispatch)(isProvider ? GET_PROVIDER : GET_CLIENT, [false]),
+    addInterval(dispatch)(isProvider ? GET_PROVIDER : GET_CLIENT, [{isLoading: false}]),
   removeInterval: isProvider =>
     removeInterval(dispatch)(isProvider ? GET_PROVIDER : GET_CLIENT),
 })
