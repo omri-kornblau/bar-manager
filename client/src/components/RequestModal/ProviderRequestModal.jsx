@@ -106,7 +106,7 @@ const ProviderRequestModal = props => {
             </Typography>
             <Typography align="center" variant="subtitle2">
               בקשה מאת
-              {" "}{data.author._id}
+              {" "}{data.author.name}
             </Typography>
           </Box>
           <Box mt={2}/>

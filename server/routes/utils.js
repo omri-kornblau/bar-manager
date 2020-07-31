@@ -220,7 +220,7 @@ exports.createProviderNotification = async (message, requestId, providerId) => {
 exports.fetchRequestById = async (requestId, providerId) => {
   const request = await findRequestById(requestId);
 
-  const author = findClientById(request.author, { fullName: 1 });
+  const author = findClientById(request.author, {name: 1});
   const providerMessages = !_.isNil(providerId) ?
     censorMessagesForProvider(request.messages, providerId)
     : [];
