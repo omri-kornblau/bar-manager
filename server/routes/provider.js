@@ -15,6 +15,7 @@ const {
   prepareNotifications,
   createClientNotification,
   downloadFile,
+  providerDownloadFile,
   readNotification
 } = require("./utils");
 
@@ -233,7 +234,7 @@ exports.downloadFile = async (req, res) => {
   } = req.query;
 
   const [user, provider] = await getProvider(username);
-  await downloadFile(provider, requestId, fileId, res);
+  await providerDownloadFile(provider, requestId, fileId, res);
 }
 
 exports.readNotification = async (req, res) => {
