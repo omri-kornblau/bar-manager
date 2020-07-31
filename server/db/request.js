@@ -132,6 +132,20 @@ exports.removeOffer = async (requestId, offerId) => {
   )
 }
 
+exports.removeAllOffersButOne = async (requestId, remainedOfferId) => {
+  return exports.updateRequestById(
+    requestId,
+    {
+      $pull: {
+        offers: {
+          $nin: [Mongoose.mongo.ObjectId(remainedOfferId)],
+        }
+      }
+    },
+    true
+  )
+}
+
 exports.removeFileFromExtraFiles = async (requestId, fileId) => {
   return exports.updateRequestById(
     requestId,

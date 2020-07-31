@@ -35,7 +35,7 @@ exports.addRequest = async (providerId, requestId) => {
   )
 }
 
-exports.removRequest = async (providerId, requestId) => {
+exports.removeRequestFromProviderById = async (providerId, requestId) => {
   return exports.updateProviderById(
     providerId,
     {

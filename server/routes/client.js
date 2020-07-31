@@ -50,9 +50,6 @@ const {
 const {
   updateUserById,
 } = require("../db/user")
-const {
-  readNotificationInProviderById,
-} = require("../db/provider");
 
 const {
   REQUEST_STATUSES,
@@ -71,6 +68,7 @@ exports.getAll = async (req, res) => {
 
   const [user, client] = await getClient(username);
 
+  // TODO: better logs here
   const requests = await prepareRequests(await findByIds(RequestModel, client.requests, "Request not found"));
   const oldRequests = await prepareRequests(await findByIds(OldRequestModel, client.oldRequests, "Old request not found"));
   const notifications = await prepareNotifications(await findByIds(NotificationModel, client.unreadNotifications, "Unread notification not found"));
@@ -118,6 +116,24 @@ exports.createRequest = async (req, res) => {
     await addRequestToClientById(user.clientId, createdRequest._id);
   } catch (err) {
     await deleteRequestById(createdRequest._id);
+
+    filesIds.forEach(fileId =>
+      Attachment.unlink({ _id: fileId }, err => {
+        if (!_.isNil(err)) {
+          console.error("Failed deleting file", fileId, err);
+        }
+      })
+    )
+
+    console.error("Failed updating client after creating request");
+    throw Boom.internal(err);
+  }
+
+  try {
+    await createSampledFromRequest(createdRequest, user._id)
+  } catch (err) {
+    await deleteRequestById(createdRequest._id);
+    await removeRequestFromClientById(client._id, createdRequest._id)
 
     filesIds.forEach(fileId =>
       Attachment.unlink({ _id: fileId }, err => {

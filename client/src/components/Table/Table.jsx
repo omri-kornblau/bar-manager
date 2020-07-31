@@ -102,6 +102,8 @@ const CustomTable = props => {
     manualSkip,
   } = props;
 
+  const classes = useStyles();
+
   const [_page, setPage] = useState(page);
   const [_rowsPerPage, setRowsPerPage] = useState(rowsPerPage);
   const [sortBy, setSortBy] = useState({id: "", direction: true});
@@ -175,8 +177,6 @@ const CustomTable = props => {
   const renderLabelDisplayedRows = ({from, to, count}) => {
     return `${from}-${to} מתוך ${count}`;
   };
-
-  const classes = useStyles();
 
   return (
     <Paper elevation={3} className={classes.table}>

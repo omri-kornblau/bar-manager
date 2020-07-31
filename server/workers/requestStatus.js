@@ -11,12 +11,19 @@ const {
 } = require("../config/consts");
 const { createClientNotification } = require("../routes/utils");
 
-const { updateRequestById } = require("../db/request");
+const { updateRequestById, findRequestById, deleteRequestById, removeAllOffersButOne } = require("../db/request");
+const { removeRequestFromClientById } = require("../db/client");
+const { findOfferById } = require("../db/offer");
+const { removeRequestFromProviderById } = require("../db/provider");
 
 const SampledModel = Mongoose.model("SampledRequest");
 const OftenSampledModel = Mongoose.model("OftenSampledRequest");
 
 const StatusWorker = {};
+
+const isProcedureEnd = targetStatus => {
+  return targetStatus !== "inTenderProcedure";
+}
 
 const updateProjectionById = async (id, updateOp) => {
   const updatedProjection = await OftenSampledModel.findByIdAndUpdate(id, updateOp, { new: true });
@@ -55,6 +62,24 @@ const sampleRequestsOften = async () => {
     const restoreStatusOp = { $set: { status } };
 
     if (now.isAfter(endTime)) {
+      if (isProcedureEnd(targetStatus)) {
+        const { offers: offersIds, author } = await findRequestById(requestId);
+        if (_.isEmpty(offersIds)) {
+          await deleteRequestById(requestId);
+          await removeRequestFromClientById(author, requestId);
+          await OftenSampledModel.findByIdAndRemove(_id);
+          return;
+        } else {
+          const offers = await Promise.all(offersIds.map(findOfferById));
+          const minOffer = _.minBy(offers, "price");
+          await Promise.all(offers
+            .filter(offer => offer._id !== minOffer._id)
+            .map(offer => removeRequestFromProviderById(offer.provider, requestId)
+          ));
+          await removeAllOffersButOne(requestId, minOffer._id);
+        }
+      }
+
       const updatedRequest = await updateRequestById(requestId, updateStatusOp, true);
 
       const updatedProjection = await updateProjectionById(_id, updateStatusOp);

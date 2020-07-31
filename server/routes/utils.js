@@ -108,6 +108,18 @@ exports.prepareRequestsFiles = async requests => {
   )));
 }
 
+exports.prepareRequestsOffers = async requests => (
+  await Promise.all(requests.map(async request => {
+    const requestOffers = await Promise.all(request.offers.map(findOfferById));
+    const offersProviders = await Promise.all(requestOffers.map(offer =>
+      findProviderById(offer.provider)
+    ));
+    return requestOffers.map((offer, index) =>
+      _.set(offer._doc, "provider", offersProviders[index].name)
+    )
+  }))
+)
+
 exports.prepareRequestsAuthors = async requests => {
   return await Promise.all(requests.map(request =>
     UserModel.findById(request.author)
@@ -119,6 +131,7 @@ exports.prepareRequests = async requests => {
   const authors = await exports.prepareRequestsAuthors(requests);
   const messages = await exports.prepareRequestsMessages(requests);
   const files = await exports.prepareRequestsFiles(requests);
+  const offers = await exports.prepareRequestsOffers(requests);
 
   return requests.map((request, index) => {
     return {
@@ -127,6 +140,7 @@ exports.prepareRequests = async requests => {
       messages: messages[index],
       policy: files[index].policy,
       extraFiles: files[index].extraFiles,
+      offers: offers[index]
     };
   });
 }

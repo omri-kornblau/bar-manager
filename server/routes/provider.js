@@ -35,7 +35,7 @@ const {
 
 const {
   addRequest: addRequestToProvider,
-  removRequest: removeRequestFromProvider,
+  removeRequestFromProviderById,
   readNotificationInProviderById,
   updateProviderById,
 } = require("../db/provider");
@@ -135,7 +135,7 @@ exports.setOffer = async (req, res) => {
         await removeOfferFromRequest(requestId, offer._id);
       }
       if (!_.isNil(updatedProvider)) {
-        await removeRequestFromProvider(requestId, offer._id);
+        await removeRequestFromProviderById(requestId, offer._id);
       }
 
       if (!_.isNil(request) && !_.isNil(updatedProvider)) {
