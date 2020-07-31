@@ -11,6 +11,8 @@ exports.SALT_LENGTH = 8;
 // Auth
 exports.USER_MIN_LENGTH = 3;
 exports.USER_MAX_LENGTH = 20;
+exports.NAME_MIN_LENGTH = 3;
+exports.NAME_MAX_LENGTH = 50;
 exports.PASSWORD_MIN_LENGTH = 8;
 exports.PASSWORD_MAX_LENGTH = 25;
 exports.SALT_ROUNDS = 10;
@@ -24,25 +26,22 @@ exports.STATUS_UPDATE_ALLOWED_FIELDS = {
     "insuranceDuration",
     "assetDescription",
     "companyDescription",
-    "isCurrentlyInsured"
+    "isCurrentlyInsured",
+    "policy",
+    "extraFiles",
   ]
 }
 
-exports.ALLOW_ACCEPT_CANCEL_STATUSES = ["waitingForApproval"];
+exports.ALLOW_ACCEPT_CANCEL_STATUSES = ["inTenderProcedure"];
 exports.ALLOW_SET_OFFER_STATUSES = ["inTenderProcedure"];
 
 // Request Status Worker
 exports.LONG_SAMPLE_INTERVAL = Moment.duration(10, "seconds");
 exports.SHORT_SAMPLE_INTERVAL = Moment.duration(2, "seconds")
 exports.STATUS_TIMING = {
-  waitingForApproval: {
-    endTimeKey: "createdTime",
-    duration: 0,
-    targetStatus: "inTenderProcedure"
-  },
   inTenderProcedure: {
     endTimeKey: "startDate",
-    duration: Moment.duration(30, "minutes"),
+    duration: Moment.duration(3, "minutes"),
     targetStatus: "waitingForSign"
   },
   waitingForSign: {

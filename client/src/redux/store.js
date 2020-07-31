@@ -3,6 +3,7 @@ import { connectRouter, routerMiddleware } from "connected-react-router";
 import thunk from "redux-thunk";
 import { createBrowserHistory } from "history";
 import rootReducer from "./reducers/index";
+import RWMutex from "rwmutex";
 
 export const history = createBrowserHistory();
 
@@ -35,4 +36,5 @@ const store = createStore(
   composedEnhancers
 );
 
+export const requestsMutex = new RWMutex();
 export default store;

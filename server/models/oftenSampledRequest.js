@@ -10,10 +10,10 @@ const {
 } = require("../config/types");
 
 const yupOftenSampledRequestSchema = Yup.object().shape({
-  requestId: Yup.string().length(OBJECT_ID_LENGTH),
-  status: Yup.mixed().oneOf(REQUEST_STATUSES),
-  startDate: Yup.date(),
-  activeTime: Yup.date(),
+  requestId: Yup.string().length(OBJECT_ID_LENGTH).required(),
+  status: Yup.mixed().oneOf(REQUEST_STATUSES).required(),
+  startDate: Yup.date().required(),
+  activeTime: Yup.date().required(),
 });
 
 const mongoFormat = {

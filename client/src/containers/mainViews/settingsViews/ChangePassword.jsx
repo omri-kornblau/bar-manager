@@ -1,4 +1,5 @@
-import React, { useCallback } from "react";
+import _ from "lodash";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Container,
   Button,
@@ -8,35 +9,57 @@ import {
 } from "@material-ui/core";
 
 import FormBody from "../../../components/Form/FormBody";
-
-const structure =
-  [[
-    {
-      label: "סיסמה ישנה",
-      type: "password",
-      required: true,
-    },
-  ],
-  [
-    {
-      label: "סיסמה חדשה",
-      type: "password",
-      required: true,
-    },
-  ],
-  [
-    {
-      label: "אימות סיסמה חדשה",
-      type: "password",
-      required: true,
-    },
-  ]
-];
+import {
+  changePassword as structure,  
+} from "../../../constants/structure/settings"
+import { connect } from "react-redux";
+import { getChangePasswordErrors } from "../../../redux/selectors/errors";
+import { changePassword } from "../../../redux/thunks/settings";
+import LoadingButton from "../../../components/LoadingButton/LoadingButton";
+import { parseFormError } from "../../../helpers/errors";
 
 const ChangePassword = props => {
-  const onChangePassword = useCallback(() => {
+  const {
+    status,
+    changePassword,
+  } = props;
 
+  const [form, setForm] = useState({});
+  const [error, setError] = useState({});
+  useEffect(() => {
+    setError(parseFormError(status.error));
+  }, [status]);
+
+  const [isDiff, setIsDiff] = useState(true);
+  useEffect(() => {
+    if (status.try && !status.inProgress) {
+      setIsDiff(!_.isNil(status.error));
+    }
+  }, [status])
+
+  const onChange = useCallback(e => {
+    const {
+      name,
+      value,
+    } = e.target;
+
+    setIsDiff(true);
+    setForm(form => ({ ...form, [name]: value }));
   }, []);
+
+  const onChangePassword = useCallback(e => {
+    e.preventDefault();
+    if (form.newPassword !== form.reNewPassword) {
+      setError({key: "reNewPassword", message: "הסיסמאות לא תואמות"});
+      return;
+    }
+
+    changePassword(form.previosPassword, form.newPassword)
+  }, [form]);
+
+  const label = isDiff
+    ? "עדכן סיסמה"
+    : "הסיסמה עודכנה";
 
   return (
     <Container>
@@ -48,20 +71,31 @@ const ChangePassword = props => {
           formStructure={structure}
           spacing={3}
           margin="dense"
+          error={error}
+          onChange={onChange}
         />
         <Box mt={7}/>
         <Grid justify="center" container>
-          <Button
+          <LoadingButton
             type="submit"
             variant="contained"
             color="primary"
+            loading={status.inProgress}
           >
-            עדכן סיסמה
-          </Button>
+            {label}
+          </LoadingButton>
         </Grid>
       </form>
     </Container>
   );
 }
 
-export default ChangePassword;
+const mapStateToProps = state => ({
+  status: getChangePasswordErrors(state)
+})
+
+const mapDispatchToProps = dispatch => ({
+  changePassword: changePassword(dispatch),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChangePassword);

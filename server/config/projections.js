@@ -9,7 +9,7 @@ exports.REQUEST_FOR_PROVIDER_ALL_REQUESTS = {
   insuranceDuration: 1,
   companyDescription: 1,
   assetDescription: 1,
-  createdTime: 1
+  createdAt: 1
 };
 
 exports.USER_FOR_USER = {

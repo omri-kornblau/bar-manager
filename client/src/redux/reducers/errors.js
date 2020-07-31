@@ -1,9 +1,21 @@
-
+import {
+  TRY_SIGNUP,
+  SIGNUP_SUCCESS,
+  SIGNUP_FAILURE,
+} from "../actions/signup";
 import {
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
   TRY_LOGIN
 } from "../actions/login";
+import {
+  TRY_CHANGE_PASSWORD,
+  CHANGE_PASSWORD_SUCCESS,
+  CHANGE_PASSWORD_FAILURE,
+  TRY_UPDATE_USER_DETAILES,
+  UPDATE_USER_DETAILES_SUCCESS,
+  UPDATE_USER_DETAILES_FAILURE,
+} from "../actions/settings";
 import {
   TRY_GET_CLIENT,
   GET_CLIENT_SUCCESS,
@@ -43,7 +55,22 @@ import {
 } from "../actions/provider";
 
 const initialState = {
+   updateUserDetailes: {
+    inProgress: false,
+    try: false,
+    error: undefined
+  },
+  signup: {
+    inProgress: false,
+    try: false,
+    error: undefined
+  },
   login: {
+    inProgress: false,
+    try: false,
+    error: undefined
+  },
+  changePassword: {
     inProgress: false,
     try: false,
     error: undefined
@@ -182,7 +209,10 @@ const reduceRowFetch = (prop, TRY, SUCCESS, FAILURE) => (state, action) => {
 
 const userReducer = (state=initialState, action) => {
   const fetchReducers = [
+    reduceFetch("signup", TRY_SIGNUP, SIGNUP_SUCCESS, SIGNUP_FAILURE),
     reduceFetch("login", TRY_LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE),
+    reduceFetch("changePassword", TRY_CHANGE_PASSWORD, CHANGE_PASSWORD_SUCCESS, CHANGE_PASSWORD_FAILURE),
+    reduceFetch("updateUserDetailes", TRY_UPDATE_USER_DETAILES, UPDATE_USER_DETAILES_SUCCESS, UPDATE_USER_DETAILES_FAILURE),
     reduceFetch("getClient", TRY_GET_CLIENT, GET_CLIENT_SUCCESS, GET_CLIENT_FAILURE),
     reduceFetch("getProvider", TRY_GET_PROVIDER, GET_PROVIDER_SUCCESS, GET_PROVIDER_FAILED),
     reduceFetch("createRequest", TRY_CREATE_REQUEST, CREATE_REQUEST_SUCCESS, CREATE_REQUEST_FAILURE),

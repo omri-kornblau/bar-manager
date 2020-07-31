@@ -29,9 +29,9 @@ export const tableHeaders = {
         type: "text"
       }
     },
-    createdTime: {
+    createdAt: {
       id: "time",
-      label: labels.createdTime,
+      label: labels.createdAt,
       formatter: formatTimeStampRTL,
       filter: {
         // type: "date"
@@ -40,4 +40,4 @@ export const tableHeaders = {
     },
 }
 
-export const chosenHeaders= ["index", "type", "message", "createdTime"];
+export const chosenHeaders= ["index", "type", "message", "createdAt"];

@@ -3,6 +3,8 @@ const Mongoose = require("mongoose");
 const Boom = require("boom");
 
 const RequestModel = Mongoose.model("Request");
+const ClientModel = Mongoose.model("Client");
+const UserModel = Mongoose.model("User");
 const OldRequestModel = Mongoose.model("OldRequest");
 const NotificationModel = Mongoose.model("Notification");
 
@@ -17,35 +19,37 @@ const {
   getProvider,
   prepareRequestsMessages,
   createProviderNotification,
+  downloadFile,
+  readNotification,
 } = require("./utils");
 
 const {
   createRequest,
   deleteRequestById,
   findRequestById,
+  findRequestByExtraFileId,
   updateRequestFieldsById,
-  updateFirstAcceptById,
-  updateSecondAcceptById,
+  removeFileFromExtraFiles,
   addMessage: addMessageToRequest
 } = require("../db/request");
 const {
   addRequestToClientById,
   removeRequestFromClientById,
   readNotificationInClientById,
+  updateClientById,
 } = require("../db/client");
 const {
   createSampledFromRequest
 } = require("../db/sampledRequest");
 const {
-  readNotification,
-} = require("../db/notification")
-const {
-  readNotificationInProviderById,
-} = require("../db/provider");
-const {
   addMessage
 } = require("../db/message");
-
+const {
+  findFileById,
+} = require("../db/attachment");
+const {
+  updateUserById,
+} = require("../db/user")
 
 const {
   REQUEST_STATUSES,
@@ -64,6 +68,7 @@ exports.getAll = async (req, res) => {
 
   const [user, client] = await getClient(username);
 
+  // TODO: better logs here
   const requests = await prepareRequests(await findByIds(RequestModel, client.requests, "Request not found"));
   const oldRequests = await prepareRequests(await findByIds(OldRequestModel, client.oldRequests, "Old request not found"));
   const notifications = await prepareNotifications(await findByIds(NotificationModel, client.unreadNotifications, "Unread notification not found"));
@@ -111,6 +116,24 @@ exports.createRequest = async (req, res) => {
     await addRequestToClientById(user.clientId, createdRequest._id);
   } catch (err) {
     await deleteRequestById(createdRequest._id);
+
+    filesIds.forEach(fileId =>
+      Attachment.unlink({ _id: fileId }, err => {
+        if (!_.isNil(err)) {
+          console.error("Failed deleting file", fileId, err);
+        }
+      })
+    )
+
+    console.error("Failed updating client after creating request");
+    throw Boom.internal(err);
+  }
+
+  try {
+    await createSampledFromRequest(createdRequest, user._id)
+  } catch (err) {
+    await deleteRequestById(createdRequest._id);
+    await removeRequestFromClientById(client._id, createdRequest._id)
 
     filesIds.forEach(fileId =>
       Attachment.unlink({ _id: fileId }, err => {
@@ -176,8 +199,12 @@ exports.updateRequest = async (req, res) => {
   const data = req.body;
 
   const {
-    _id
+    _id,
+    policy,
+    extraFiles,
   } = data;
+
+  const { Attachment } = internals;
 
   const [user, client] = await getClient(username);
   if (!client.requests.includes(_id) && !client.oldRequests.includes(_id)) {
@@ -189,44 +216,29 @@ exports.updateRequest = async (req, res) => {
     throw Boom.badRequest("Cannot update request with such status");
   }
 
+  if (_.isArray(policy) && policy.length > 0) {
+    data.policy = await writerFile(Attachment, policy[0]);;
+  } else {
+    delete data.policy;
+  }
+
+  const filesIds = await Promise.all(extraFiles
+    .filter(file => !_.isNil(file.content))
+    .map(file =>
+      writerFile(Attachment, file)
+  ));
+
+  data.extraFiles = data.extraFiles.
+    filter(
+      file => !_.isNil(file._id)
+    ).map(
+      file => file._id
+    ).concat(filesIds);
+
   const cleanData = _.pick(data, STATUS_UPDATE_ALLOWED_FIELDS[data.status]);
   const updatedRequest = await updateRequestFieldsById(_id, cleanData, true);
 
-  res.send(cleanData);
-}
-
-exports.acceptRequest = async (req, res) => {
-  const {
-    username
-  } = req;
-
-  const {
-    _id,
-  } = req.body;
-
-  const [user, client] = await getClient(username);
-  if (!client.requests.includes(_id) && !client.oldRequests.includes(_id)) {
-    throw Boom.badRequest("_id not belong to client");
-  }
-
-  const currentRequest = await findRequestById(_id);
-  if (!_.includes(ALLOW_ACCEPT_CANCEL_STATUSES, currentRequest.status)) {
-    throw Boom.badRequest("Cannot update request with such status");
-  }
-
-  const { firstAccept, secondAccept } = currentRequest;
-  let updatedRequest;
-  if (firstAccept === "") {
-    updatedRequest = await updateFirstAcceptById(_id, user._id)
-  } else if (secondAccept === "") {
-    updatedRequest = await updateSecondAcceptById(_id, user._id)
-    // TODO: Handle throw here
-    await createSampledFromRequest(updatedRequest);
-  } else {
-    throw Boom.badRequest("Cannot update request with current accepts statuses");
-  }
-
-  res.send(updatedRequest);
+  res.send({...cleanData, extraFiles});
 }
 
 exports.cancelRequest = async (req, res) => {
@@ -271,35 +283,40 @@ exports.downloadFile = async (req, res) => {
     requestId,
     fileId,
   } = req.query;
+
+  const [user, client] = await getClient(username);
+  await downloadFile(client, requestId, fileId, res);
+}
+
+exports.deleteFile = async (req, res) => {
+  const {
+    username
+  } =  req;
+
+  const {
+    fileId,
+  } = req.body;
   const { Attachment } = internals;
 
-  let user;
-  let client;
-  try {
-    [user, client] = await getClient(username);
-  } catch {
-    [user, client] = await getProvider(username);
+  const [user, client] = await getClient(username);
+  const request = await findRequestByExtraFileId(fileId);
+  if (!client.requests.includes(request._id)
+  && !client.oldRequests.includes(request._id)) {
+    throw Boom.badRequest("Request not belong to client");
   }
 
-  if (!client.requests.includes(requestId)
-  && !client.oldRequests.includes(requestId)) {
-    throw Boom.badRequest("Request not belong to client or provider");
+  if (request.extraFiles.length === 1) {
+    throw Boom.unauthorized("Extra files must include atleast one file");
   }
 
-  const request = await findRequestById(requestId)
-  if (!request.extraFiles.includes(fileId) && fileId !== request.policy) {
-    throw Boom.badRequest("File not belong to request")
-  }
+  await removeFileFromExtraFiles(request._id, fileId);
+  Attachment.unlink({_id: fileId}, err => {
+    if (!_.isNil(err)) {
+      console.error("Failed deleting file", fileId, err);
+    }
+  });
 
-  const file = await Attachment.findById(fileId);
-  if (_.isNil(file)) {
-    throw Boom.internal("File not found");
-  }
-
-  const readStream = Attachment.read({_id: Mongoose.mongo.ObjectID(fileId)});
-  res.set("Content-Type", "application/octet-stream");
-  res.set("Content-Disposition", `attachment; filename=\"${file.filename}\"`);
-  readStream.pipe(res);
+  res.sendStatus(204);
 }
 
 exports.readNotification = async (req, res) => {
@@ -311,32 +328,9 @@ exports.readNotification = async (req, res) => {
     notificationId,
   } = req.body;
 
-  let user;
-  let client;
-  let type;
-  try {
-    [user, client] = await getClient(username);
-    type = "client";
-  } catch {
-    [user, client] = await getProvider(username);
-    type = "provider";
-  }
+  const [user, client] = await getClient(username);
 
-  if (!client.unreadNotifications.includes(notificationId)) {
-    throw Boom.badRequest("Notification not belong to client");
-  }
-
-  await readNotification(notificationId, true)
-  try {
-    if (type === "client") {
-      await readNotificationInClientById(client._id, notificationId);
-    } else {
-      await readNotificationInProviderById(client._id, notificationId);
-    }
-  } catch (err) {
-    await readNotification(notificationId, false)
-    throw Boom.internal(err);
-  }
+  await readNotification(client, notificationId, readNotificationInClientById);
   res.sendStatus(204)
 }
 
@@ -358,4 +352,22 @@ exports.getMessages = async (req, res) => {
   const messages = await prepareRequestsMessages([ request ]);
 
   res.send(_.first(messages));
+  res.sendStatus(204);
+}
+
+exports.updatesDetailes = async (req, res) => {
+  const {
+    username
+  } = req;
+
+  const [user, client] = await getClient(username);
+
+  const newClient = _.pick(req.body, ["name"]);
+  await ClientModel.yupClientSchema.validate(newClient);
+  const newUser = _.pick(req.body, ["email"]);
+  await UserModel.yupUserSchema.validate(newUser);
+
+  await updateClientById(client._id, {$set: newClient});
+  await updateUserById(user._id, {$set: newUser});
+  res.sendStatus(204);
 }

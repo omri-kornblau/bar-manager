@@ -21,7 +21,11 @@ import {
   setOffer as setOfferThunk,
   sendMessage,
 } from "../../../../redux/thunks/provider";
-import { getFilteredRequests, getFetchedRequest } from "../../../../redux/selectors/provider";
+import {
+  getFilteredRequests,
+  getFetchedRequest,
+  getTotalRequests,
+} from "../../../../redux/selectors/provider";
 
 import { typeButtons } from "../../../../constants/structure/requestsPool";
 import { filterButtons } from "../../../../constants/structure/requestsPool";
@@ -36,6 +40,10 @@ import {
   getSendMessageErrors,
 } from "../../../../redux/selectors/errors";
 import { getUserData } from "../../../../redux/selectors/user";
+import { addInterval, removeInterval } from "../../../../redux/thunks/interval";
+import {
+  GET_FILTERED_REQUESTS, GET_FETCHED_REQUEST,
+} from "../../../../constants/intervals";
 
 const toRequestFilters = filters => (
   _.map(
@@ -49,6 +57,7 @@ const toRequestFilters = filters => (
 const ProviderRequestsPool = props => {
   const {
     requests,
+    totalRequests,
     filterRequests,
     fetchRequest,
     setOffer,
@@ -58,6 +67,8 @@ const ProviderRequestsPool = props => {
     setOfferStatus,
     sendMessage,
     sendMessageStatus,
+    addInterval,
+    removeInterval,
   } = props;
 
   const [openedRequestId, setOpenedRequest] = useState(null);
@@ -67,14 +78,21 @@ const ProviderRequestsPool = props => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
-    filterRequests(activeType, toRequestFilters(activeFilters), page * rowsPerPage, rowsPerPage);
-  }, [activeType, activeFilters])
+    const params = [activeType, toRequestFilters(activeFilters), page * rowsPerPage, rowsPerPage];
+    filterRequests(...params);
+    addInterval(GET_FILTERED_REQUESTS, params);
+    return () => removeInterval(GET_FILTERED_REQUESTS)
+  }, [activeType, activeFilters, page, rowsPerPage])
 
   const onOpenRequest = e => {
     setOpenedRequest(e._id);
+    addInterval(GET_FETCHED_REQUEST, [e._id, false]);
     fetchRequest(e._id)
   };
-  const onCloseRequest = () => setOpenedRequest(null);
+  const onCloseRequest = () => {
+    setOpenedRequest(null);
+    removeInterval(GET_FETCHED_REQUEST);
+  };
   const onTypeSelect = id => setActiveType(id);
   const onFilterSelect = id => {
     setActiveFilters({
@@ -140,6 +158,8 @@ const ProviderRequestsPool = props => {
               onRowsPerPageChange={setRowsPerPage}
               page={page}
               onPageChange={setPage}
+              totalRows={totalRequests}
+              manualSkip
             />
             <Modal
               open={isModalOpen}
@@ -192,6 +212,7 @@ const ProviderRequestsPool = props => {
 
 const mapStateToProps = state => ({
   requests: getFilteredRequests(state),
+  totalRequests: getTotalRequests(state),
   fetchRequestLoading: getFetchedRequestErrors(state),
   fetchedRequest: getFetchedRequest(state),
   provider: getUserData(state),
@@ -204,6 +225,8 @@ const mapDispatchToProps = dispatch => ({
   fetchRequest: fetchRequestThunk(dispatch),
   setOffer: setOfferThunk(dispatch),
   sendMessage: sendMessage(dispatch),
+  addInterval: addInterval(dispatch),
+  removeInterval: removeInterval(dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProviderRequestsPool);

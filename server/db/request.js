@@ -16,16 +16,21 @@ const {
 } = require("../config/projections");
 
 exports.createRequest = async requestData => {
+    const now = Moment();
+
   const createdRequest = await RequestModel.create({
-    createdTime: new Date(),
-    startDate: undefined,
-    activeTime: undefined,
+    createdAt: now,
+    startDate: now.clone()
+      .add(STATUS_TIMING.inTenderProcedure.duration),
+    activeTime: now.clone()
+      .add(STATUS_TIMING.inTenderProcedure.duration)
+      .add(STATUS_TIMING.waitingForSign.duration),
     messages: {},
     offers: [],
     firstAccept: "",
     secondAccept: "",
     ...requestData
-  })
+  });
 
   if (_.isNil(createdRequest)) {
     console.error(`Failed creating request for user ${requestData.author}`)
@@ -46,6 +51,33 @@ exports.findRequestById = async _id => {
     throw Boom.internal("Request not found");
   }
   return request;
+}
+
+exports.findRequest = async query => {
+  const request = await RequestModel.findOne(query);
+
+  if (_.isNil(request)) {
+    throw Boom.internal("Request not found");
+  }
+  return request;
+}
+
+exports.findRequestByFileId = async fileId => {
+  return await exports.findRequest({
+    $or: [
+      {
+        policy: Mongoose.Types.ObjectId(fileId)
+      }, {
+        extraFiles: Mongoose.Types.ObjectId(fileId)
+      }
+    ]
+  });
+}
+
+exports.findRequestByExtraFileId = async fileId => {
+  return await exports.findRequest({
+    extraFiles: Mongoose.Types.ObjectId(fileId)
+  });
 }
 
 exports.updateRequestFieldsById = async (_id, data, validate=true) => {
@@ -76,34 +108,6 @@ exports.updateRequestById = async (_id, action, returnNew=false) => {
   return updatedRequest;
 }
 
-exports.updateFirstAcceptById = async (_id, userId) => {
-  return exports.updateRequestById(
-    _id,
-    { $set: { firstAccept: userId } },
-    true
-  );
-}
-
-exports.updateSecondAcceptById = async (_id, userId) => {
-  const now = Moment();
-
-  return exports.updateRequestById(
-    _id,
-    {
-      $set: {
-        secondAccept: userId,
-        status: "inTenderProcedure",
-        startDate: now.clone()
-          .add(STATUS_TIMING.inTenderProcedure.duration),
-        activeTime: now.clone()
-          .add(STATUS_TIMING.inTenderProcedure.duration)
-          .add(STATUS_TIMING.waitingForSign.duration),
-      }
-    },
-    true
-  );
-}
-
 exports.addOffer = async (requestId, offerId) => {
   return exports.updateRequestById(
     requestId,
@@ -122,6 +126,32 @@ exports.removeOffer = async (requestId, offerId) => {
     {
       $pull: {
         offers: offerId,
+      }
+    },
+    true
+  )
+}
+
+exports.removeAllOffersButOne = async (requestId, remainedOfferId) => {
+  return exports.updateRequestById(
+    requestId,
+    {
+      $pull: {
+        offers: {
+          $nin: [Mongoose.mongo.ObjectId(remainedOfferId)],
+        }
+      }
+    },
+    true
+  )
+}
+
+exports.removeFileFromExtraFiles = async (requestId, fileId) => {
+  return exports.updateRequestById(
+    requestId,
+    {
+      $pull: {
+        extraFiles: Mongoose.Types.ObjectId(fileId)
       }
     },
     true
@@ -155,14 +185,18 @@ exports.removeMessage = async (requestId, messageId, providerId) => {
 }
 
 exports.getProviderRequests = async (types, existsRequests, skip, limit) => {
-  return RequestModel
-    .find({
-      status: { $in: REQUESTS_POOL_STATUSES },
-      type: { $in: types },
-      _id: {
-        $nin: existsRequests
-      },
-    }, REQUEST_FOR_PROVIDER_ALL_REQUESTS)
-    .skip(skip)
-    .limit(limit);
+  const query = {
+    status: { $in: REQUESTS_POOL_STATUSES },
+    type: { $in: types },
+    _id: {
+      $nin: existsRequests
+    },
+  };
+  return await Promise.all([
+    RequestModel
+      .find(query, REQUEST_FOR_PROVIDER_ALL_REQUESTS)
+      .skip(skip)
+      .limit(limit),
+    RequestModel.count(query),
+  ])
 }

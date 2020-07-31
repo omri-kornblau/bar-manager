@@ -8,18 +8,39 @@ import {
   ListItemText,
   Box,
   Typography,
+  IconButton,
 } from "@material-ui/core";
 import { useState } from "react";
+import {
+  DeleteOutline as DeleteOutlineIcon,
+} from '@material-ui/icons';
+import { useCallback } from "react";
 
 const FileUploadWrapper = props => {
   const {
     name,
     label,
     onChange,
-    multiple
+    multiple,
+    onDeletePredefinedFile,
+    enableDelete,
+    allowEmptyFiles,
+    value,
   } = props;
 
-  const [files, setFiles] =  useState([]);
+  const [files, setFiles] =  useState(_.isNil(value)
+    ? []
+    : multiple
+      ? value.map((file, index) => ({name: file.filename, preDefined: true, ...value[index]}))
+      : [{name: value.filename, preDefined: true, ...value}]
+    );
+
+  const wrapOnChange = newFiles => {
+    onChange({target: {
+      name: name, 
+      value: newFiles,
+    }});
+  }
 
   const handleFileRead = e => {
     const {
@@ -30,15 +51,22 @@ const FileUploadWrapper = props => {
     const newFile = {name: fileName, content: btoa(result)};
     setFiles(files => {
       const newFiles = multiple ? [...files, newFile] : [newFile];
-      onChange({target: {
-        name: name, 
-        value: newFiles,
-      }});
+      wrapOnChange(newFiles);
       return newFiles;
     });
   }
 
-  const _onChange = e => {
+  const onDelete = index => {
+    if (files[index].preDefined === true && !_.isNil(onDeletePredefinedFile)) {
+      onDeletePredefinedFile(files[index]._id);
+    }
+
+    const newFiles = files.slice(0, index).concat(files.slice(index + 1))
+    wrapOnChange(newFiles.filter(file => !file.preDefined));
+    setFiles(newFiles);
+  }
+
+  const _onChange = useCallback(e => {
     const {
       files,
     } = e.target;
@@ -51,7 +79,7 @@ const FileUploadWrapper = props => {
       fileReader.onloadend = handleFileRead;
       fileReader.readAsBinaryString(currentFile);
     })
-  }
+  }, []);
 
   return  (
     <Grid container justify="center" direction="column">
@@ -59,7 +87,9 @@ const FileUploadWrapper = props => {
         <Button variant="outlined" component="label">
           {label}
           <input
-            {...props}
+            {
+              ..._.omit(props, ["value"])
+            }
             onChange={_onChange}
             type="file"
             name={name}
@@ -72,9 +102,23 @@ const FileUploadWrapper = props => {
         ? <>
             <Box mt={2}/>
             <Grid item container justify="center">
-              <Typography>
-                {files.map(file => file.name).join(", ")}
-              </Typography>
+              {
+                files.map((file, index) => 
+                  <>
+                    <Typography>
+                      {file.name}
+                    </Typography>
+                    {
+                      enableDelete
+                      && (allowEmptyFiles || files.filter(file => !_.isNil(file.preDefined)).length > 1 || !file.preDefined)
+                      ? <IconButton size="small" onClick={() => onDelete(index)}>
+                          <DeleteOutlineIcon/>
+                        </IconButton>
+                      : <></>
+                    }
+                  </>
+                 )
+              }
             </Grid>
           </>
         : <></>

@@ -98,7 +98,11 @@ const CustomTable = props => {
     rowsPerPage,
     onPageChange,
     onRowsPerPageChange,
+    totalRows,
+    manualSkip,
   } = props;
+
+  const classes = useStyles();
 
   const [_page, setPage] = useState(page);
   const [_rowsPerPage, setRowsPerPage] = useState(rowsPerPage);
@@ -117,6 +121,10 @@ const CustomTable = props => {
               return true;
             }
 
+            if (_.isNil(value)) {
+              return true;
+            }
+
             switch (_.isNil(column.filter) ? "" : column.filter.type) {
               case "":
               case "text":
@@ -130,7 +138,7 @@ const CustomTable = props => {
                 return (min === "" || min < value) && (max === "" || max > value);
 
               case "bool":
-                return _.isNil(currentOptions.value) || currentOptions.value === value;
+                return  _.isNil(currentOptions.value) || currentOptions.value === value;
             }
           })
       })
@@ -150,8 +158,8 @@ const CustomTable = props => {
       });
     }
 
-    return pagination ? filteredRows.slice(_page * _rowsPerPage, (_page + 1) * _rowsPerPage) : filteredRows;
-  }, [options, filter, sort, sortBy, rows]);
+    return pagination && !manualSkip ? filteredRows.slice(_page * _rowsPerPage, (_page + 1) * _rowsPerPage) : filteredRows;
+  }, [options, filter, sort, sortBy, _rowsPerPage, _page, manualSkip]);
 
   const headerRefs = columns.map(() => useRef(null));
 
@@ -169,8 +177,6 @@ const CustomTable = props => {
   const renderLabelDisplayedRows = ({from, to, count}) => {
     return `${from}-${to} מתוך ${count}`;
   };
-
-  const classes = useStyles();
 
   return (
     <Paper elevation={3} className={classes.table}>
@@ -233,9 +239,9 @@ const CustomTable = props => {
       </TableContainer>
       { pagination ?
        <TablePagination
-          rowsPerPageOptions={[5,10,25,100]}
+          rowsPerPageOptions={[3,5,10,25,100]}
           component="div"
-          count={finalRows.length}
+          count={_.isNil(totalRows) ? rows.length : totalRows}
           rowsPerPage={_rowsPerPage}
           page={_page}
           onChangePage={_onPageChange}

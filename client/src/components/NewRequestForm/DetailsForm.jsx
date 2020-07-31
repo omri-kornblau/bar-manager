@@ -85,6 +85,7 @@ const structure =
       name: "policy",
       type: "file",
       justify: "center",
+      enableDelete: true,
     },
   ],[
     {
@@ -92,6 +93,7 @@ const structure =
       name: "extraFiles",
       type: "file",
       justify: "center",
+      enableDelete: true,
       multiple: true,
     },
   ]

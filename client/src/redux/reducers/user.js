@@ -7,7 +7,8 @@ import {
 const initialUser = {
   data: {
     name: "",
-    type: ""
+    type: "",
+    email: "",
   },
   isLoggedIn: true
 };

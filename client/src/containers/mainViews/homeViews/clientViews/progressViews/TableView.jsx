@@ -64,6 +64,7 @@ const TableView = props => {
     actions,
   } = progressBar[progress];
 
+
   const isModalOpen = !!openedRequestIdx;
   const { query, pathname: url } = location;
 

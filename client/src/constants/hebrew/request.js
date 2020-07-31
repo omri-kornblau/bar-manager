@@ -10,9 +10,12 @@ export const labels = {
   maxPrice: "פרמיה מקסימלית",
   comments: "הערות",
   isCurrentlyInsured: "מבוטח כרגע",
-  createdTime: "זמן יצירה",
+  createdAt: "זמן יצירה",
   startDate: "זמן התחלה",
   activeTime: "תאריך העמדה",
   firstAccept: "אישור A",
   secondAccept: "אישור B",
+  password: "סיסמה",
+  name: "שם",
+  emaik: "אימייל",
 }

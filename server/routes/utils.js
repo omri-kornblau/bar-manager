@@ -4,7 +4,8 @@ const Boom = require("boom");
 const { Readable } = require("stream");
 
 const {
-  createNotification
+  createNotification,
+  readNotification,
 } = require("../db/notification");
 const {
   addNotificationToClientById,
@@ -23,7 +24,11 @@ const {
 const {
   findRequestById,
 } = require("../db/request");
+const {
+  findFileById,
+} = require("../db/attachment");
 const { censorMessagesForProvider } = require("../censors");
+const { internals } = require("../models/attachment");
 
 const UserModel = Mongoose.model("User");
 const RequestModal = Mongoose.model("Request");
@@ -84,20 +89,58 @@ exports.prepareRequestsMessages = async requests => {
 
 }
 
-exports.prepareRequests = async requests => {
-  const authorsPromise = requests.map(request =>
-    UserModel.findById(request.author)
-  )
+exports.prepareRequestFiles = async request => {
+  const policy = findFileById(request.policy);
+  const extraFiles = request.extraFiles.map(fileId =>
+    findFileById(fileId)
+  );
+  const files = await Promise.all([policy, ...extraFiles]);
 
-  const authors = await Promise.all(authorsPromise);
+  return {
+    policy: files[0],
+    extraFiles: files.slice(1),
+  };
+}
+
+exports.prepareRequestsFiles = async requests => {
+  return await Promise.all(requests.map(request => (
+    exports.prepareRequestFiles(request)
+  )));
+}
+
+exports.prepareRequestsOffers = async requests => (
+  await Promise.all(requests.map(async request => {
+    const requestOffers = await Promise.all(request.offers.map(findOfferById));
+    const offersProviders = await Promise.all(requestOffers.map(offer =>
+      findProviderById(offer.provider)
+    ));
+    return requestOffers.map((offer, index) =>
+      _.set(offer._doc, "provider", offersProviders[index].name)
+    )
+  }))
+)
+
+exports.prepareRequestsAuthors = async requests => {
+  return await Promise.all(requests.map(request =>
+    UserModel.findById(request.author)
+  ));
+}
+
+exports.prepareRequests = async requests => {
+  // TODO: run all the requests async
+  const authors = await exports.prepareRequestsAuthors(requests);
   const messages = await exports.prepareRequestsMessages(requests);
+  const files = await exports.prepareRequestsFiles(requests);
+  const offers = await exports.prepareRequestsOffers(requests);
 
   return requests.map((request, index) => {
-
     return {
       ...request._doc,
+      author: authors[index].username,
       messages: messages[index],
-      author: authors[index].username
+      policy: files[index].policy,
+      extraFiles: files[index].extraFiles,
+      offers: offers[index]
     };
   });
 }
@@ -108,9 +151,12 @@ exports.prepareNotifications = async notifications => {
   ))
 
   const requests = await Promise.all(promise);
-  return notifications.map((notification, index) => {
-    return {...notification._doc, request: requests[index]._doc};
-  });
+  return notifications
+    .map((notification, index) => {
+      if (_.isNil(requests[index])) return null;
+      return {...notification._doc, request: requests[index]._doc};
+    })
+    .filter(notification => !_.isNil(notification));
 }
 
 exports.getClient = async username => {
@@ -193,4 +239,39 @@ exports.fetchRequestById = async (requestId, providerId) => {
   finalRequest.offers = result.slice(index);
 
   return finalRequest;
+}
+
+exports.downloadFile = async (client, requestId, fileId, res) => {
+  const { Attachment } = internals;
+
+  if (!client.requests.includes(requestId)
+  && !client.oldRequests.includes(requestId)) {
+    throw Boom.badRequest("Request not belong to client or provider");
+  }
+
+  const request = await findRequestById(requestId)
+  if (!request.extraFiles.includes(fileId) && fileId !== request.policy) {
+    throw Boom.badRequest("File not belong to request")
+  }
+
+  const file = await findFileById(fileId);
+  const readStream = Attachment.read({_id: Mongoose.mongo.ObjectID(fileId)});
+
+  res.set("Content-Type", "application/octet-stream");
+  res.set("Content-Disposition", `attachment; filename=\"${file.filename}\"`);
+  readStream.pipe(res);
+}
+
+exports.readNotification = async (client, notificationId, readNotifcationFunc) => {
+  if (!client.unreadNotifications.includes(notificationId)) {
+    throw Boom.badRequest("Notification not belong to client");
+  }
+
+  await readNotification(notificationId, true)
+  try {
+    await readNotifcationFunc(client._id, notificationId);
+  } catch (err) {
+    await readNotification(notificationId, false)
+    throw Boom.internal(err);
+  }
 }

@@ -31,7 +31,7 @@ import { getTableHeaders } from "../../../../helpers/structer";
 import { connect } from "react-redux";
 import { getRequests } from "../../../../redux/selectors/request";
 import { getNotifications } from "../../../../redux/selectors/notification";
-import { readNotification } from "../../../../redux/thunks/client";
+import { readNotification } from "../../../../redux/thunks/provider";
 
 const DashboardTable = props => {
   const {
@@ -93,7 +93,6 @@ const ClientDashboardMainView = props => {
           : [request]
      }), {
        inTenderProcedure: [],
-       waitingForApproval: [],
        active: [],
       })
     }, [requests]);
@@ -113,7 +112,8 @@ const ClientDashboardMainView = props => {
 
   const onOpenNotification = useCallback(notificationData => {
     readNotification(notificationData._id);
-    pushUrl(`/home/${notificationData.request.type}/${notificationData.request.status}?or=${notificationData.request.index}`);
+    const { type, status, _id } = notificationData.request;
+    pushUrl(`/home/${type}/${status}?or=${_id}`);
   })
 
   return (
@@ -144,15 +144,6 @@ const ClientDashboardMainView = props => {
             />
           </Grid>
           <Grid item direction="column" xs="6">
-            <DashboardTable
-              title="מחכות לאישור חתימה"
-              tooltip= "פוליסות שמחכות לאישור חתימה"
-              rows={sepratedRequests.waitingForApproval}
-              chosenHeaders={["type", ...progressBar.waitingForApproval.chosenHeaders]}
-              tableHeaders={requestTableHeaders}
-              onRowClick={onOpenRequest}
-              emtpyMessage="אין בקשות שמחכות לאישור חתימה"
-            />
             <DashboardTable
               title="פוליסות בהליך מכרזי"
               tooltip= "פוליסות בהליך מכרזי"

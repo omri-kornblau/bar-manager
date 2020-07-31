@@ -10,7 +10,6 @@ import { labels } from "../hebrew/request";
 import ConnectedButton from "../../components/ConnectedButtons/ConnectedButton";
 import ConnectedLink from "../../components/ConnectedButtons/ConnectedLink";
 import {
-  acceptRequest,
   cancelRequest,
 } from "../../redux/thunks/client"
 
@@ -22,6 +21,7 @@ import {
   formatShekel,
   formatMonths,
 } from "../../helpers/formats";
+import { postDeleteFile } from "../../api/client";
 
 
 export const tableHeaders = {
@@ -87,9 +87,9 @@ export const tableHeaders = {
         type: "bool"
       }
     },
-    createdTime: {
-      id: "createdTime",
-      label: labels.createdTime,
+    createdAt: {
+      id: "createdAt",
+      label: labels.createdAt,
       formatter: formatTimeStampRTL,
       filter: {
         // type: "date"
@@ -114,22 +114,6 @@ export const tableHeaders = {
         type: "text"
       }
     },
-    firstAccept: {
-      id: "firstAccept",
-      label: labels.firstAccept,
-      formatter: formatAccept,
-      filter: {
-        type: "bool",
-      },
-    },
-    secondAccept: {
-      id: "secondAccept",
-      label: labels.secondAccept,
-      formatter: formatAccept,
-      filter: {
-        type: "bool",
-      },
-    },
     actions: {
       id: "actions",
       label: "פעולות",
@@ -139,7 +123,7 @@ export const tableHeaders = {
     },
 }
 
-const downloadActions = [
+const downloadActions = prefix => [
   <ConnectedLink
     label={
         <Grid container>
@@ -148,7 +132,7 @@ const downloadActions = [
         </Grid>
     }
     action={(_, row) => {
-      window.open(`/client/downloadfile?fileId=${row.policy}&requestId=${row._id}`, "_self");
+      window.open(`/${prefix}/downloadfile?fileId=${row.policy}&requestId=${row._id}`, "_self");
     }}
     color="primary"
   />,
@@ -164,38 +148,13 @@ const downloadActions = [
         const action = index + 1 === row.extraFiles.length
         ? "_self"
         : "blank";
-        window.open(`/client/downloadfile?fileId=${fileId}&requestId=${row._id}`, action);
+        window.open(`/${prefix}/downloadfile?fileId=${fileId}&requestId=${row._id}`, action);
       })
     }}
   />,
 ]
 
 export const clientProgressBar = {
-  waitingForApproval: {
-    label: "בקשות המחכות לאישור מורשה חתימה",
-    description: "",
-    chosenHeaders: ["index", "maxPrice", "firstAccept", "secondAccept"],
-    actions: [
-      <ConnectedButton
-        label="אשר"
-        action={(dispatch, row) =>
-          acceptRequest(dispatch)(row)
-        }
-        className="success"
-        progressName="acceptRequest"
-      />,
-      <ConnectedButton
-        label="בטל"
-        action={(dispatch, row) => {
-          if (window.confirm("אתה בטוח שאתה רוצה למחוק את הבקשה?")) {
-            cancelRequest(dispatch)(row)
-          }
-        }}
-        progressName="cancelRequest"
-        className="failed"
-      />,
-    ],
-  },
   inTenderProcedure: {
     label: "פוליסות בהליך מכרזי",
     description: "",
@@ -210,25 +169,35 @@ export const clientProgressBar = {
         }}
         color="primary"
       />,
+      <ConnectedButton
+        label="בטל"
+        action={(dispatch, row) => {
+          if (window.confirm("אתה בטוח שאתה רוצה למחוק את הבקשה?")) {
+            cancelRequest(dispatch)(row)
+          }
+        }}
+        progressName="cancelRequest"
+        className="failed"
+      />,
     ],
   },
   waitingForSign: {
     label: "פוליסות שאושרו ומחכות לחתימה",
     description: "",
     chosenHeaders: ["type", "startDate", "maxPrice"],
-    actions: downloadActions,
+    actions: downloadActions("client"),
   },
   active: {
     label: "פוליסות פעילות",
     description: "",
     chosenHeaders: ["type", "startDate", "activeTime"],
-    actions: downloadActions,
+    actions: downloadActions("client"),
   },
   history: {
     label: "היסטוריה",
     description: "",
     chosenHeaders: ["index", "startDate", "activeTime", "maxPrice"],
-    actions: downloadActions,
+    actions: downloadActions("client"),
   },
 }
 
@@ -242,24 +211,24 @@ export const providerProgressBar = {
     label: "פוליסות שאושרו ומחכות לחתימה",
     description: "",
     chosenHeaders: ["type", "startDate", "maxPrice"],
-    actions: downloadActions,
+    actions: downloadActions("provider"),
   },
   active: {
     label: "פוליסות פעילות",
     description: "",
     chosenHeaders: ["type", "startDate", "activeTime"],
-    actions: downloadActions,
+    actions: downloadActions("provider"),
   },
   history: {
     label: "היסטוריה",
     description: "",
     chosenHeaders: ["index", "startDate", "activeTime", "maxPrice"],
-    actions: downloadActions,
+    actions: downloadActions("provider"),
   },
 }
 
 export const providerPoolChosenHeaders = [
-  "type", "createdTime", "maxPrice", "insuranceDuration", "author"
+  "type", "createdAt", "maxPrice", "insuranceDuration", "author"
 ];
 
 export const modalChosenHeaders = [
@@ -267,7 +236,7 @@ export const modalChosenHeaders = [
     id: "type"
   },
   {
-    id: "createdTime",
+    id: "createdAt",
     formatter: formatTimeStampRTL
   },
   {
@@ -352,7 +321,27 @@ export const modalEditFormStructure = [
       name: "isCurrentlyInsured",
       type: "checkbox",
     },
-  ]
+  ],[
+    {
+      label: "העלה פוליסה",
+      name: "policy",
+      type: "file",
+      justify: "center",
+      enableDelete: true,
+    },{
+      label: "קבצים נוספים",
+      name: "extraFiles",
+      type: "file",
+      justify: "center",
+      multiple: true,
+      enableDelete: true,
+      onDeletePredefinedFile: fileId => {
+        if (window.confirm("אתה בטוח שאתה רוצה למחוק קובץ זה?")) {
+          postDeleteFile(fileId)
+        }
+      }
+    },
+  ],
 ];
 
 export const providerModalFeatures = {

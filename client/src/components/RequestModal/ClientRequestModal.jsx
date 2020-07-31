@@ -25,6 +25,7 @@ import { applyFormat } from "../../helpers/formats";
 import LoadingButton from "../LoadingButton/LoadingButton";
 import { parseFormError } from "../../helpers/errors";
 import ErrorMessage from "../LoadingButton/ErrorMessage";
+import OffersTable from "./OffersTable";
 
 import {
   clientProgressBar as progressBar,
@@ -176,9 +177,26 @@ const RequestModal = props => {
                   data={data}
                   updateStatus={updateStatus}
                 />
-                : <DataList data={data}/>
+                : <>
+                    <DataList data={data}/>
+                    <Box mt={2}/>
+                    <Divider/>
+                    {
+                      !_.isEmpty(data.offers) ?
+                        <>
+                          <Typography align="center" variant="h6">
+                            הצעות
+                          </Typography>
+                          <OffersTable offers={data.offers}/>
+                        </>
+                        :
+                          <Typography align="center" variant="h6">
+                            אין עדיין הצעות לבקשה
+                          </Typography>
+                    }
+                  </>
               }
-              <Box mt={1}/>
+              <Box pt={2}/>
               <Divider/>
               <Box mt={1}/>
               {!editMode ?

@@ -10,7 +10,7 @@ const errMessageToText = {
   "Policy file must be provided": "יש להעלות קובץ פוליסה",
   "Extra files must be provided": "יש להעלות קבצים נוספים",
   "Price should be lower then last price": "המחיר החדש לא נמוך מהנוכחי",
-  "Price should be bigger then 0": "נא להכניס מספר חיובי"
+  "Price should be bigger then 0": "נא להכניס מספר חיובי",
 }
 
 const generalErrorToText = ({ message }) => (
@@ -24,9 +24,15 @@ const yupErrorToText = errData => {
 
   switch(errData.type) {
     case "min":
-      return `סעיף ${label} חייב להיות גדול מ${errData.params.more}`
+      const min = _.isNil(errData.params.more)
+        ? `${errData.params.min} תווים`
+        : errData.params.more;
+      return `סעיף ${label} חייב להיות גדול מ${min}`
     case "max":
-      return `סעיף ${label} חייב להיות קטן מ${errData.params.more}`
+      const max = _.isNil(errData.params.more)
+        ? `${errData.params.max} תווים`
+        : errData.params.more;
+      return `סעיף ${label} חייב להיות קטן מ${max}`
     case "required":
       return `יש למלא את סעיף ${label}`
     default:
@@ -38,17 +44,33 @@ export const parseFormError = err => {
   if (_.isNil(err)) return err;
 
   const errData = getAxiosError(err);
-
   if (errData.name === "ValidationError") {
     return {
       key: errData.path,
       message: yupErrorToText(errData)
     }
   } else {
-    return {
-      key: null,
-      message: generalErrorToText(errData)
+    try {
+      return parseBoomError(errData);
+    } catch {
+      return {
+        key: null,
+        message: generalErrorToText(errData)
+      };
     }
+  }
+}
+
+export const parseBoomError = err => {
+  const errData = JSON.parse(err.message);
+  const initErr = {key: errData.path};
+  switch (errData.message) {
+    case "Password to short":
+      return {...initErr, message: `הסיסמה צריכה להכיל לפחות ${errData.min} תווים`};
+    case "Password to long":
+      return {...initErr, message: `הסיסמה צריכה להכיל פחות מ${errData.max} תווים`};
+    case "Incorrect password":
+      return {...initErr, message: "הסיסמה לא נכונה"};
   }
 }
 

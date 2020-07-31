@@ -46,3 +46,7 @@ exports.readNotification = async (_id, isRead) => {
 
   return updatedNotification;
 }
+
+exports.deleteNotificationsByRequestId = requestId => {
+  return NotificationModel.remove({ requestId });
+}

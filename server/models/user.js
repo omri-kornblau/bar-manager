@@ -56,5 +56,6 @@ userSchema.methods.isCorrectPassword = async function (password) {
 }
 
 const User = Mongoose.model("User", userSchema);
+User.yupUserSchema = yupUserFormat;
 
 module.exports = User;

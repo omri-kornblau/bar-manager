@@ -28,6 +28,9 @@ import {
 
 import AppNavbar from "../components/AppNavbar/AppNavbar";
 import { getLocation } from "connected-react-router";
+import { getIntervals } from "../redux/selectors/interval";
+import { addInterval, removeInterval } from "../redux/thunks/interval";
+import { GET_CLIENT, GET_PROVIDER } from "../constants/intervals";
 
 const navbarPages = _.filter(pages, { hideFromNavbar: false });
 const accountIconPages = _.filter(pages, { hideFromNavbar: true });
@@ -42,6 +45,8 @@ const Main = props => {
     getProvider,
     isProvider,
     location,
+    addInterval,
+    removeInterval,
   } = props;
 
   const { pathname, search, hash } = location;
@@ -49,6 +54,8 @@ const Main = props => {
   useEffect(() => {
     checkToken(`${pathname}${search}${hash}`);
     isProvider ? getProvider() : getClient();
+    addInterval(isProvider)
+    return () => removeInterval(isProvider);
   }, [isProvider]);
 
   return (
@@ -77,6 +84,7 @@ const mapStateToProps = state => ({
   isLoggedIn: getUserLoggedIn(state),
   location: getLocation(state),
   isProvider: isProvider(state),
+  intervals: getIntervals(state),
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -84,6 +92,10 @@ const mapDispatchToProps = dispatch => ({
   logout: logoutThunk(dispatch),
   getClient: getClientData(dispatch),
   getProvider: getProviderData(dispatch),
+  addInterval: isProvider =>
+    addInterval(dispatch)(isProvider ? GET_PROVIDER : GET_CLIENT, [false]),
+  removeInterval: isProvider =>
+    removeInterval(dispatch)(isProvider ? GET_PROVIDER : GET_CLIENT),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

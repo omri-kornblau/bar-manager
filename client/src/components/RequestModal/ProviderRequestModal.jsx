@@ -1,5 +1,5 @@
 import _ from "lodash";
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   Paper,
   Box,
@@ -75,14 +75,17 @@ const ProviderRequestModal = props => {
   }
 
   const onTabChange = (e, val) => setSelectedTab(val);
-  const TabPanel = ({ index, children }) => <div hidden={index === selectedTab}>{children}</div>
+  const TabPanel = useCallback(({ index, children }) =>
+    <div hidden={index === selectedTab}>{children}</div>,
+  [selectedTab]);
+
   const _onSetOffer = value => {
     onSetOffer(data._id, value);
-  }
+  };
 
   const onSendMessage = value => {
     sendMessage(data._id, value);
-  }
+  };
 
   const allowOffer = _.get(providerModalFeatures[data.status], "offer");
 

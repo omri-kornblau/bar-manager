@@ -93,7 +93,6 @@ const ClientDashboardMainView = props => {
           : [request]
      }), {
        inTenderProcedure: [],
-       waitingForApproval: [],
        active: [],
       })
     }, [requests]);
@@ -144,15 +143,6 @@ const ClientDashboardMainView = props => {
             />
           </Grid>
           <Grid item direction="column" xs="6">
-            <DashboardTable
-              title="מחכות לאישור חתימה"
-              tooltip= "פוליסות שמחכות לאישור חתימה"
-              rows={sepratedRequests.waitingForApproval}
-              chosenHeaders={["type", ...progressBar.waitingForApproval.chosenHeaders]}
-              tableHeaders={requestTableHeaders}
-              onRowClick={onOpenRequest}
-              emtpyMessage="אין בקשות שמחכות לאישור חתימה"
-            />
             <DashboardTable
               title="פוליסות בהליך מכרזי"
               tooltip= "פוליסות בהליך מכרזי"

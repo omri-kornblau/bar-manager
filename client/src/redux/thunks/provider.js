@@ -16,79 +16,121 @@ import {
   getProviderFailed,
 } from "../actions/provider";
 import {
+  readNotification as readNotificationAction,
+} from "../actions/notification";
+import {
   getProvider,
   postFilteredRequests,
   getFetchRequest,
   postSetOffer,
   postSendMessage,
+  postReadNotification,
 } from "../../api/provider";
 
-export const getProviderData = outerDispatch => () => {
-  outerDispatch(dispatch => {
-    dispatch(tryGetProvider());
+import { requestsMutex } from "../store";
 
-    getProvider()
-      .then(res => {
-        dispatch(getProviderSuccess(res.data));
-      })
-      .catch(err => {
-        dispatch(getProviderFailed(err));
-      })
+export const getProviderData = outerDispatch => (isLoading=true) => {
+  outerDispatch(dispatch => {
+    requestsMutex.lockFunc = isLoading ? requestsMutex.rlock : requestsMutex.lock;
+    requestsMutex.lockFunc().then(release => {
+      if (isLoading) {
+        dispatch(tryGetProvider());
+      }
+
+      getProvider()
+        .then(res => {
+          dispatch(getProviderSuccess(res.data));
+        })
+        .catch(err => {
+          dispatch(getProviderFailed(err));
+        })
+        .finally(release);
+    });
   })
 }
 
-export const filterRequests = outerDispatch => (type, filters, skip, limit) => {
+export const filterRequests = outerDispatch => (type, filters, skip, limit, isLoading=true) => {
   outerDispatch(dispatch => {
-    dispatch(tryPostFilteredRequests());
+    requestsMutex.lockFunc = isLoading ? requestsMutex.rlock : requestsMutex.lock;
+    requestsMutex.lockFunc().then(release => {
+      if (isLoading) {
+        dispatch(tryPostFilteredRequests());
+      }
 
-    postFilteredRequests(type, filters, skip, limit)
-      .then(res => {
-        dispatch(postFilteredRequestsSuccess(res.data));
-      })
-      .catch(err => {
-        dispatch(postFilteredRequestsFailure(err));
-      })
+      postFilteredRequests(type, filters, skip, limit)
+        .then(res => {
+          dispatch(postFilteredRequestsSuccess(res.data));
+        })
+        .catch(err => {
+          dispatch(postFilteredRequestsFailure(err));
+        })
+        .finally(release);
+    });
   })
 }
 
-export const fetchRequest = outerDispatch => requestId => {
+export const fetchRequest = outerDispatch => (requestId, isLoading=true) => {
   outerDispatch(dispatch => {
-    dispatch(tryFetchRequest());
+    requestsMutex.lockFunc = isLoading ? requestsMutex.rlock : requestsMutex.lock;
+    requestsMutex.lockFunc().then(release => {
+      if (isLoading) {
+        dispatch(tryFetchRequest());
+      }
 
-    getFetchRequest(requestId)
-      .then(res => {
-        dispatch(fetchRequestSuccess(res.data));
-      })
-      .catch(err => {
-        dispatch(fetchRequestFailed(err));
-      })
+      getFetchRequest(requestId)
+        .then(res => {
+          dispatch(fetchRequestSuccess(res.data));
+        })
+        .catch(err => {
+          dispatch(fetchRequestFailed(err));
+        })
+        .finally(release);
+    });
   })
 }
 
 export const setOffer = outerDispatch => (requestId, price) => {
   outerDispatch(dispatch => {
-    dispatch(tryPostSetOffer());
+    requestsMutex.rlock().then(release => {
+      dispatch(tryPostSetOffer());
 
-    postSetOffer(requestId, price)
-      .then(res => {
-        dispatch(postSetOfferSuccess(requestId, res.data));
-      })
-      .catch(err => {
-        dispatch(postSetOfferFailed(err));
-      })
+      postSetOffer(requestId, price)
+        .then(res => {
+          dispatch(postSetOfferSuccess(requestId, res.data));
+        })
+        .catch(err => {
+          dispatch(postSetOfferFailed(err));
+        })
+        .finally(release);
+    })
   })
 }
 
 export const sendMessage = outerDispatch => (requestId, message) => {
   outerDispatch(dispatch => {
-    dispatch(tryPostSendMessage(requestId));
+    requestsMutex.rlock().then(release => {
+      dispatch(tryPostSendMessage(requestId));
 
-    postSendMessage(requestId, message)
+      postSendMessage(requestId, message)
+        .then(res => {
+          dispatch(postSendMessageSuccess(requestId, res.data));
+        })
+        .catch(err => {
+          dispatch(postSendMessageFailed(err));
+        })
+        .finally(release);
+    });
+  })
+}
+
+export const readNotification = outerDispatch => notificationId => {
+  outerDispatch(dispatch => {
+    requestsMutex.rlock().then(release => {
+    postReadNotification(notificationId)
       .then(res => {
-        dispatch(postSendMessageSuccess(requestId, res.data));
+        dispatch(readNotificationAction(notificationId));
       })
-      .catch(err => {
-        dispatch(postSendMessageFailed(err));
-      })
+      .finally(release);
+    });
   })
 }

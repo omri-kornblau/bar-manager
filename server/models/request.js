@@ -20,15 +20,14 @@ const yupCreateRequestSchema = Yup.object().shape({
   isCurrentlyInsured: Yup.boolean(),
   maxPrice: Yup.number().positive().required(),
   comments: Yup.string(),
-  createdTime: Yup.date(),
   startDate: Yup.date(),
   activeTime: Yup.date(),
   policy: Yup.string().length(OBJECT_ID_LENGTH),
   extraFiles: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   messages: Yup.object(),
   offers: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
-  firstAccept: Yup.string().test('len', 'Must be "" or object id length', val => val.length === OBJECT_ID_LENGTH || val.length === 0),
-  secondAccept: Yup.string().test('len', 'Must be "" or object id length', val => val.length === OBJECT_ID_LENGTH || val.length === 0),
+  // firstAccept: Yup.string().test('len', 'Must be "" or object id length', val => val.length === OBJECT_ID_LENGTH || val.length === 0),
+  // secondAccept: Yup.string().test('len', 'Must be "" or object id length', val => val.length === OBJECT_ID_LENGTH || val.length === 0),
 });
 
 const yupUpdateRequestSchema = Yup.object().shape({
@@ -64,9 +63,6 @@ const mongoFormat = {
   comments: {
     type: String,
   },
-  createdTime: {
-    type: Date,
-  },
   startDate: {
     type: Date,
   },
@@ -91,16 +87,15 @@ const mongoFormat = {
   index: {
     type: Number,
   },
-  firstAccept: {
-    type: String,
-  },
-  secondAccept: {
-    type: String,
-  },
+};
+
+const mongoOptions = {
+  timestamps: true,
+  minimize: false,
 };
 
 // Set 'minimize: false' to allow empty objects in
-const requestScheme = new Mongoose.Schema(mongoFormat, { minimize: false });
+const requestScheme = new Mongoose.Schema(mongoFormat, mongoOptions);
 
 requestScheme.pre("save", async function () {
   await yupCreateRequestSchema.validate(this);

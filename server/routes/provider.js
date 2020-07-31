@@ -2,6 +2,8 @@ const _ = require("lodash");
 const Mongoose = require("mongoose");
 const Boom = require("boom");
 
+const UserModel = Mongoose.model("User");
+const ProviderModel = Mongoose.model("Provider");
 const RequestModel = Mongoose.model("Request");
 const OldRequestModel = Mongoose.model("OldRequest");
 const NotificationModel = Mongoose.model("Notification");
@@ -12,6 +14,8 @@ const {
   findByIds,
   prepareNotifications,
   createClientNotification,
+  downloadFile,
+  readNotification
 } = require("./utils");
 
 const {
@@ -31,13 +35,19 @@ const {
 
 const {
   addRequest: addRequestToProvider,
-  removRequest: removeRequestFromProvider,
+  removeRequestFromProviderById,
+  readNotificationInProviderById,
+  updateProviderById,
 } = require("../db/provider");
 
 const {
   addMessage,
   deleteMessage,
 } = require("../db/message");
+
+const {
+  updateUserById
+} = require("../db/user");
 
 const {
   censorMessagesForProvider,
@@ -77,8 +87,11 @@ exports.getRequests = async (req, res) => {
   const types = _.flattenDeep([type]);
   const [user, provider] = await getProvider(username);
 
-  const requests = await getProviderRequests(types, provider.requests, skip, limit);
-  res.send(requests);
+  const [requests, totalRequests] = await getProviderRequests(types, provider.requests, skip, limit);
+  res.send({
+    requests,
+    totalRequests,
+  });
 }
 
 exports.setOffer = async (req, res) => {
@@ -122,7 +135,7 @@ exports.setOffer = async (req, res) => {
         await removeOfferFromRequest(requestId, offer._id);
       }
       if (!_.isNil(updatedProvider)) {
-        await removeRequestFromProvider(requestId, offer._id);
+        await removeRequestFromProviderById(requestId, offer._id);
       }
 
       if (!_.isNil(request) && !_.isNil(updatedProvider)) {
@@ -207,4 +220,50 @@ exports.fetchRequest = async (req, res) => {
   })
 
   res.send({...request, myOffer: myOffer ? myOffer : {price: undefined}})
+}
+
+exports.downloadFile = async (req, res) => {
+  const {
+    username
+  } =  req;
+
+  const {
+    requestId,
+    fileId,
+  } = req.query;
+
+  const [user, provider] = await getProvider(username);
+  await downloadFile(provider, requestId, fileId, res);
+}
+
+exports.readNotification = async (req, res) => {
+  const {
+    username
+  } =  req;
+
+  const {
+    notificationId,
+  } = req.body;
+
+  const [user, provider] = await getProvider(username);
+
+  await readNotification(provider, notificationId, readNotificationInProviderById);
+  res.sendStatus(204)
+}
+
+exports.updatesDetailes = async (req, res) => {
+  const {
+    username
+  } = req;
+
+  const [user, provider] = await getProvider(username);
+
+  const newProvider = _.pick(req.body, ["name"]);
+  await ProviderModel.yupProviderSchema.validate(newProvider);
+  const newUser = _.pick(req.body, ["email"]);
+  await UserModel.yupUserSchema.validate(newUser);
+
+  await updateProviderById(provider._id, {$set: newProvider});
+  await updateUserById(user._id, {$set: newUser});
+  res.sendStatus(204);
 }
