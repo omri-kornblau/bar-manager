@@ -13,6 +13,11 @@ exports.signupClient = async (req, res) => {
     username,
     password,
     name,
+    companyId,
+    address,
+    phoneNumber,
+    owner,
+    fieldOfActivity,
   } = req.body;
 
   let createdClient;
@@ -25,7 +30,11 @@ exports.signupClient = async (req, res) => {
       readNotifications: [],
       requests: [],
       oldRequests: [],
-      name
+      companyId,
+      address,
+      phoneNumber,
+      owner,
+      fieldOfActivity,
     }
 
     createdClient = await ClientModel.create(emptyClient);
@@ -57,6 +66,9 @@ exports.signupProvider = async (req, res) => {
     username,
     password,
     name,
+    contactName,
+    contactPhone,
+    contactEmail,
   } = req.body;
 
   let createdProvider = undefined;
@@ -68,7 +80,9 @@ exports.signupProvider = async (req, res) => {
       readNotifications: [],
       requests: [],
       oldRequests: [],
-      name
+      contactName,
+      contactPhone,
+      contactEmail
     }
 
     createdProvider = await ProviderModel.create(emptyProvider);

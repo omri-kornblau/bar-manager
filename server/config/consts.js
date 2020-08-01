@@ -7,6 +7,14 @@ exports.OBJECT_ID_LENGTH  = 24;
 exports.USER_TYPES_VALUES  = _.values(USER_TYPES);
 exports.HASH_LENGTH = 60;
 exports.SALT_LENGTH = 8;
+exports.COMPANY_ID_LENGTH = 10;
+exports.ADDRESS_MIN_LENGTH = 10;
+exports.ADDRESS_MAX_LENGTH = 50;
+exports.OWNER_MIN_LENGTH = 5;
+exports.OWNER_MAX_LENGTH = 30;
+exports.FILED_OF_ACTIVITY_MIN_LENGTH = 5;
+exports.FILED_OF_ACTIVITY_MAX_LENGTH = 30;
+exports.PHONE_REGEX = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
 // Auth
 exports.USER_MIN_LENGTH = 3;
