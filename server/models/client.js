@@ -14,6 +14,8 @@ const yupClientSchema = Yup.object().shape({
   requests: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   oldRequests: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   name: Yup.string(),
+  createdAt: Yup.date(),
+  updatedAt: Yup.date(),
 });
 
 const mongoFormat = {
@@ -31,7 +33,13 @@ const mongoFormat = {
   },
   oldRequests: {
     type: Array
-  }
+  },
+  createdAt: {
+    type: Date
+  },
+  updatedAt: {
+    type: Date
+  },
 };
 
 const mongoOptions = {

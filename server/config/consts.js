@@ -34,6 +34,9 @@ exports.STATUS_UPDATE_ALLOWED_FIELDS = {
 
 exports.ALLOW_ACCEPT_CANCEL_STATUSES = ["inTenderProcedure"];
 exports.ALLOW_SET_OFFER_STATUSES = ["inTenderProcedure"];
+exports.ALLOW_ALL_PROVIDERS_DOWNLOAD_FILE = ["inTenderProcedure"];
+
+exports.CLIENT_INTERVAL = Moment.duration(2, "seconds");
 
 // Request Status Worker
 exports.LONG_SAMPLE_INTERVAL = Moment.duration(10, "seconds");

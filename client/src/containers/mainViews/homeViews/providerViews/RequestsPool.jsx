@@ -86,8 +86,8 @@ const ProviderRequestsPool = props => {
 
   const onOpenRequest = e => {
     setOpenedRequest(e._id);
-    addInterval(GET_FETCHED_REQUEST, [e._id, false]);
-    fetchRequest(e._id)
+    addInterval(GET_FETCHED_REQUEST, [{requestId: e._id, isLoading: false}]);
+    fetchRequest({requestId: e._id, isForce: true});
   };
   const onCloseRequest = () => {
     setOpenedRequest(null);

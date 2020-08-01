@@ -69,7 +69,7 @@ export const filterRequests = outerDispatch => (type, filters, skip, limit, isLo
   })
 }
 
-export const fetchRequest = outerDispatch => (requestId, isLoading=true) => {
+export const fetchRequest = outerDispatch => ({requestId, isLoading=true, isForce=false} = {}) => {
   outerDispatch(dispatch => {
     requestsMutex.lockFunc = isLoading ? requestsMutex.rlock : requestsMutex.lock;
     requestsMutex.lockFunc().then(release => {
@@ -77,7 +77,7 @@ export const fetchRequest = outerDispatch => (requestId, isLoading=true) => {
         dispatch(tryFetchRequest());
       }
 
-      getFetchRequest(requestId)
+      getFetchRequest(requestId, isForce)
         .then(res => {
           dispatch(fetchRequestSuccess(res.data));
         })

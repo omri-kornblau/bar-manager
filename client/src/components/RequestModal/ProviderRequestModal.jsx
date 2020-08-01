@@ -20,7 +20,7 @@ import {
 } from "../../constants/structure/request"
 import { applyFormat, formatActions } from "../../helpers/formats";
 import {
-  clientProgressBar
+  providerProgressBar
 } from "../../constants/structure/request"
 import ProviderOfferBox from "./ProviderOfferBox";
 import ProviderMessageBox from "./ProviderMessageBox";
@@ -102,11 +102,8 @@ const ProviderRequestModal = props => {
         >
           <Box fontWeight="900">
             <Typography align="center" variant="h5">
-              {data._id}
-            </Typography>
-            <Typography align="center" variant="subtitle2">
               בקשה מאת
-              {" "}{data.author._id}
+              {" "}{data.author.name}
             </Typography>
           </Box>
           <Box mt={2}/>
@@ -140,7 +137,7 @@ const ProviderRequestModal = props => {
                 <DataList data={data.author}/>
               </Grid>
             </Grid>
-            {formatActions(clientProgressBar.active.actions, data)}
+            {formatActions(providerProgressBar.active.actions, data)}
           </TabPanel>
           <TabPanel value={selectedTab} index={0}>
             <Grid container spacing={4}>

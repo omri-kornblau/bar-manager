@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import {
   Container,
   Box,
-  CircularProgress,
 } from "@material-ui/core";
 
 import {
@@ -21,7 +20,7 @@ import { getView, getClosed } from "../../redux/selectors/sidebar";
 import {
   getUserLoggedIn,
   isProvider,
-  getUserType
+  getUserType,
 } from "../../redux/selectors/user";
 import { setSidebarClosed } from "../../redux/actions/sidebar";
 
@@ -29,7 +28,6 @@ import useStyles from "./style";
 
 import SecondaryNavbar from "../../components/SecondaryNavbar/SecondaryNavbar";
 import { getProgress } from "../../redux/selectors/progressBar";
-import { getLoading } from "../../redux/selectors/request";
 
 const ViewsSwitch = ({ views, view, progress, matchUrl }) => (
   <Switch>
@@ -47,7 +45,6 @@ const Home = props => {
     view,
     getProgressWithView,
     isLoggedIn,
-    isLoading,
     isProvider,
   } = props;
 
@@ -68,26 +65,14 @@ const Home = props => {
               views={views}
               getProgress={getProgressWithView}
             />
-            {
-              isLoading
-              ? <Box
-                  display="flex"
-                  height="65%"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <CircularProgress color="primary" size={80}/>
-                </Box>
-              : <Container className={classes.container}>
-                  <ViewsSwitch
-                    views={views}
-                    view={view}
-                    matchUrl={match.url}
-                    progress={getProgressWithView(view)}
-                  />
-                </Container>
-            }
-
+            <Container className={classes.container}>
+              <ViewsSwitch
+                views={views}
+                view={view}
+                matchUrl={match.url}
+                progress={getProgressWithView(view)}
+              />
+            </Container>
           </>
           : <ViewsSwitch
             views={views}
@@ -107,7 +92,6 @@ const mapStateToProps = state => ({
   sidebarClosed: getClosed(state),
   isLoggedIn: getUserLoggedIn(state),
   isProvider: isProvider(state),
-  isLoading: getLoading(state)
 })
 
 const mapDispatchToProps = dispatch => ({

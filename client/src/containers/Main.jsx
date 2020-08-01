@@ -31,6 +31,8 @@ import { getLocation } from "connected-react-router";
 import { getIntervals } from "../redux/selectors/interval";
 import { addInterval, removeInterval } from "../redux/thunks/interval";
 import { GET_CLIENT, GET_PROVIDER } from "../constants/intervals";
+import { getLoading } from "../redux/selectors/request";
+import { Box, CircularProgress, Grid, Modal } from "@material-ui/core";
 
 const navbarPages = _.filter(pages, { hideFromNavbar: false });
 const accountIconPages = _.filter(pages, { hideFromNavbar: true });
@@ -47,13 +49,14 @@ const Main = props => {
     location,
     addInterval,
     removeInterval,
+    isLoading,
   } = props;
 
   const { pathname, search, hash } = location;
 
   useEffect(() => {
     checkToken(`${pathname}${search}${hash}`);
-    isProvider ? getProvider() : getClient();
+    isProvider ? getProvider({isForce: true}) : getClient({isForce: true});
     addInterval(isProvider)
     return () => removeInterval(isProvider);
   }, [isProvider]);
@@ -67,14 +70,30 @@ const Main = props => {
         isLoggedIn={isLoggedIn}
         logout={logout}
       />
-      <Switch>
-        {_.map(pages, pageData =>
-          <Route key={pageData.id} path={`/${pageData.id}`}>
-            <pageData.component/>
-          </Route>
-        )}
-        <Redirect from="/" to="/home"/>
-      </Switch>
+      {
+        isLoading
+        ? <Modal open={true}>
+            <Grid container alignItems="center" direction="row" style={{height: "100%"}}>
+              <Grid container item direction="column" alignItems="center">
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <CircularProgress color="primary" size={80}/>
+                </Box>
+              </Grid>
+            </Grid>
+          </Modal>
+        : <Switch>
+            {_.map(pages, pageData =>
+              <Route key={pageData.id} path={`/${pageData.id}`}>
+                <pageData.component/>
+              </Route>
+            )}
+            <Redirect from="/" to="/home"/>
+          </Switch>
+      }
     </>
   );
 }
@@ -85,6 +104,7 @@ const mapStateToProps = state => ({
   location: getLocation(state),
   isProvider: isProvider(state),
   intervals: getIntervals(state),
+  isLoading: getLoading(state),
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -93,7 +113,7 @@ const mapDispatchToProps = dispatch => ({
   getClient: getClientData(dispatch),
   getProvider: getProviderData(dispatch),
   addInterval: isProvider =>
-    addInterval(dispatch)(isProvider ? GET_PROVIDER : GET_CLIENT, [false]),
+    addInterval(dispatch)(isProvider ? GET_PROVIDER : GET_CLIENT, [{isLoading: false}]),
   removeInterval: isProvider =>
     removeInterval(dispatch)(isProvider ? GET_PROVIDER : GET_CLIENT),
 })

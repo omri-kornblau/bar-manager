@@ -15,6 +15,7 @@ const {
   prepareNotifications,
   createClientNotification,
   downloadFile,
+  providerDownloadFile,
   readNotification
 } = require("./utils");
 
@@ -39,6 +40,10 @@ const {
   readNotificationInProviderById,
   updateProviderById,
 } = require("../db/provider");
+
+const {
+  findClientById,
+} = require("../db/client");
 
 const {
   addMessage,
@@ -88,8 +93,17 @@ exports.getRequests = async (req, res) => {
   const [user, provider] = await getProvider(username);
 
   const [requests, totalRequests] = await getProviderRequests(types, provider.requests, skip, limit);
+  const authors = await Promise.all(requests.map(request => (
+    findClientById(request.author)
+  )))
+
+  const finalRequests = requests.map((request, index) => ({
+    ...request._doc,
+    author: authors[index].name
+  }))
+
   res.send({
-    requests,
+    requests: finalRequests,
     totalRequests,
   });
 }
@@ -233,7 +247,7 @@ exports.downloadFile = async (req, res) => {
   } = req.query;
 
   const [user, provider] = await getProvider(username);
-  await downloadFile(provider, requestId, fileId, res);
+  await providerDownloadFile(provider, requestId, fileId, res);
 }
 
 exports.readNotification = async (req, res) => {
