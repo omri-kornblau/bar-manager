@@ -9,7 +9,9 @@ exports.REQUEST_FOR_PROVIDER_ALL_REQUESTS = {
   insuranceDuration: 1,
   companyDescription: 1,
   assetDescription: 1,
-  createdAt: 1
+  createdAt: 1,
+  policy: 1,
+  extraFiles: 1,
 };
 
 exports.USER_FOR_USER = {

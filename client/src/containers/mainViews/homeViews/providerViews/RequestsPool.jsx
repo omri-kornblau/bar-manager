@@ -28,7 +28,7 @@ import {
 
 import { typeButtons } from "../../../../constants/structure/requestsPool";
 import { filterButtons } from "../../../../constants/structure/requestsPool";
-import { providerPoolChosenHeaders as chosenHeaders, tableHeaders } from "../../../../constants/structure/request";
+import { providerPoolChosenHeaders as providerHeaders, tableHeaders } from "../../../../constants/structure/request";
 
 import CustomTable from "../../../../components/Table/Table";
 import ProviderRequestModal from "../../../../components/RequestModal/ProviderRequestModal";
@@ -70,6 +70,11 @@ const ProviderRequestsPool = props => {
     addInterval,
     removeInterval,
   } = props;
+
+  const {
+    chosenHeaders,
+    actions
+  } = providerHeaders;
 
   const [openedRequestId, setOpenedRequest] = useState(null);
   const [activeType, setActiveType] = useState(typeButtons[0].id);
@@ -150,7 +155,8 @@ const ProviderRequestsPool = props => {
           <Box pb={1}>
             <CustomTable
               rows={requests}
-              columns={_.map(chosenHeaders, column => tableHeaders[column])}
+              columns={[...chosenHeaders.map(column => tableHeaders[column]), tableHeaders.actions]}
+              actions={actions}
               filter
               sort
               onRowClick={onOpenRequest}

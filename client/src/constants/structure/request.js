@@ -227,9 +227,10 @@ export const providerProgressBar = {
   },
 }
 
-export const providerPoolChosenHeaders = [
-  "type", "createdAt", "maxPrice", "insuranceDuration", "author"
-];
+export const providerPoolChosenHeaders = {
+  chosenHeaders: ["type", "createdAt", "maxPrice", "insuranceDuration", "author"],
+  actions: downloadActions("provider"),
+};
 
 export const modalChosenHeaders = [
   {
