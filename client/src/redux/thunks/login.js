@@ -11,7 +11,9 @@ import {
   getCheckToken,
   getLogout,
 } from "../../api/authentication";
+
 import { getClientData } from "./client";
+import { getProviderData } from "./provider";
 
 export const login = outerDispatch => (username, password) =>
   outerDispatch(dispatch => {
@@ -34,6 +36,10 @@ export const checkToken = outerDispatch => originUrl =>
       .then(res => {
         dispatch(loginSuccess(res.data));
         dispatch(push(originUrl));
+        const isProvider = res.data.type === "provider";
+        isProvider ?
+          getProviderData(outerDispatch)({ isForce: true }) :
+          getClientData(outerDispatch)({ isForce: true });
       })
       .catch(err => {
         dispatch(logoutSuccess());

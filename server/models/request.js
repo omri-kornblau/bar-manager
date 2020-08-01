@@ -16,7 +16,7 @@ const yupCreateRequestSchema = Yup.object().shape({
   status: Yup.mixed().oneOf(REQUEST_STATUSES),
   assetDescription: Yup.string().required(),
   companyDescription: Yup.string().required(),
-  insuranceDuration: Yup.number().positive().required(),
+  insuranceDuration: Yup.number().positive().integer().required(),
   isCurrentlyInsured: Yup.boolean(),
   maxPrice: Yup.number().positive().required(),
   comments: Yup.string(),

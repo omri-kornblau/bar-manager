@@ -49,7 +49,7 @@ exports.isClientChange = async (req, res, next) => {
     return next();
   }
 
-  res.sendStatus(304);
+  res.send("NO CHANGE");
 }
 
 exports.providerChange = async (req, res, next) => {
@@ -81,5 +81,5 @@ exports.isProviderChange = async (req, res, next) => {
     return next();
   }
 
-  res.sendStatus(304);
+  res.send("NO CHANGE");
 }

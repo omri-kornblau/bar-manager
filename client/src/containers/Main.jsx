@@ -56,10 +56,13 @@ const Main = props => {
 
   useEffect(() => {
     checkToken(`${pathname}${search}${hash}`);
-    isProvider ? getProvider({isForce: true}) : getClient({isForce: true});
+  }, []);
+
+  useEffect(() => {
     addInterval(isProvider)
+
     return () => removeInterval(isProvider);
-  }, [isProvider]);
+  }, [isProvider])
 
   return (
     <>
