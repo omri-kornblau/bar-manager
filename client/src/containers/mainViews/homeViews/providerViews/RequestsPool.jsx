@@ -5,7 +5,6 @@ import {
   Typography,
   Grid,
   Box,
-  Modal,
   Button,
   Card,
   CardContent,
@@ -44,6 +43,7 @@ import { addInterval, removeInterval } from "../../../../redux/thunks/interval";
 import {
   GET_FILTERED_REQUESTS, GET_FETCHED_REQUEST,
 } from "../../../../constants/intervals";
+import EscapeModal from "../../../../components/ModalEscape/ModalEscape";
 
 const toRequestFilters = filters => (
   _.map(
@@ -161,7 +161,7 @@ const ProviderRequestsPool = props => {
               totalRows={totalRequests}
               manualSkip
             />
-            <Modal
+            <EscapeModal
               open={isModalOpen}
               onClose={onCloseRequest}
               style={{
@@ -193,7 +193,7 @@ const ProviderRequestsPool = props => {
                     sendMessageStatus={sendMessageStatus}
                   />
               }
-            </Modal>
+            </EscapeModal>
           </Box>
         </CardContent>
         <img style={{

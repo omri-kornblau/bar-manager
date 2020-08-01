@@ -24,8 +24,9 @@ import { getIntervals } from "../redux/selectors/interval";
 import { addInterval, removeInterval } from "../redux/thunks/interval";
 import { GET_CLIENT, GET_PROVIDER } from "../constants/intervals";
 import { getLoading } from "../redux/selectors/request";
-import { Box, CircularProgress, Grid, Modal } from "@material-ui/core";
 import { getCheckTokenErrors } from "../redux/selectors/errors";
+import { Box, CircularProgress, Grid } from "@material-ui/core";
+import EscapeModal from "../components/ModalEscape/ModalEscape";
 
 const navbarPages = _.filter(pages, { hideFromNavbar: false });
 const accountIconPages = _.filter(pages, { hideFromNavbar: true });
@@ -66,8 +67,13 @@ const Main = props => {
         logout={logout}
       />
       {
+<<<<<<< HEAD
         checkTokenStatus.inProgress
         ? <Modal open={true}>
+=======
+        isLoading
+        ? <EscapeModal open={true}>
+>>>>>>> 6675160... Exit modals on escape
             <Grid container alignItems="center" direction="row" style={{height: "100%"}}>
               <Grid container item direction="column" alignItems="center">
                 <Box
@@ -79,7 +85,7 @@ const Main = props => {
                 </Box>
               </Grid>
             </Grid>
-          </Modal>
+          </EscapeModal>
         : <Switch>
             {_.map(pages, pageData =>
               <Route key={pageData.id} path={`/${pageData.id}`}>

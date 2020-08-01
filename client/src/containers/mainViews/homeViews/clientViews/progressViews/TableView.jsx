@@ -6,7 +6,6 @@ import {
   Typography,
   Grid,
   Box,
-  Modal,
   Collapse,
   Backdrop
 } from "@material-ui/core";
@@ -38,6 +37,7 @@ import {
 import RequestModal from "../../../../../components/RequestModal/ClientRequestModal";
 import CustomTable from "../../../../../components/Table/Table";
 import { getTableHeaders } from "../../../../../helpers/structer";
+import EscapeModal from "../../../../../components/ModalEscape/ModalEscape";
 
 
 const TableView = props => {
@@ -116,7 +116,7 @@ const TableView = props => {
         actions={actions}
         onRowClick={onOpenRequest}
       />
-      <Modal
+      <EscapeModal
         open={isModalOpen}
         onClose={onCloseRequest}
         style={{
@@ -144,7 +144,7 @@ const TableView = props => {
             client={client}
           />
         {/* </Collapse> */}
-      </Modal>
+      </EscapeModal>
     </Box>
   );
 }
