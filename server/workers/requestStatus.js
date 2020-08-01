@@ -33,7 +33,7 @@ const isProcedureEnd = targetStatus => {
 }
 
 const isPolicyEnd = targetStatus => {
-  return targetStatus !== "history";
+  return targetStatus === "history";
 }
 
 const findRequestAndDeleteIfMissing = async (requestId, sampledId) => {
