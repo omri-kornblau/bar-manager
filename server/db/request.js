@@ -28,7 +28,7 @@ exports.createRequest = async requestData => {
     endTime: now.clone()
       .add(STATUS_TIMING.inTenderProcedure.duration)
       .add(STATUS_TIMING.waitingForSign.duration)
-      .add(requestData.duration, "months"),
+      .add(requestData.insuranceDuration, "months"),
     messages: {},
     offers: [],
     firstAccept: "",
