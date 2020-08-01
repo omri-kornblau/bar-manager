@@ -42,6 +42,10 @@ const {
 } = require("../db/provider");
 
 const {
+  findClientById,
+} = require("../db/client");
+
+const {
   addMessage,
   deleteMessage,
 } = require("../db/message");
@@ -89,8 +93,17 @@ exports.getRequests = async (req, res) => {
   const [user, provider] = await getProvider(username);
 
   const [requests, totalRequests] = await getProviderRequests(types, provider.requests, skip, limit);
+  const authors = await Promise.all(requests.map(request => (
+    findClientById(request.author)
+  )))
+
+  const finalRequests = requests.map((request, index) => ({
+    ...request._doc,
+    author: authors[index].name
+  }))
+
   res.send({
-    requests,
+    requests: finalRequests,
     totalRequests,
   });
 }
