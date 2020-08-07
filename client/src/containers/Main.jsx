@@ -50,11 +50,11 @@ const Main = props => {
   }, []);
 
   useEffect(() => {
-    if (checkTokenStatus.try && !checkTokenStatus.inProgress) {
+    if (isLoggedIn && checkTokenStatus.try && !checkTokenStatus.inProgress) {
       addInterval(isProvider)
       return () => removeInterval(isProvider);
     }
-  }, [checkTokenStatus, isProvider])
+  }, [isLoggedIn, checkTokenStatus, isProvider])
 
   return (
     <>
