@@ -4,7 +4,10 @@ import {
   tryLogin,
   loginSuccess,
   loginFailure,
-  logoutSuccess
+  logoutSuccess,
+  tryCheckToken,
+  checkTokenSuccess,
+  checkTokenFailure
 } from "../actions/login";
 import {
   postLogin,
@@ -32,9 +35,11 @@ export const login = outerDispatch => (username, password) =>
 
 export const checkToken = outerDispatch => originUrl =>
   outerDispatch(dispatch => {
+    dispatch(tryCheckToken())
+
     getCheckToken()
       .then(res => {
-        dispatch(loginSuccess(res.data));
+        dispatch(checkTokenSuccess(res.data));
         dispatch(push(originUrl));
         const isProvider = res.data.type === "provider";
         isProvider ?
@@ -42,7 +47,7 @@ export const checkToken = outerDispatch => originUrl =>
           getClientData(outerDispatch)({ isForce: true });
       })
       .catch(err => {
-        dispatch(logoutSuccess());
+        dispatch(checkTokenFailure(err));
         dispatch(push("/home/welcome"));
       })
   })

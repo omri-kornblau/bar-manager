@@ -6,7 +6,10 @@ import {
 import {
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
-  TRY_LOGIN
+  TRY_LOGIN,
+  TRY_CHECKTOKEN,
+  CHECKTOKEN_SUCCESS,
+  CHECKTOKEN_FAILURE
 } from "../actions/login";
 import {
   TRY_CHANGE_PASSWORD,
@@ -120,6 +123,11 @@ const initialState = {
     try: false,
     error: undefined
   },
+  checkToken: {
+    inProgress: false,
+    try: false,
+    error: undefined
+  },
   acceptRequest: {},
   cancelRequest: {},
 };
@@ -223,6 +231,7 @@ const userReducer = (state=initialState, action) => {
     reduceFetch("sendMessage", TRY_POST_SEND_MESSAGE, POST_SEND_MESSAGE_SUCCESS, POST_SEND_MESSAGE_FAILURE),
     reduceFetch("sendMessageClient", TRY_POST_SEND_MESSAGE_CLIENT, POST_SEND_MESSAGE_SUCCESS_CLIENT, POST_SEND_MESSAGE_FAILURE_CLIENT),
     reduceFetch("getMessages", TRY_POST_SEND_MESSAGE_CLIENT, POST_SEND_MESSAGE_SUCCESS_CLIENT, POST_SEND_MESSAGE_FAILURE_CLIENT),
+    reduceFetch("checkToken", TRY_CHECKTOKEN, CHECKTOKEN_SUCCESS, CHECKTOKEN_FAILURE),
     reduceRowFetch("acceptRequest", TRY_ACCEPT_REQUEST, ACCEPT_REQUEST_SUCCESS, ACCEPT_REQUEST_FAILURE),
     reduceRowFetch("cancelRequest", TRY_CANCEL_REQUEST, CANCEL_REQUEST_SUCCESS, CANCEL_REQUEST_FAILURE),
   ]

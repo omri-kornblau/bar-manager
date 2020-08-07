@@ -18,14 +18,6 @@ import {
   logout as logoutThunk
 } from "../redux/thunks/login";
 
-import {
-  getClientData,
-} from "../redux/thunks/client"
-
-import {
-  getProviderData,
-} from "../redux/thunks/provider"
-
 import AppNavbar from "../components/AppNavbar/AppNavbar";
 import { getLocation } from "connected-react-router";
 import { getIntervals } from "../redux/selectors/interval";
@@ -33,6 +25,7 @@ import { addInterval, removeInterval } from "../redux/thunks/interval";
 import { GET_CLIENT, GET_PROVIDER } from "../constants/intervals";
 import { getLoading } from "../redux/selectors/request";
 import { Box, CircularProgress, Grid, Modal } from "@material-ui/core";
+import { getCheckTokenErrors } from "../redux/selectors/errors";
 
 const navbarPages = _.filter(pages, { hideFromNavbar: false });
 const accountIconPages = _.filter(pages, { hideFromNavbar: true });
@@ -43,13 +36,11 @@ const Main = props => {
     isLoggedIn,
     checkToken,
     logout,
-    getClient,
-    getProvider,
     isProvider,
     location,
     addInterval,
     removeInterval,
-    isLoading,
+    checkTokenStatus,
   } = props;
 
   const { pathname, search, hash } = location;
@@ -59,10 +50,11 @@ const Main = props => {
   }, []);
 
   useEffect(() => {
-    addInterval(isProvider)
-
-    return () => removeInterval(isProvider);
-  }, [isProvider])
+    if (checkTokenStatus.try && !checkTokenStatus.inProgress) {
+      addInterval(isProvider)
+      return () => removeInterval(isProvider);
+    }
+  }, [checkTokenStatus, isProvider])
 
   return (
     <>
@@ -74,7 +66,7 @@ const Main = props => {
         logout={logout}
       />
       {
-        isLoading
+        checkTokenStatus.inProgress
         ? <Modal open={true}>
             <Grid container alignItems="center" direction="row" style={{height: "100%"}}>
               <Grid container item direction="column" alignItems="center">
@@ -107,16 +99,14 @@ const mapStateToProps = state => ({
   location: getLocation(state),
   isProvider: isProvider(state),
   intervals: getIntervals(state),
-  isLoading: getLoading(state),
+  checkTokenStatus: getCheckTokenErrors(state),
 })
 
 const mapDispatchToProps = dispatch => ({
   checkToken: checkTokenThunk(dispatch),
   logout: logoutThunk(dispatch),
-  getClient: getClientData(dispatch),
-  getProvider: getProviderData(dispatch),
   addInterval: isProvider =>
-    addInterval(dispatch)(isProvider ? GET_PROVIDER : GET_CLIENT, [{isLoading: false}]),
+    addInterval(dispatch)(isProvider ? GET_PROVIDER : GET_CLIENT, [{ isLoading: false }]),
   removeInterval: isProvider =>
     removeInterval(dispatch)(isProvider ? GET_PROVIDER : GET_CLIENT),
 })

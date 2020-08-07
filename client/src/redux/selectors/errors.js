@@ -41,3 +41,8 @@ export const getSendMessageErrors = state => {
 export const getSendMessageErrorsClient = state => {
   return state.app.errors.sendMessageClient;
 }
+
+export const getCheckTokenErrors = state => {
+  return state.app.errors.checkToken;
+}
+

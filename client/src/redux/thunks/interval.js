@@ -14,8 +14,9 @@ import { REFRESH_INTERVAL } from "../../constants/intervals";
 export const addInterval = outerDispatch => (intervalName, params) => {
   outerDispatch((dispatch, getState) => {
     const state = getState();
+    const currentIntervals = getIntervals(state);
     const intervals = [
-        ...getIntervals(state),
+        ...currentIntervals,
         {
           name: intervalName,
           params: params
