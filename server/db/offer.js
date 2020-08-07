@@ -24,7 +24,7 @@ exports.setOffer = async (providerId, requestId, price) => {
     throw Boom.internal("Failed setting offer");
   }
 
-  return newOffer;
+  return newOffer._doc;
 }
 
 exports.deleteOffer = async offerId => {

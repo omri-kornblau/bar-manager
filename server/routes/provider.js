@@ -170,7 +170,7 @@ exports.setOffer = async (req, res) => {
     throw Boom.internal(err);
   }
 
-  res.send(offer)
+  res.send({...offer, provider: provider.name});
 }
 
 exports.sendMessage = async (req, res) => {
