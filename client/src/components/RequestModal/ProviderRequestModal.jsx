@@ -145,13 +145,14 @@ const ProviderRequestModal = props => {
                 <Typography align="center" variant="h6">
                   הגש הצעה
                 </Typography>
+                <Box mt={1}/>
                 <ProviderOfferBox
-                  provider={provider}
                   myOffer={data.myOffer.price}
                   offers={data.offers}
                   onSetOffer={_onSetOffer}
                   setOfferStatus={setOfferStatus}
                   allowOffer={allowOffer}
+                  maxPrice={data.maxPrice}
                 />
                 <Box mt={1}/>
               </Grid>
