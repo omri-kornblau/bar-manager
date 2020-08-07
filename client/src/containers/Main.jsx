@@ -67,13 +67,8 @@ const Main = props => {
         logout={logout}
       />
       {
-<<<<<<< HEAD
         checkTokenStatus.inProgress
-        ? <Modal open={true}>
-=======
-        isLoading
         ? <EscapeModal open={true}>
->>>>>>> 6675160... Exit modals on escape
             <Grid container alignItems="center" direction="row" style={{height: "100%"}}>
               <Grid container item direction="column" alignItems="center">
                 <Box
