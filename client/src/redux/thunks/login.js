@@ -4,14 +4,19 @@ import {
   tryLogin,
   loginSuccess,
   loginFailure,
-  logoutSuccess
+  logoutSuccess,
+  tryCheckToken,
+  checkTokenSuccess,
+  checkTokenFailure
 } from "../actions/login";
 import {
   postLogin,
   getCheckToken,
   getLogout,
 } from "../../api/authentication";
+
 import { getClientData } from "./client";
+import { getProviderData } from "./provider";
 
 export const login = outerDispatch => (username, password) =>
   outerDispatch(dispatch => {
@@ -30,13 +35,19 @@ export const login = outerDispatch => (username, password) =>
 
 export const checkToken = outerDispatch => originUrl =>
   outerDispatch(dispatch => {
+    dispatch(tryCheckToken())
+
     getCheckToken()
       .then(res => {
-        dispatch(loginSuccess(res.data));
+        dispatch(checkTokenSuccess(res.data));
         dispatch(push(originUrl));
+        const isProvider = res.data.type === "provider";
+        isProvider ?
+          getProviderData(outerDispatch)({ isForce: true }) :
+          getClientData(outerDispatch)({ isForce: true });
       })
       .catch(err => {
-        dispatch(logoutSuccess());
+        dispatch(checkTokenFailure(err));
         dispatch(push("/home/welcome"));
       })
   })

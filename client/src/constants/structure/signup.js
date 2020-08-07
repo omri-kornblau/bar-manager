@@ -28,9 +28,40 @@ export const clientForm =
       label: "שם מלא",
       name: "name",
       type: "text",
-      fullWidth: false,
       required: true,
     },
+    {
+      label: "ח.פ",
+      name: "companyId",
+      type: "text",
+      required: true,
+    }
+  ],[
+    {
+      label: "כתובת",
+      name: "address",
+      type: "text",
+      required: true,
+    },
+    {
+      label: "טלפון",
+      name: "phoneNumber",
+      type: "text",
+      required: true,
+    }
+  ],[
+    {
+      label: "שם הבעלים",
+      name: "owner",
+      type: "text",
+      required: true,
+    },
+    {
+      label: "תחום פעילות",
+      name: "fieldOfActivity",
+      type: "text",
+      required: true,
+    }
   ],
 ];
 
@@ -42,7 +73,6 @@ export const providerForm =
       type: "text",
       required: true,
     },
-  ],[
     {
       label: "דואר אלקטרוני",
       name: "email",
@@ -56,7 +86,6 @@ export const providerForm =
       type: "password",
       required: true,
     },
-  ],[
     {
       label: "אימות סיסמה",
       name: "rePassword",
@@ -67,6 +96,25 @@ export const providerForm =
     {
       label: "שם מלא",
       name: "name",
+      type: "text",
+      required: true,
+    },
+    {
+      label: "שם איש קשר",
+      name: "contactName",
+      type: "text",
+      required: true,
+    },
+  ],[
+    {
+      label: "טלפון איש קשר",
+      name: "contactPhone",
+      type: "text",
+      required: true,
+    },
+    {
+      label: "דואר אלקטרוני איש קשר",
+      name: "contactEmail",
       type: "text",
       required: true,
     },

@@ -17,28 +17,28 @@ import {
   Chip
 } from '@material-ui/core';
 import {
-  Send as SendIcon ,
+  Send as SendIcon,
   GetApp as GetAppIcon
 } from '@material-ui/icons';
 
 import CustomTable from "../Table/Table";
 import LoadingButton from "../LoadingButton/LoadingButton";
 import { parseOfferBoxError } from "../../helpers/errors";
-import { useEffect } from "react";
+import { formatShekel } from "../../helpers/formats";
 
 const ProviderOfferBox = props => {
   const {
-    provider,
     myOffer,
     offers,
     onSetOffer,
     setOfferStatus,
-    allowOffer
+    allowOffer,
+    maxPrice
   } = props;
 
   offers.sort((a, b) => a.price - b.price);
   const isOfferWinning = offers.length > 0 ?
-    _.minBy(offers, offer => offer.price).provider === provider._id
+    _.minBy(offers, offer => offer.price).price === myOffer
     : false;
 
   const [newOffer, setNewOffer] = useState(myOffer)
@@ -61,7 +61,7 @@ const ProviderOfferBox = props => {
           { allowOffer ? "הצעה נוכחית:" : "מחיר סופי:" }
         </Box>
         <Chip
-          label={myOffer ? `${myOffer} ש"ח` : "אין הצעה נוכחית"}
+          label={myOffer ? formatShekel(myOffer) : "אין הצעה נוכחית"}
           size="small"
           color={isOfferWinning ? "primary" : "default"}
         />
@@ -69,6 +69,17 @@ const ProviderOfferBox = props => {
       <Box mt={1}/>
       {allowOffer &&
         <>
+          <Typography align="center" variant="body1">
+            <Box display="inline" mr={1} fontWeight={900}>
+              פרמיה מקסימלית:
+            </Box>
+            <Chip
+              label={formatShekel(maxPrice)}
+              size="small"
+              color={isOfferWinning ? "primary" : "default"}
+            />
+          </Typography>
+          <Box mt={2}/>
           <Grid justify="center" container alignItems="center">
             <TextField
               label="סכום הצעה חדש"

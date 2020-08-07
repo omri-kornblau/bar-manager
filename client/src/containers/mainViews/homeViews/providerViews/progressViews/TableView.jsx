@@ -6,7 +6,6 @@ import {
   Typography,
   Grid,
   Box,
-  Modal,
   Fade,
   Backdrop,
   Paper,
@@ -40,6 +39,7 @@ import { getFetchedRequest } from "../../../../../redux/selectors/provider";
 import { useEffect } from "react";
 import { removeInterval, addInterval } from "../../../../../redux/thunks/interval";
 import { GET_FETCHED_REQUEST } from "../../../../../constants/intervals";
+import EscapeModal from "../../../../../components/ModalEscape/ModalEscape";
 
 
 const TableView = props => {
@@ -115,7 +115,7 @@ const TableView = props => {
         actions={actions}
         onRowClick={onOpenRequest}
       />
-      <Modal
+      <EscapeModal
         open={isModalOpen}
         onClose={onCloseRequest}
         style={{
@@ -152,7 +152,7 @@ const TableView = props => {
             sendMessageStatus={sendMessageStatus}
           />
         }
-      </Modal>
+      </EscapeModal>
     </Box>
   );
 }

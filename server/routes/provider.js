@@ -132,6 +132,9 @@ exports.setOffer = async (req, res) => {
   if (!_.isNil(originalOffer) && price >= originalOffer.price) {
     throw Boom.badRequest("Price should be lower then last price")
   }
+  if (price > originalRequest.maxPrice) {
+    throw Boom.badRequest("Price should be lower then max price")
+  }
   const offer = await setOffer(provider._id, requestId, price);
 
   let request;

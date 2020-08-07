@@ -24,7 +24,12 @@ const errorRoutes = [
   },
   {
     condition: err => err.name === "MongoError" && err.code === 11000,
-    handler: (res, err) => res.status(400).send(Boom.badRequest(err))
+    handler: (res, err) => res.status(400).send(
+      Boom.badRequest(JSON.stringify({
+        message: "Duplicate key",
+        path: Object.keys(err.keyValue)[0],
+      })).output.payload
+    )
   }
 ];
 

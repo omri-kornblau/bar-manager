@@ -7,8 +7,9 @@ const SampledModel = Mongoose.model("SampledRequest");
 exports.createSampledFromRequest = async (request) => {
   const {
     _id,
+    startDate,
     activeTime,
-    startDate
+    endTime
   } = request;
 
   const createdSampled = await SampledModel.create({
@@ -16,6 +17,7 @@ exports.createSampledFromRequest = async (request) => {
     requestId: _id,
     startDate,
     activeTime,
+    endTime
   });
 
   if (_.isNil(createdSampled)) {

@@ -1,5 +1,4 @@
 import _ from "lodash";
-import RWMutex from "rwmutex";
 import {
   interval,
 } from "../../helpers/interval";
@@ -12,25 +11,24 @@ import {
 } from "../actions/interval";
 import { REFRESH_INTERVAL } from "../../constants/intervals";
 
-const mutex = new RWMutex();
-
 export const addInterval = outerDispatch => (intervalName, params) => {
   outerDispatch((dispatch, getState) => {
     const state = getState();
+    const currentIntervals = getIntervals(state);
     const intervals = [
-        ...getIntervals(state),
+        ...currentIntervals,
         {
           name: intervalName,
           params: params
         }
       ];
-    let intervalId = getIntervalId(state);
+    const currentIntervalId = getIntervalId(state);
 
-    if (!_.isNil(intervalId)) {
-      clearInterval(intervalId);
+    if (!_.isNil(currentIntervalId)) {
+      clearInterval(currentIntervalId);
     }
 
-    intervalId = setInterval(
+    const intervalId = setInterval(
       () => interval(intervals, dispatch)
     ,REFRESH_INTERVAL);
 
@@ -41,15 +39,15 @@ export const addInterval = outerDispatch => (intervalName, params) => {
 export const removeInterval = outerDispatch => intervalName => {
   outerDispatch((dispatch, getState) => {
     const state = getState();
-    let intervals = getIntervals(state);
-    let intervalId = getIntervalId(state);
+    const currentIntervals = getIntervals(state);
+    const currentIntervalId = getIntervalId(state);
 
-    if (!_.isNil(intervalId)) {
-      clearInterval(intervalId);
+    if (!_.isNil(currentIntervalId)) {
+      clearInterval(currentIntervalId);
     }
 
-    intervals = _.remove(state.intervals, {name: intervalName});
-    intervalId = intervals.length > 0
+    const intervals = _.reject(currentIntervals, { name: intervalName });
+    const intervalId = intervals.length > 0
       ? setInterval(
           () => interval(intervals, dispatch),
           REFRESH_INTERVAL)

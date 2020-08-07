@@ -215,6 +215,9 @@ exports.updateRequest = async (req, res) => {
   if (!_.includes(ALLOW_UPDATE_STATUSES, currentRequest.status)) {
     throw Boom.badRequest("Cannot update request with such status");
   }
+  if (currentRequest.offers.length > 0) {
+    throw Boom.badRequest("Cannot update request with offers");
+  }
 
   if (_.isArray(policy) && policy.length > 0) {
     data.policy = await writerFile(Attachment, policy[0]);;

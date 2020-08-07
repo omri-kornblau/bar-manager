@@ -9,8 +9,10 @@ const unknowErrorData = {
 const errMessageToText = {
   "Policy file must be provided": "יש להעלות קובץ פוליסה",
   "Extra files must be provided": "יש להעלות קבצים נוספים",
+  "Price should be lower then max price": "המחיר המוצע לא נמוך מן הפרמיה המקסימלית",
   "Price should be lower then last price": "המחיר החדש לא נמוך מהנוכחי",
   "Price should be bigger then 0": "נא להכניס מספר חיובי",
+  "Cannot update request with offers": "לא ניתן לעדכן בקשה אשר קיבלה הצעות ממבטחים"
 }
 
 const generalErrorToText = ({ message }) => (
@@ -35,6 +37,10 @@ const yupErrorToText = errData => {
       return `סעיף ${label} חייב להיות קטן מ${max}`
     case "required":
       return `יש למלא את סעיף ${label}`
+    case "email":
+      return `יש למלא אימייל תקין`
+    case "matches":
+      return `יש למלא ${label} תקין`
     default:
       return `יש לתקן את סעיף ${label}`
   }
@@ -71,6 +77,8 @@ export const parseBoomError = err => {
       return {...initErr, message: `הסיסמה צריכה להכיל פחות מ${errData.max} תווים`};
     case "Incorrect password":
       return {...initErr, message: "הסיסמה לא נכונה"};
+    case "Duplicate key":
+      return {...initErr, message: `${labels[initErr.key]} כבר קיים`};
   }
 }
 

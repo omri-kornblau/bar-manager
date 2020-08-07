@@ -16,12 +16,13 @@ const yupCreateRequestSchema = Yup.object().shape({
   status: Yup.mixed().oneOf(REQUEST_STATUSES),
   assetDescription: Yup.string().required(),
   companyDescription: Yup.string().required(),
-  insuranceDuration: Yup.number().positive().required(),
+  insuranceDuration: Yup.number().positive().integer().required(),
   isCurrentlyInsured: Yup.boolean(),
   maxPrice: Yup.number().positive().required(),
   comments: Yup.string(),
   startDate: Yup.date(),
   activeTime: Yup.date(),
+  endTime: Yup.date(),
   policy: Yup.string().length(OBJECT_ID_LENGTH),
   extraFiles: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   messages: Yup.object(),
@@ -29,10 +30,6 @@ const yupCreateRequestSchema = Yup.object().shape({
 });
 
 const yupUpdateRequestSchema = Yup.object().shape({
-  assetDescription: Yup.string().required(),
-  companyDescription: Yup.string().required(),
-  insuranceDuration: Yup.number().positive().required(),
-  isCurrentlyInsured: Yup.boolean(),
   maxPrice: Yup.number().positive().required(),
 });
 
@@ -65,6 +62,9 @@ const mongoFormat = {
     type: Date,
   },
   activeTime: {
+    type: Date,
+  },
+  endTime: {
     type: Date,
   },
   policy: {

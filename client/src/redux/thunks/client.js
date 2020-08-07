@@ -51,6 +51,7 @@ export const getClientData = outerDispatch => ({isLoading=true, isForce=false} =
 
       getClient(isForce)
         .then(res => {
+          if (res.data === "NO CHANGE") return
           dispatch(getClientSuccess(res.data));
         })
         .catch(err => {
