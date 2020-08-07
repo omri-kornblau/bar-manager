@@ -14,6 +14,7 @@ const {
 const {
   addNotificationToProviderById,
   findProviderById,
+  updateProviderById,
 } = require("../db/provider");
 const {
   findMessageById,
@@ -300,4 +301,10 @@ exports.readNotification = async (client, notificationId, readNotifcationFunc) =
     await readNotification(notificationId, false)
     throw Boom.internal(err);
   }
+}
+
+exports.updateProvidersUpdateAt = async providerIds => {
+  return Promise.all(providerIds.map(providerId => {
+    return updateProviderById(providerId, {})
+  }))
 }

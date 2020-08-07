@@ -27,6 +27,8 @@ const yupCreateRequestSchema = Yup.object().shape({
   extraFiles: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   messages: Yup.object(),
   offers: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
+  createdAt: Yup.date(),
+  updatedAt: Yup.date(),
 });
 
 const yupUpdateRequestSchema = Yup.object().shape({

@@ -14,9 +14,8 @@ const {
   findByIds,
   prepareNotifications,
   createClientNotification,
-  downloadFile,
   providerDownloadFile,
-  readNotification
+  readNotification,
 } = require("./utils");
 
 const {
