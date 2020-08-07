@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { push } from "connected-react-router";
 
 import {
@@ -17,6 +18,8 @@ import {
 
 import { getClientData } from "./client";
 import { getProviderData } from "./provider";
+import { getView } from "../selectors/sidebar";
+import LoggedOutViews from "../../containers/mainViews/homeViews/loggedOutViews";
 
 export const login = outerDispatch => (username, password) =>
   outerDispatch(dispatch => {
@@ -34,14 +37,18 @@ export const login = outerDispatch => (username, password) =>
   })
 
 export const checkToken = outerDispatch => originUrl =>
-  outerDispatch(dispatch => {
+  outerDispatch((dispatch, getState) => {
     dispatch(tryCheckToken())
 
     getCheckToken()
       .then(res => {
-        dispatch(checkTokenSuccess(res.data));
-        dispatch(push(originUrl));
+        const state = getState();
         const isProvider = res.data.type === "provider";
+
+        dispatch(checkTokenSuccess(res.data));
+        if (_.isNaN(LoggedOutViews[getView(state)])) {
+          dispatch(push(originUrl));
+        }
         isProvider ?
           getProviderData(outerDispatch)({ isForce: true }) :
           getClientData(outerDispatch)({ isForce: true });

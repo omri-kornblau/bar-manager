@@ -4,6 +4,7 @@ import {
 import {
   LOCATION_CHANGE
 } from "connected-react-router"
+import { CHECKTOKEN_SUCCESS } from "../actions/login";
 
 const initialSidebar = {
   view: "welcome",
@@ -16,6 +17,12 @@ const navbarReducer = (state=initialSidebar, action) => {
       return {
         ...state,
         closed: action.payload.closed
+      }
+
+    case CHECKTOKEN_SUCCESS:
+      return {
+        ...state,
+        view: "dashboard"
       }
 
     case LOCATION_CHANGE:
