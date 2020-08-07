@@ -9,16 +9,16 @@ const {
 } = require("../config/consts");
 
 const yupProviderSchema = Yup.object().shape({
-  name: Yup.string().min(NAME_MIN_LENGTH).max(NAME_MAX_LENGTH),
+  name: Yup.string().min(NAME_MIN_LENGTH).max(NAME_MAX_LENGTH).required(),
   unreadNotifications: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   readNotifications: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   requests: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   oldRequests: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   createdAt: Yup.date(),
   updatedAt: Yup.date(),
-  contactName: Yup.string().min(NAME_MIN_LENGTH).max(NAME_MAX_LENGTH),
-  contactPhone: Yup.string().matches(PHONE_REGEX, 'Phone number is not valid'),
-  contactEmail: Yup.string().email(),
+  contactName: Yup.string().min(NAME_MIN_LENGTH).max(NAME_MAX_LENGTH).required(),
+  contactPhone: Yup.string().matches(PHONE_REGEX, 'Phone number is not valid').required(),
+  contactEmail: Yup.string().email().required(),
 });
 
 const mongoFormat = {

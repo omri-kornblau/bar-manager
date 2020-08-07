@@ -35,6 +35,10 @@ const yupErrorToText = errData => {
       return `סעיף ${label} חייב להיות קטן מ${max}`
     case "required":
       return `יש למלא את סעיף ${label}`
+    case "email":
+      return `יש למלא אימייל תקין`
+    case "matches":
+      return `יש למלא ${label} תקין`
     default:
       return `יש לתקן את סעיף ${label}`
   }
@@ -71,6 +75,8 @@ export const parseBoomError = err => {
       return {...initErr, message: `הסיסמה צריכה להכיל פחות מ${errData.max} תווים`};
     case "Incorrect password":
       return {...initErr, message: "הסיסמה לא נכונה"};
+    case "Duplicate key":
+      return {...initErr, message: `${labels[initErr.key]} כבר קיים`};
   }
 }
 

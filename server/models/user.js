@@ -17,11 +17,11 @@ const hashCompare = promisify(Bcrypt.compare);
 const hash = promisify(Bcrypt.hash);
 
 const yupUserFormat = Yup.object().shape({
-  email: Yup.string().email(),
-  username: Yup.string().min(USER_MIN_LENGTH).max(USER_MAX_LENGTH),
-  password: Yup.string().min(PASSWORD_MIN_LENGTH).max(PASSWORD_MAX_LENGTH),
-  type: Yup.mixed().oneOf(USER_TYPES_VALUES),
-  clientId: Yup.string().length(OBJECT_ID_LENGTH),
+  email: Yup.string().email().required(),
+  username: Yup.string().min(USER_MIN_LENGTH).max(USER_MAX_LENGTH).required(),
+  password: Yup.string().min(PASSWORD_MIN_LENGTH).max(PASSWORD_MAX_LENGTH).required(),
+  type: Yup.mixed().oneOf(USER_TYPES_VALUES).required(),
+  clientId: Yup.string().length(OBJECT_ID_LENGTH).required(),
 });
 
 const mongoFormat = {
