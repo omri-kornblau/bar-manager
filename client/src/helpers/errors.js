@@ -11,6 +11,7 @@ const errMessageToText = {
   "Extra files must be provided": "יש להעלות קבצים נוספים",
   "Price should be lower then last price": "המחיר החדש לא נמוך מהנוכחי",
   "Price should be bigger then 0": "נא להכניס מספר חיובי",
+  "Cannot update request with offers": "לא ניתן לעדכן בקשה אשר קיבלה הצעות ממבטחים"
 }
 
 const generalErrorToText = ({ message }) => (

@@ -30,10 +30,6 @@ const yupCreateRequestSchema = Yup.object().shape({
 });
 
 const yupUpdateRequestSchema = Yup.object().shape({
-  assetDescription: Yup.string().required(),
-  companyDescription: Yup.string().required(),
-  insuranceDuration: Yup.number().positive().required(),
-  isCurrentlyInsured: Yup.boolean(),
   maxPrice: Yup.number().positive().required(),
 });
 

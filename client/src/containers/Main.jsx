@@ -55,6 +55,7 @@ const Main = props => {
       addInterval(isProvider)
       return () => removeInterval(isProvider);
     }
+
   }, [isLoggedIn, checkTokenStatus, isProvider])
 
   return (

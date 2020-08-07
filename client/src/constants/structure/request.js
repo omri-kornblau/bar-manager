@@ -274,54 +274,15 @@ export const modalChosenHeaders = [
 export const modalEditFormStructure = [
   [
     {
-      label: "תקופת הביטוח הרצויה",
-      type: "number",
-      name: "insuranceDuration",
-      justify: "center",
-      required: true,
-      InputProps: {
-        endAdornment: <InputAdornment position="end">חודשים</InputAdornment>,
-      }
-    },
-  ],[
-    {
       label: "פרמיה מקסימלית רצויה",
       name: "maxPrice",
       type: "number",
+      fullWidth: false,
+      justify: "center",
       InputProps: {
         endAdornment: <InputAdornment position="end">₪k</InputAdornment>,
       }
     }
-  ],[
-    {
-      label: "הערות",
-      name: "comments",
-      multiline: true,
-      rows: 2,
-      placeholder: "הכנס הערות כאן..."
-    },
-  ],[
-    {
-      label: "תיאור תמציתי של הנכס",
-      name: "assetDescription",
-      multiline: true,
-      rows: 2,
-      placeholder: "הכנס תיאור כאן.."
-    },
-  ],[
-    {
-      label: "תיאור תמציתי של החברה",
-      name: "companyDescription",
-      multiline: true,
-      rows: 2,
-      placeholder: "הכנס תיאור כאן.."
-    },
-  ],[
-    {
-      label: "מבוטח כרגע",
-      name: "isCurrentlyInsured",
-      type: "checkbox",
-    },
   ],[
     {
       label: "העלה פוליסה",

@@ -30,11 +30,6 @@ exports.ALLOW_UPDATE_STATUSES = ["inTenderProcedure"];
 exports.STATUS_UPDATE_ALLOWED_FIELDS = {
   inTenderProcedure: [
     "maxPrice",
-    "comments",
-    "insuranceDuration",
-    "assetDescription",
-    "companyDescription",
-    "isCurrentlyInsured",
     "policy",
     "extraFiles",
   ]

@@ -86,7 +86,7 @@ const EditDataList = props => {
         variant="outlined"
         size="small"
         margin="dense"
-        spacing={1}
+        spacing={4}
         onChange={onChange}
         error={parsedError}
       />
