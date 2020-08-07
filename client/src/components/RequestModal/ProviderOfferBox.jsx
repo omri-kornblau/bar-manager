@@ -74,9 +74,9 @@ const ProviderOfferBox = props => {
               פרמיה מקסימלית:
             </Box>
             <Chip
-              label={formatShekel(myOffer)}
+              label={formatShekel(maxPrice)}
               size="small"
-              color={isOfferWinning ? "primary" : "secondary"}
+              color={isOfferWinning ? "primary" : "default"}
             />
           </Typography>
           <Box mt={2}/>
