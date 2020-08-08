@@ -161,7 +161,7 @@ const CustomTable = props => {
     return pagination && !manualSkip ? filteredRows.slice(_page * _rowsPerPage, (_page + 1) * _rowsPerPage) : filteredRows;
   }, [options, filter, sort, sortBy, _rowsPerPage, _page, manualSkip]);
 
-  const headerRefs = columns.map(() => useRef(null));
+  const headerRefs = useRef(columns.map(React.createRef));
 
   const _onPageChange = (event, newPage) => {
     onPageChange(newPage);
@@ -227,7 +227,7 @@ const CustomTable = props => {
                 columns={columns}
                 key={index}
                 collapse={collapse}
-                headerRefs={headerRefs}
+                headerRefs={headerRefs.current}
                 rounded={rounded}
                 onRowClick={onRowClick}
                 actions={actions}

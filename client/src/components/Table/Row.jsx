@@ -70,7 +70,7 @@ const Row = props => {
               {
                 index + 1 < columns.length && !! drag
                 ? <ColumnResizer
-                    style={{opacity: rounded ? 0 : 1}}
+                    style={{ opacity: rounded ? 0 : 1 }}
                     prev={headerRefs[index]}
                     next={headerRefs[index+1]}
                   />
