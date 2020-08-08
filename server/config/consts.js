@@ -52,7 +52,7 @@ exports.STATUS_TIMING = {
   },
   waitingForSign: {
     endTimeKey: "activeTime",
-    duration: Moment.duration(30, "minutes"),
+    duration: Moment.duration(1, "minutes"),
     targetStatus: "active"
   },
   active: {

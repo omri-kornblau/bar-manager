@@ -5,7 +5,6 @@ const Boom = require("boom");
 const UserModel = Mongoose.model("User");
 const ProviderModel = Mongoose.model("Provider");
 const RequestModel = Mongoose.model("Request");
-const OldRequestModel = Mongoose.model("OldRequest");
 const NotificationModel = Mongoose.model("Notification");
 
 const {
@@ -70,7 +69,6 @@ exports.getAll = async (req, res) => {
   const [user, provider] = await getProvider(username);
 
   const rawRequests = await findByIds(RequestModel, provider.requests, "Request not found");
-  const oldRequests = await findByIds(OldRequestModel, provider.oldRequests, "Old request not found");
   const notifications = await prepareNotifications(await findByIds(NotificationModel, provider.unreadNotifications, "Unread notification not found"));
 
   const requests = await Promise.all(rawRequests.map(async request => {
@@ -78,7 +76,7 @@ exports.getAll = async (req, res) => {
     return { ...request._doc, author: client.name }
   }));
 
-  res.send({ requests, oldRequests, notifications });
+  res.send({ requests, notifications });
 }
 
 exports.getRequests = async (req, res) => {

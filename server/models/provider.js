@@ -13,7 +13,6 @@ const yupProviderSchema = Yup.object().shape({
   unreadNotifications: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   readNotifications: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   requests: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
-  oldRequests: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   createdAt: Yup.date(),
   updatedAt: Yup.date(),
   contactName: Yup.string().min(NAME_MIN_LENGTH).max(NAME_MAX_LENGTH).required(),
@@ -32,9 +31,6 @@ const mongoFormat = {
     type: Array
   },
   requests: {
-    type: Array
-  },
-  oldRequests: {
     type: Array
   },
   createdAt: {

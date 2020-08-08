@@ -29,7 +29,6 @@ const { removeRequestFromProviderById } = require("../db/provider");
 const SampledModel = Mongoose.model("SampledRequest");
 const OftenSampledModel = Mongoose.model("OftenSampledRequest");
 const RequestModel = Mongoose.model("Request");
-const OldRequestModel = Mongoose.model("OldRequest");
 
 const StatusWorker = {};
 
@@ -88,12 +87,6 @@ const endProcedureWithOffers = async request => {
 
 const endPolicy = async (request, sampledId) => {
   await OftenSampledModel.findByIdAndRemove(sampledId);
-  await moveMongoDocument(request, RequestModel, OldRequestModel);
-  await removeRequestFromClientById(request.author, request._id)
-  const offers = await Promise.all(request.offers.map(findOfferById));
-  await Promise.all(offers.map(({ provider }) =>
-    removeRequestFromProviderById(provider, request._id)
-  ));
 }
 
 const sampleRequestsOften = async () => {
@@ -135,12 +128,6 @@ const sampleRequestsOften = async () => {
         }
       }
 
-      if (isPolicyEnd(targetStatus)) {
-        await endPolicy(request, _id);
-        console.log(`Moved request [${requestId}] to old reqeusts`);
-        return
-      }
-
       const updateStatusOp = { $set: { status: targetStatus } };
       const restoreStatusOp = { $set: { status } };
 
@@ -164,6 +151,10 @@ const sampleRequestsOften = async () => {
         type: "Status updated",
         status: targetStatus
       }, requestId, (await findOfferById(updatedRequest.offers[0])).provider);
+
+      if (isPolicyEnd(targetStatus)) {
+        await endPolicy(request, _id);
+      }
     }
   }));
 }

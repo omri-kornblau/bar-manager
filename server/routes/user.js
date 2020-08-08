@@ -29,7 +29,6 @@ exports.signupClient = async (req, res) => {
       unreadNotifications: [],
       readNotifications: [],
       requests: [],
-      oldRequests: [],
       companyId,
       address,
       phoneNumber,
@@ -79,7 +78,6 @@ exports.signupProvider = async (req, res) => {
       unreadNotifications: [],
       readNotifications: [],
       requests: [],
-      oldRequests: [],
       contactName,
       contactPhone,
       contactEmail

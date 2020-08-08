@@ -5,7 +5,6 @@ const Boom = require("boom");
 const RequestModel = Mongoose.model("Request");
 const ClientModel = Mongoose.model("Client");
 const UserModel = Mongoose.model("User");
-const OldRequestModel = Mongoose.model("OldRequest");
 const NotificationModel = Mongoose.model("Notification");
 
 const { internals } = require("../models/attachment");
@@ -70,10 +69,9 @@ exports.getAll = async (req, res) => {
 
   // TODO: better logs here
   const requests = await prepareRequests(await findByIds(RequestModel, client.requests, "Request not found"));
-  const oldRequests = await prepareRequests(await findByIds(OldRequestModel, client.oldRequests, "Old request not found"));
   const notifications = await prepareNotifications(await findByIds(NotificationModel, client.unreadNotifications, "Unread notification not found"));
 
-  res.send({ requests, oldRequests, notifications });
+  res.send({ requests, notifications });
 }
 
 exports.createRequest = async (req, res) => {
@@ -108,7 +106,7 @@ exports.createRequest = async (req, res) => {
   const createdRequest = await createRequest({
     author: user._id,
     status: REQUEST_STATUSES[0],
-    index: client.requests.length + client.oldRequests.length,
+    index: client.requests.length,
     ...req.body
   });
 
@@ -207,7 +205,7 @@ exports.updateRequest = async (req, res) => {
   const { Attachment } = internals;
 
   const [user, client] = await getClient(username);
-  if (!client.requests.includes(_id) && !client.oldRequests.includes(_id)) {
+  if (!client.requests.includes(_id)) {
     throw Boom.unauthorized("_id not belong to client");
   }
 
@@ -255,7 +253,7 @@ exports.cancelRequest = async (req, res) => {
   const { Attachment } = internals;
 
   const [user, client] = await getClient(username);
-  if (!client.requests.includes(_id) && !client.oldRequests.includes(_id)) {
+  if (!client.requests.includes(_id)) {
     throw Boom.unauthorized("_id not belong to client");
   }
 
@@ -303,8 +301,7 @@ exports.deleteFile = async (req, res) => {
 
   const [user, client] = await getClient(username);
   const request = await findRequestByExtraFileId(fileId);
-  if (!client.requests.includes(request._id)
-  && !client.oldRequests.includes(request._id)) {
+  if (!client.requests.includes(request._id)) {
     throw Boom.badRequest("Request not belong to client");
   }
 

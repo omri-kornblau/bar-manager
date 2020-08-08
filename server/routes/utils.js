@@ -249,8 +249,7 @@ exports.fetchRequestById = async (requestId, providerId) => {
 exports.downloadFile = async (client, requestId, fileId, res) => {
   const { Attachment } = internals;
 
-  if (!client.requests.includes(requestId)
-  && !client.oldRequests.includes(requestId)) {
+  if (!client.requests.includes(requestId)) {
     throw Boom.badRequest("Request not belong to client or provider");
   }
 
@@ -272,8 +271,7 @@ exports.providerDownloadFile = async (provider, requestId, fileId, res) => {
 
   const request = await findRequestById(requestId)
   if (!ALLOW_ALL_PROVIDERS_DOWNLOAD_FILE.includes(request.status)
-  && !provider.requests.includes(requestId)
-  && !provider.oldRequests.includes(requestId)) {
+  && !provider.requests.includes(requestId)) {
     throw Boom.badRequest("Request not belong to provider");
   }
 
