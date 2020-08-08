@@ -2,14 +2,19 @@ const _ = require("lodash");
 const Moment = require("moment");
 const Mongoose = require("mongoose");
 
-const { moveMongoDocument } = require("../utils");
+const {
+  moveMongoDocument,
+} = require("../utils");
 
 const {
   STATUS_TIMING,
   SHORT_SAMPLE_INTERVAL,
   LONG_SAMPLE_INTERVAL
 } = require("../config/consts");
-const { createClientNotification } = require("../routes/utils");
+const {
+  createClientNotification,
+  createProviderNotification,
+} = require("../routes/utils");
 
 const {
   updateRequestById,
@@ -59,6 +64,9 @@ const endNoOffersProcedure = async (request, sampledId) => {
   await OftenSampledModel.findByIdAndRemove(sampledId);
   await deleteRequestById(request._id);
   await removeRequestFromClientById(request.author, request._id);
+  await createClientNotification({
+    type: "Tender Procedure Without Offers",
+  }, request._id, request.author);
 }
 
 const endProcedureWithOffers = async request => {
