@@ -23,7 +23,6 @@ import { getLocation } from "connected-react-router";
 import { getIntervals } from "../redux/selectors/interval";
 import { addInterval, removeInterval } from "../redux/thunks/interval";
 import { GET_CLIENT, GET_PROVIDER } from "../constants/intervals";
-import { getLoading } from "../redux/selectors/request";
 import { getCheckTokenErrors } from "../redux/selectors/errors";
 import { Box, CircularProgress, Grid } from "@material-ui/core";
 import EscapeModal from "../components/ModalEscape/ModalEscape";
