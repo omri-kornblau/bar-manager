@@ -74,8 +74,15 @@ const endProcedureWithOffers = async request => {
   const minOffer = _.minBy(offers, "price");
   await Promise.all(offers
     .filter(({ _id }) => _id !== minOffer._id)
-    .map(({ provider }) => removeRequestFromProviderById(provider, request._id)
-  ));
+    .map(({ provider }) => 
+      Promise.all([
+        removeRequestFromProviderById(provider, request._id),
+        createProviderNotification({
+            type: "Offer lose",
+          }, request._id, provider)
+      ])
+    )
+  );
   await removeAllOffersButOne(request._id, minOffer._id);
 }
 
@@ -152,6 +159,11 @@ const sampleRequestsOften = async () => {
         type: "Status updated",
         status: targetStatus
       }, requestId, updatedRequest.author);
+
+      await createProviderNotification({
+        type: "Status updated",
+        status: targetStatus
+      }, requestId, (await findOfferById(updatedRequest.offers[0])).provider);
     }
   }));
 }
