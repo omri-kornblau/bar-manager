@@ -13,6 +13,7 @@ exports.createSampledFromRequest = async (request) => {
   } = request;
 
   const createdSampled = await SampledModel.create({
+    _id: Mongoose.mongo.ObjectID(_id),
     status: "inTenderProcedure",
     requestId: _id,
     startDate,
@@ -25,4 +26,8 @@ exports.createSampledFromRequest = async (request) => {
   }
 
   return createdSampled;
+}
+
+exports.deleteSampledRequestById = _id => {
+  return SampledModel.findByIdAndDelete(_id);
 }

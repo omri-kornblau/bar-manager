@@ -36,10 +36,15 @@ const {
   removeRequestFromClientById,
   readNotificationInClientById,
   updateClientById,
+  deleteNotificationByIds: deleteClientNotificationByIds,
 } = require("../db/client");
 const {
-  createSampledFromRequest
+  createSampledFromRequest,
+  deleteSampledRequestById
 } = require("../db/sampledRequest");
+const {
+  deleteOftenSampledRequestById,
+} = require("../db/oftenSampledRequests")
 const {
   addMessage
 } = require("../db/message");
@@ -48,7 +53,11 @@ const {
 } = require("../db/attachment");
 const {
   updateUserById,
-} = require("../db/user")
+} = require("../db/user");
+const {
+  findNotificationByRequestId,
+  deleteNotificationById,
+} = require("../db/notification");
 
 const {
   REQUEST_STATUSES,
@@ -58,7 +67,10 @@ const {
   STATUS_UPDATE_ALLOWED_FIELDS,
   ALLOW_ACCEPT_CANCEL_STATUSES,
 } = require("../config/consts");
-const { findProviderById } = require("../db/provider");
+const {
+  findProviderById,
+  deleteNotificationByIds: deleteProviderNotificationByIds,
+} = require("../db/provider");
 
 exports.getAll = async (req, res) => {
   const {
@@ -262,8 +274,24 @@ exports.cancelRequest = async (req, res) => {
     throw Boom.badRequest("Cannot cancel request with such status");
   }
 
-  await removeRequestFromClientById(client._id, _id);
-  await deleteRequestById(_id);
+  await Promise.all([
+    removeRequestFromClientById(client._id, _id),
+    deleteRequestById(_id),
+    deleteSampledRequestById(_id),
+    deleteOftenSampledRequestById(_id),
+  ]);
+
+  const notifications = await findNotificationByRequestId(_id);
+  await Promise.all(notifications.map(notification => {
+    const query = notification.ownerType === "client"
+      ? deleteClientNotificationByIds(notification.ownerId, notification._id)
+      : deleteProviderNotificationByIds(notification.ownerId, notification._id);
+
+    return Promise.all([
+      query,
+      deleteNotificationById(notification._id),
+    ]);
+  }));
 
   [currentRequest.policy, ...currentRequest.extraFiles].forEach(fileId =>
     Attachment.unlink({_id: fileId}, err => {

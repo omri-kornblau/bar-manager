@@ -4,12 +4,14 @@ const Boom = require("boom");
 
 const NotificationModel = Mongoose.model("Notification");
 
-exports.createNotification = async (message, requestId) => {
+exports.createNotification = async (message, requestId, ownerId, ownerType) => {
   const createdNotification = await NotificationModel.create({
     time: new Date().toISOString(),
     read: false,
     message,
-    requestId
+    requestId,
+    ownerId,
+    ownerType, 
   })
 
   if (_.isNil(createdNotification)) {
@@ -47,6 +49,23 @@ exports.readNotification = async (_id, isRead) => {
   return updatedNotification;
 }
 
-exports.deleteNotificationsByRequestId = requestId => {
-  return NotificationModel.remove({ requestId });
+exports.findNotification = async query => {
+  const notification = await NotificationModel.findOne(query);
+
+  if (_.isNil(request)) {
+    throw Boom.internal("Notification not found");
+  }
+  return notification;
+}
+
+exports.findNotificationByRequestId = async requestId => {
+  return await NotificationModel.find({ requestId });
+}
+
+exports.findNotificationByRequestId = async requestId => {
+  return await NotificationModel.find({ requestId });
+}
+
+exports.deleteNotificationById = async id => {
+  return await NotificationModel.findByIdAndDelete(id);
 }

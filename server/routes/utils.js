@@ -210,12 +210,12 @@ exports.readFile = (attachment, _id) => {
 }
 
 exports.createClientNotification = async (message, requestId, clientId) => {
-  const createdNotification = await createNotification(message, requestId);
+  const createdNotification = await createNotification(message, requestId, clientId, "client");
   return await addNotificationToClientById(clientId, createdNotification._id);
 }
 
 exports.createProviderNotification = async (message, requestId, providerId) => {
-  const createdNotification = await createNotification(message, requestId);
+  const createdNotification = await createNotification(message, requestId, providerId, "provider");
   return await addNotificationToProviderById(providerId, createdNotification._id);
 }
 
