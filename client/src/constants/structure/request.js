@@ -268,6 +268,23 @@ export const modalChosenHeaders = [
   },
   {
     id: "comments"
+  },
+  {
+    id: "name"
+  },
+  {
+    id: "companyId"
+  },{
+    id: "address"
+  },
+  {
+    id: "owner"
+  },
+  {
+    id: "fieldOfActivity"
+  },
+  {
+    id: "phoneNumber"
   }
 ]
 

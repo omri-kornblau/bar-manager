@@ -32,6 +32,7 @@ const { internals } = require("../models/attachment");
 const {
   ALLOW_ALL_PROVIDERS_DOWNLOAD_FILE,
 } = require("../config/consts");
+const { CLIENT_FOT_PROVIDER } = require("../config/projections");
 
 const UserModel = Mongoose.model("User");
 const RequestModal = Mongoose.model("Request");
@@ -220,7 +221,7 @@ exports.createProviderNotification = async (message, requestId, providerId) => {
 exports.fetchRequestById = async (requestId, providerId) => {
   const request = await findRequestById(requestId);
 
-  const author = findClientById(request.author, {name: 1});
+  const author = findClientById(request.author, CLIENT_FOT_PROVIDER);
   const providerMessages = !_.isNil(providerId) ?
     censorMessagesForProvider(request.messages, providerId)
     : [];
