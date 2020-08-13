@@ -90,7 +90,6 @@ const endProcedureWithOffers = async request => {
 }
 
 const endPolicy = async (request, sampledId) => {
-  await OftenSampledModel.findByIdAndRemove(sampledId);
 }
 
 const sampleRequestsOften = async () => {
