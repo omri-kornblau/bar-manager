@@ -29,15 +29,14 @@ export const tableHeaders = {
         type: "text"
       }
     },
-    createdAt: {
+    notifyTime: {
       id: "time",
-      label: labels.createdAt,
+      label: labels.notifyTime,
       formatter: formatTimeStampRTL,
       filter: {
-        // type: "date"
-        type: "text"
+        type: "date"
       }
     },
 }
 
-export const chosenHeaders= ["index", "type", "message", "createdAt"];
+export const chosenHeaders = ["type", "message", "notifyTime"];

@@ -20,6 +20,7 @@ import {
   formatTimeStampRTL,
   formatShekel,
   formatMonths,
+  formatTimeStampDate,
 } from "../../helpers/formats";
 import { postDeleteFile } from "../../api/client";
 
@@ -108,11 +109,16 @@ export const tableHeaders = {
     activeTime: {
       id: "activeTime",
       label: labels.activeTime,
-      formatter: formatTimeStampRTL,
+      formatter: formatTimeStampDate,
       filter: {
         // type: "date"
         type: "text"
       }
+    },
+    endTime: {
+      id: "endTime",
+      label: labels.endTime,
+      formatter: formatTimeStampDate
     },
     actions: {
       id: "actions",
@@ -205,24 +211,24 @@ export const providerProgressBar = {
   inTenderProcedure: {
     label: "פוליסות בהליך מכרזי",
     description: "",
-    chosenHeaders: ["index", "type", "activeTime", "startDate", "maxPrice"],
+    chosenHeaders: ["author", "type", "activeTime", "startDate", "maxPrice"],
   },
   waitingForSign: {
     label: "פוליסות שאושרו ומחכות לחתימה",
     description: "",
-    chosenHeaders: ["type", "startDate", "maxPrice"],
+    chosenHeaders: ["author", "type", "startDate", "maxPrice"],
     actions: downloadActions("provider"),
   },
   active: {
     label: "פוליסות פעילות",
     description: "",
-    chosenHeaders: ["type", "startDate", "activeTime"],
+    chosenHeaders: ["author", "type", "endTime", "activeTime"],
     actions: downloadActions("provider"),
   },
   history: {
     label: "היסטוריה",
     description: "",
-    chosenHeaders: ["index", "startDate", "activeTime", "maxPrice"],
+    chosenHeaders: ["author", "startDate", "activeTime", "maxPrice"],
     actions: downloadActions("provider"),
   },
 }
@@ -268,6 +274,23 @@ export const modalChosenHeaders = [
   },
   {
     id: "comments"
+  },
+  {
+    id: "name"
+  },
+  {
+    id: "companyId"
+  },{
+    id: "address"
+  },
+  {
+    id: "owner"
+  },
+  {
+    id: "fieldOfActivity"
+  },
+  {
+    id: "phoneNumber"
   }
 ]
 

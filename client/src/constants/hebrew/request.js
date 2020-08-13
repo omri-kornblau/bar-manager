@@ -2,7 +2,7 @@ export const labels = {
   index: "מס' פוליסה",
   messages: "הודעות",
   type: "סוג הביטוח",
-  author: "יוצר",
+  author: "לקוח",
   status: "סטטוס",
   assetDescription: "תיאור הנכס",
   companyDescription: "תיאור החברה",
@@ -13,6 +13,7 @@ export const labels = {
   createdAt: "זמן יצירה",
   startDate: "זמן התחלה",
   activeTime: "תאריך העמדה",
+  endTime: "תאריך סיום הפוליסה",
   firstAccept: "אישור A",
   secondAccept: "אישור B",
   password: "סיסמה",
@@ -27,4 +28,5 @@ export const labels = {
   contactName: "איש קשר",
   contactPhone: "פלאפון איש קשר",
   contactEmail: "אימייל איש קשר",
+  notifyTime: "זמן התראה"
 }

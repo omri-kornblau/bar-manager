@@ -25,3 +25,13 @@ exports.OFFER_FOR_PROVIDER = {
   price: 1,
   provider: 1
 }
+
+exports.CLIENT_FOT_PROVIDER = {
+  name: 1,
+  companyId: 1,
+  address: 1,
+  phoneNumber: 1,
+  owner: 1,
+  fieldOfActivity: 1
+}
+
