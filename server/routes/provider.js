@@ -70,9 +70,14 @@ exports.getAll = async (req, res) => {
 
   const [user, provider] = await getProvider(username);
 
-  const requests = await findByIds(RequestModel, provider.requests, "Request not found");
+  const rawRequests = await findByIds(RequestModel, provider.requests, "Request not found");
   const oldRequests = await findByIds(OldRequestModel, provider.oldRequests, "Old request not found");
   const notifications = await prepareNotifications(await findByIds(NotificationModel, provider.unreadNotifications, "Unread notification not found"));
+
+  const requests = await Promise.all(rawRequests.map(async request => {
+    const client = await findClientById(request.author);
+    return { ...request._doc, author: client.name }
+  }));
 
   res.send({ requests, oldRequests, notifications });
 }

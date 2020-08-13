@@ -148,7 +148,7 @@ const ClientDashboardMainView = props => {
               title="פוליסות בהליך מכרזי"
               tooltip= "פוליסות בהליך מכרזי"
               rows={sepratedRequests.inTenderProcedure}
-              chosenHeaders={["type", ...progressBar.inTenderProcedure.chosenHeaders]}
+              chosenHeaders={progressBar.inTenderProcedure.chosenHeaders}
               tableHeaders={requestTableHeaders}
               onRowClick={onOpenRequest}
               emtpyMessage="אין פוליסות בהליך מכרזי"
@@ -157,7 +157,7 @@ const ClientDashboardMainView = props => {
               title="פוליסות פעילות"
               tooltip= "פוליסות שאושרו ונחתמו"
               rows={sepratedRequests.active}
-              chosenHeaders={["type", ...progressBar.active.chosenHeaders]}
+              chosenHeaders={progressBar.active.chosenHeaders}
               tableHeaders={requestTableHeaders}
               onRowClick={onOpenRequest}
               emtpyMessage="אין פוליסות פעילות"
