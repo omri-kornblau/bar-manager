@@ -26,6 +26,8 @@ const { createAttachment  } = require("./models/attachment");
 
 const StatusWorker = require("./workers/requestStatus");
 
+const lo = require("./log/logger").logger;
+
 AsyncErrorsHandler.patchRouter(ErrorsRouter.route);
 
 // Connect to mongodb
