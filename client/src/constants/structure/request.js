@@ -1,3 +1,4 @@
+import _ from "lodash";
 import React from "react";
 import { push } from "connected-react-router";
 import {
@@ -137,8 +138,9 @@ const downloadActions = prefix => [
           הורד פוליסה
         </Grid>
     }
-    action={(_, row) => {
-      window.open(`/${prefix}/downloadfile?fileId=${row.policy}&requestId=${row._id}`, "_self");
+    action={(temp, row) => {
+      const fileId = _.isNil(row.policy._id) ? row.policy : row.policy._id;
+      window.open(`/${prefix}/downloadfile?fileId=${fileId}&requestId=${row._id}`, "_self");
     }}
     color="primary"
   />,
@@ -149,8 +151,9 @@ const downloadActions = prefix => [
             הורד קבצים נוספים
         </Grid>
     }
-    action={(_, row) => {
-      row.extraFiles.forEach((fileId, index)=> {
+    action={(temp, row) => {
+      row.extraFiles.forEach((file, index)=> {
+        const fileId = _.isNil(file._id) ? file : file._id;
         const action = index + 1 === row.extraFiles.length
         ? "_self"
         : "blank";
