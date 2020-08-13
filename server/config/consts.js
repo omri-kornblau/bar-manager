@@ -47,7 +47,7 @@ exports.SHORT_SAMPLE_INTERVAL = Moment.duration(2, "seconds")
 exports.STATUS_TIMING = {
   inTenderProcedure: {
     endTimeKey: "startDate",
-    duration: Moment.duration(1, "seconds"),
+    duration: Moment.duration(3, "minutes"),
     targetStatus: "waitingForSign"
   },
   waitingForSign: {

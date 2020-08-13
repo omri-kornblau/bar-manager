@@ -80,8 +80,8 @@ const initOptions = (columns, rows) => {
         const { before, after } = rows.reduce((prev, cur) => {
           const current = new Date(cur[column.id]);
           return {
-            before: current < prev.before ? current : prev.before,
-            after: current > prev.after ? current : prev.after
+            before: current > prev.before ? current : prev.before,
+            after: current < prev.after ? current : prev.after
           };
         }, {before: new Date(rows[0][column.id]), after: new Date(rows[0][column.id])});
         return {...pre, [column.id]: {before, after, isActive: false}};
@@ -120,7 +120,9 @@ const CustomTable = props => {
   const [sortBy, setSortBy] = useState({id: "", direction: true});
   const [options, setOptions] = useState(filter ? initOptions(columns, rows) : []);
 
-  useEffect(() => setOptions(initOptions(columns, rows)), [rows, columns])
+  useEffect(() => {
+    setOptions(initOptions(columns, rows))
+  }, [rows, columns])
 
   const finalRows = useMemo(() => {
     const filteredRows = filter ?
