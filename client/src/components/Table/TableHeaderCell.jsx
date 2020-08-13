@@ -11,6 +11,10 @@ import {
   ArrowDropDown as ArrowDropDownIcon,
   ArrowDropUp as ArrowDropUpIcon,
 } from '@material-ui/icons';
+import {
+  KeyboardDatePicker, MuiPickersUtilsProvider,
+} from '@material-ui/pickers'
+import DateFnsUtils from '@date-io/date-fns';
 
 import {
   StyledMenu,
@@ -117,6 +121,50 @@ const NumberMenuItems = props => {
   );
 }
 
+const DateMenuItems = props => {
+  const {
+    options,
+    setOptions
+  } = props;
+
+  const onBeforeChange = date => {
+    setOptions({...options, before: date, isActive: true});
+  }
+
+  const onAfterChange = date => {
+    setOptions({...options, after: date, isActive: true});
+  }
+
+  return (
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <StyledMenuItem>
+        <KeyboardDatePicker
+          disableToolbar
+          margin="normal"
+          variant="inline"
+          label="אחרי"
+          format="dd/MM/yyyy"
+          name="max"
+          value={options.after}
+          onChange={onAfterChange}
+        />
+      <StyledMenuItem>
+        <KeyboardDatePicker
+          disableToolbar
+          margin="normal"
+          variant="inline"
+          label="לפני"
+          format="dd/MM/yyyy"
+          name="min"
+          value={options.before}
+          onChange={onBeforeChange}
+        />
+      </StyledMenuItem>
+      </StyledMenuItem>
+    </MuiPickersUtilsProvider>
+  );
+}
+
 const OptionsMenuItems = props => {
   const {
     options
@@ -157,6 +205,9 @@ const MenuItems = forwardRef((props, ref) => {
     }
     case "options": {
       return <OptionsMenuItems options={options} setOptions={setOptions}/>;
+    }
+    case "date": {
+      return <DateMenuItems options={options} setOptions={setOptions}/>;
     }
     default: {
       return <TextMenuItems options={options} setOptions={setOptions}/>;

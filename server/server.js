@@ -72,7 +72,7 @@ if (ServerConfig.production) {
     res.sendFile(Path.resolve(__dirname, "client", "build", "index.html"));
   });
 } else {
-  // app.use(Logger("dev"));
+  app.use(Logger("dev"));
 }
 
 app.use("/", require("./routes"));

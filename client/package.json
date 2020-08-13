@@ -9,7 +9,7 @@
     "@material-ui/pickers": "^3.2.10",
     "axios": "^0.19.2",
     "connected-react-router": "^6.8.0",
-    "date-fns": "^2.14.0",
+    "date-fns": "^2.15.0",
     "history": "^4.10.1",
     "http-proxy-middleware": "^1.0.4",
     "jss-rtl": "^0.3.0",
