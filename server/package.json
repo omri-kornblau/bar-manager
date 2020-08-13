@@ -28,6 +28,8 @@
     "morgan-json": "^1.1.0",
     "winston": "^3.1.0",
     "winston-elasticsearch": "^0.7.13",
+    "node-mailer": "^0.1.1",
+    "nodemailer-smtp-transport": "^2.7.4",
     "yup": "^0.29.0"
   },
   "devDependencies": {

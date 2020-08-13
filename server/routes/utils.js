@@ -2,6 +2,9 @@ const _ = require("lodash");
 const Mongoose = require("mongoose");
 const Boom = require("boom");
 const { Readable } = require("stream");
+const nodemailer = require('nodemailer');
+const smtpTransport = require('nodemailer-smtp-transport');
+
 
 const {
   createNotification,
@@ -209,8 +212,39 @@ exports.readFile = (attachment, _id) => {
   })
 }
 
+exports.sendMail = async () => {
+  const transporter = nodemailer.createTransport(
+    smtpTransport({
+      secure: true,
+      service: 'gmail',
+      auth: {
+      user: 'gseinstestnew@gmail.com',
+      pass: 'gse1nsP@55'
+      }
+    }
+   ));
+
+  const mailOptions = {
+    from: 'gseinstestnew@gmail.com',
+    to: 'ytzury@gmail.com',
+    subject: `Contact name: test`,
+    html:`<h1>Contact details</h1>
+    <h2> name:test </h2><br>
+    <h2> email:test </h2><br>
+    <h2> phonenumber:test </h2><br>
+    <h2> message:test </h2><br>`
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (!_.isNil(error)) {
+      console.error("Failed sending mail", error);
+    }
+  });
+}
+
 exports.createClientNotification = async (message, requestId, clientId) => {
   const createdNotification = await createNotification(message, requestId, clientId, "client");
+  await exports.sendMail();
   return await addNotificationToClientById(clientId, createdNotification._id);
 }
 
