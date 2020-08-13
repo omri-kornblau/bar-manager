@@ -1,5 +1,5 @@
 module.exports = {
-  address: "127.0.0.1",
+  address: "0.0.0.0",
   port: process.env.PORT || 5000,
   enviornment: process.env.NODE_ENV,
   production: process.env.NODE_ENV === "production",

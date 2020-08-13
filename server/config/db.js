@@ -1,4 +1,4 @@
 module.exports = {
-  mongoURI: "mongodb://localhost:27017/gse",
-  mongoFSURI: "mongodb://localhost:27017/gse-fs",
+  mongoURI: "mongodb://172.17.0.1:27017/gse",
+  mongoFSURI: "mongodb://172.17.0.1:27017/gse-fs",
 };

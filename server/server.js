@@ -67,15 +67,18 @@ app.use(CookieParser());
 
 if (ServerConfig.production) {
   app.use(Logger("combined"));
-  app.use(Express.static("../client/build"));
-  app.get("*", (req, res) => {
-    res.sendFile(Path.resolve(__dirname, "client", "build", "index.html"));
-  });
 } else {
   app.use(Logger("dev"));
 }
 
 app.use("/", require("./routes"));
+
+if (ServerConfig.production) {
+  app.use(Express.static("../client/build"));
+  app.get("*", (req, res) => {
+    res.sendFile(Path.resolve(__dirname, "..", "client", "build", "index.html"));
+  });
+}
 
 app.listen(ServerConfig.port, ServerConfig.address, () =>
   console.log(`Server started on ${ServerConfig.address}:${ServerConfig.port}`)
