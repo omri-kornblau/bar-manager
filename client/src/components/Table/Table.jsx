@@ -73,7 +73,18 @@ const initOptions = (columns, rows) => {
         return {...pre, [column.id]: {min: "", max: "", isActive: false}};
 
       case "date":
-        return {...pre, [column.id]: {min: "", max: "", isActive: false}};
+        if (rows.length < 1) {
+          const now = new Date();
+          return {...pre, [column.id]: {before: now, after: now, isActive: false}};
+        }
+        const { before, after } = rows.reduce((prev, cur) => {
+          const current = new Date(cur[column.id]);
+          return {
+            before: current < prev.before ? current : prev.before,
+            after: current > prev.after ? current : prev.after
+          };
+        }, {before: new Date(rows[0][column.id]), after: new Date(rows[0][column.id])});
+        return {...pre, [column.id]: {before, after, isActive: false}};
 
       case "bool":
         return {...pre, [column.id]: {value: null, isActive: false}};
@@ -136,6 +147,11 @@ const CustomTable = props => {
               case "number":
                 const { min, max } = currentOptions;
                 return (min === "" || min < value) && (max === "" || max > value);
+
+              case "date":
+                const { before, after } = currentOptions;
+                const dateValue = new Date(value);
+                return (before >= dateValue) && (after <= dateValue);
 
               case "bool":
                 return  _.isNil(currentOptions.value) || currentOptions.value === value;

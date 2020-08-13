@@ -9,7 +9,6 @@ import {
 
 const initialState = {
   requests: [],
-  oldRequests: [],
 };
 
 const requestReducer = (state=initialState, action) => {
@@ -18,7 +17,6 @@ const requestReducer = (state=initialState, action) => {
       return {
         ...state,
         requests: action.payload.requests,
-        oldRequests: action.payload.oldRequests,
       };
     case ACCEPT_REQUEST_SUCCESS:
       return {

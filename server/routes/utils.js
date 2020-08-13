@@ -14,6 +14,7 @@ const {
 const {
   addNotificationToProviderById,
   findProviderById,
+  updateProviderById,
 } = require("../db/provider");
 const {
   findMessageById,
@@ -209,12 +210,12 @@ exports.readFile = (attachment, _id) => {
 }
 
 exports.createClientNotification = async (message, requestId, clientId) => {
-  const createdNotification = await createNotification(message, requestId);
+  const createdNotification = await createNotification(message, requestId, clientId, "client");
   return await addNotificationToClientById(clientId, createdNotification._id);
 }
 
 exports.createProviderNotification = async (message, requestId, providerId) => {
-  const createdNotification = await createNotification(message, requestId);
+  const createdNotification = await createNotification(message, requestId, providerId, "provider");
   return await addNotificationToProviderById(providerId, createdNotification._id);
 }
 
@@ -248,8 +249,7 @@ exports.fetchRequestById = async (requestId, providerId) => {
 exports.downloadFile = async (client, requestId, fileId, res) => {
   const { Attachment } = internals;
 
-  if (!client.requests.includes(requestId)
-  && !client.oldRequests.includes(requestId)) {
+  if (!client.requests.includes(requestId)) {
     throw Boom.badRequest("Request not belong to client or provider");
   }
 
@@ -271,8 +271,7 @@ exports.providerDownloadFile = async (provider, requestId, fileId, res) => {
 
   const request = await findRequestById(requestId)
   if (!ALLOW_ALL_PROVIDERS_DOWNLOAD_FILE.includes(request.status)
-  && !provider.requests.includes(requestId)
-  && !provider.oldRequests.includes(requestId)) {
+  && !provider.requests.includes(requestId)) {
     throw Boom.badRequest("Request not belong to provider");
   }
 
@@ -300,4 +299,10 @@ exports.readNotification = async (client, notificationId, readNotifcationFunc) =
     await readNotification(notificationId, false)
     throw Boom.internal(err);
   }
+}
+
+exports.updateProvidersUpdateAt = async providerIds => {
+  return Promise.all(providerIds.map(providerId => {
+    return updateProviderById(providerId, {})
+  }))
 }

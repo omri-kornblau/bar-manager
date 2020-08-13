@@ -19,7 +19,6 @@ require("./models/message");
 require("./models/offer");
 require("./models/oftenSampledRequest");
 require("./models/sampledRequest");
-require("./models/oldRequest");
 require("./models/provider");
 require("./models/request");
 require("./models/user");

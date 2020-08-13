@@ -2,14 +2,19 @@ const _ = require("lodash");
 const Moment = require("moment");
 const Mongoose = require("mongoose");
 
-const { moveMongoDocument } = require("../utils");
+const {
+  moveMongoDocument,
+} = require("../utils");
 
 const {
   STATUS_TIMING,
   SHORT_SAMPLE_INTERVAL,
   LONG_SAMPLE_INTERVAL
 } = require("../config/consts");
-const { createClientNotification } = require("../routes/utils");
+const {
+  createClientNotification,
+  createProviderNotification,
+} = require("../routes/utils");
 
 const {
   updateRequestById,
@@ -24,7 +29,6 @@ const { removeRequestFromProviderById } = require("../db/provider");
 const SampledModel = Mongoose.model("SampledRequest");
 const OftenSampledModel = Mongoose.model("OftenSampledRequest");
 const RequestModel = Mongoose.model("Request");
-const OldRequestModel = Mongoose.model("OldRequest");
 
 const StatusWorker = {};
 
@@ -59,6 +63,9 @@ const endNoOffersProcedure = async (request, sampledId) => {
   await OftenSampledModel.findByIdAndRemove(sampledId);
   await deleteRequestById(request._id);
   await removeRequestFromClientById(request.author, request._id);
+  await createClientNotification({
+    type: "Tender Procedure Without Offers",
+  }, request._id, request.author);
 }
 
 const endProcedureWithOffers = async request => {
@@ -66,19 +73,20 @@ const endProcedureWithOffers = async request => {
   const minOffer = _.minBy(offers, "price");
   await Promise.all(offers
     .filter(({ _id }) => _id !== minOffer._id)
-    .map(({ provider }) => removeRequestFromProviderById(provider, request._id)
-  ));
+    .map(({ provider }) => 
+      Promise.all([
+        removeRequestFromProviderById(provider, request._id),
+        createProviderNotification({
+            type: "Offer lose",
+          }, request._id, provider)
+      ])
+    )
+  );
   await removeAllOffersButOne(request._id, minOffer._id);
 }
 
 const endPolicy = async (request, sampledId) => {
   await OftenSampledModel.findByIdAndRemove(sampledId);
-  await moveMongoDocument(request, RequestModel, OldRequestModel);
-  await removeRequestFromClientById(request.author, request._id)
-  const offers = await Promise.all(request.offers.map(findOfferById));
-  await Promise.all(offers.map(({ provider }) =>
-    removeRequestFromProviderById(provider, request._id)
-  ));
 }
 
 const sampleRequestsOften = async () => {
@@ -120,12 +128,6 @@ const sampleRequestsOften = async () => {
         }
       }
 
-      if (isPolicyEnd(targetStatus)) {
-        await endPolicy(request, _id);
-        console.log(`Moved request [${requestId}] to old reqeusts`);
-        return
-      }
-
       const updateStatusOp = { $set: { status: targetStatus } };
       const restoreStatusOp = { $set: { status } };
 
@@ -144,6 +146,15 @@ const sampleRequestsOften = async () => {
         type: "Status updated",
         status: targetStatus
       }, requestId, updatedRequest.author);
+
+      await createProviderNotification({
+        type: "Status updated",
+        status: targetStatus
+      }, requestId, (await findOfferById(updatedRequest.offers[0])).provider);
+
+      if (isPolicyEnd(targetStatus)) {
+        await endPolicy(request, _id);
+      }
     }
   }));
 }

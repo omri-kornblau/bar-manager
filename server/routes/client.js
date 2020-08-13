@@ -5,7 +5,6 @@ const Boom = require("boom");
 const RequestModel = Mongoose.model("Request");
 const ClientModel = Mongoose.model("Client");
 const UserModel = Mongoose.model("User");
-const OldRequestModel = Mongoose.model("OldRequest");
 const NotificationModel = Mongoose.model("Notification");
 
 const { internals } = require("../models/attachment");
@@ -37,10 +36,15 @@ const {
   removeRequestFromClientById,
   readNotificationInClientById,
   updateClientById,
+  deleteNotificationByIds: deleteClientNotificationByIds,
 } = require("../db/client");
 const {
-  createSampledFromRequest
+  createSampledFromRequest,
+  deleteSampledRequestById
 } = require("../db/sampledRequest");
+const {
+  deleteOftenSampledRequestById,
+} = require("../db/oftenSampledRequests")
 const {
   addMessage
 } = require("../db/message");
@@ -49,7 +53,11 @@ const {
 } = require("../db/attachment");
 const {
   updateUserById,
-} = require("../db/user")
+} = require("../db/user");
+const {
+  findNotificationByRequestId,
+  deleteNotificationById,
+} = require("../db/notification");
 
 const {
   REQUEST_STATUSES,
@@ -59,7 +67,10 @@ const {
   STATUS_UPDATE_ALLOWED_FIELDS,
   ALLOW_ACCEPT_CANCEL_STATUSES,
 } = require("../config/consts");
-const { findProviderById } = require("../db/provider");
+const {
+  findProviderById,
+  deleteNotificationByIds: deleteProviderNotificationByIds,
+} = require("../db/provider");
 
 exports.getAll = async (req, res) => {
   const {
@@ -70,10 +81,9 @@ exports.getAll = async (req, res) => {
 
   // TODO: better logs here
   const requests = await prepareRequests(await findByIds(RequestModel, client.requests, "Request not found"));
-  const oldRequests = await prepareRequests(await findByIds(OldRequestModel, client.oldRequests, "Old request not found"));
   const notifications = await prepareNotifications(await findByIds(NotificationModel, client.unreadNotifications, "Unread notification not found"));
 
-  res.send({ requests, oldRequests, notifications });
+  res.send({ requests, notifications });
 }
 
 exports.createRequest = async (req, res) => {
@@ -108,7 +118,7 @@ exports.createRequest = async (req, res) => {
   const createdRequest = await createRequest({
     author: user._id,
     status: REQUEST_STATUSES[0],
-    index: client.requests.length + client.oldRequests.length,
+    index: client.requests.length,
     ...req.body
   });
 
@@ -207,7 +217,7 @@ exports.updateRequest = async (req, res) => {
   const { Attachment } = internals;
 
   const [user, client] = await getClient(username);
-  if (!client.requests.includes(_id) && !client.oldRequests.includes(_id)) {
+  if (!client.requests.includes(_id)) {
     throw Boom.unauthorized("_id not belong to client");
   }
 
@@ -255,7 +265,7 @@ exports.cancelRequest = async (req, res) => {
   const { Attachment } = internals;
 
   const [user, client] = await getClient(username);
-  if (!client.requests.includes(_id) && !client.oldRequests.includes(_id)) {
+  if (!client.requests.includes(_id)) {
     throw Boom.unauthorized("_id not belong to client");
   }
 
@@ -264,8 +274,24 @@ exports.cancelRequest = async (req, res) => {
     throw Boom.badRequest("Cannot cancel request with such status");
   }
 
-  await removeRequestFromClientById(client._id, _id);
-  await deleteRequestById(_id);
+  await Promise.all([
+    removeRequestFromClientById(client._id, _id),
+    deleteRequestById(_id),
+    deleteSampledRequestById(_id),
+    deleteOftenSampledRequestById(_id),
+  ]);
+
+  const notifications = await findNotificationByRequestId(_id);
+  await Promise.all(notifications.map(notification => {
+    const query = notification.ownerType === "client"
+      ? deleteClientNotificationByIds(notification.ownerId, notification._id)
+      : deleteProviderNotificationByIds(notification.ownerId, notification._id);
+
+    return Promise.all([
+      query,
+      deleteNotificationById(notification._id),
+    ]);
+  }));
 
   [currentRequest.policy, ...currentRequest.extraFiles].forEach(fileId =>
     Attachment.unlink({_id: fileId}, err => {
@@ -303,8 +329,7 @@ exports.deleteFile = async (req, res) => {
 
   const [user, client] = await getClient(username);
   const request = await findRequestByExtraFileId(fileId);
-  if (!client.requests.includes(request._id)
-  && !client.oldRequests.includes(request._id)) {
+  if (!client.requests.includes(request._id)) {
     throw Boom.badRequest("Request not belong to client");
   }
 

@@ -93,8 +93,7 @@ export const tableHeaders = {
       label: labels.createdAt,
       formatter: formatTimeStampRTL,
       filter: {
-        // type: "date"
-        type: "text"
+        type: "date"
       }
     },
     startDate: {
@@ -102,8 +101,7 @@ export const tableHeaders = {
       label: labels.startDate,
       formatter: formatTimeStampRTL,
       filter: {
-        // type: "date"
-        type: "text"
+        type: "date"
       }
     },
     activeTime: {
@@ -111,8 +109,7 @@ export const tableHeaders = {
       label: labels.activeTime,
       formatter: formatTimeStampDate,
       filter: {
-        // type: "date"
-        type: "text"
+        type: "date"
       }
     },
     endTime: {

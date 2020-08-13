@@ -65,3 +65,16 @@ exports.readNotificationInProviderById = async (_id, notificationId) => {
     true
   );
 }
+
+exports.deleteNotificationByIds = async (_id, notificationId) => {
+  return exports.updateProviderById(
+    _id,
+    {
+      $pull: {
+        unreadNotifications: Mongoose.mongo.ObjectId(notificationId),
+        readNotifications: Mongoose.mongo.ObjectId(notificationId),
+      },
+    },
+    true
+  );
+}

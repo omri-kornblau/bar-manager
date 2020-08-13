@@ -12,6 +12,10 @@ const {
 } = require("../db/provider");
 
 const {
+  findRequestById,
+} = require("../db/request");
+
+const {
   getClient,
   getProvider,
 } = require("../routes/utils");
@@ -78,6 +82,24 @@ exports.isProviderChange = async (req, res, next) => {
 
   const [user, provider] = await getProvider(username);
   if (Moment().subtract(CLIENT_INTERVAL) < provider.updatedAt) {
+    return next();
+  }
+
+  res.sendStatus(304);
+}
+
+exports.isRequestChange = async (req, res, next) => {
+  const {
+    force,
+    requestId,
+  } = req.query;
+
+  if (!_.isNil(force)) {
+    return next();
+  }
+
+  const request = await findRequestById(requestId);
+  if (Moment().subtract(CLIENT_INTERVAL) < request.updatedAt) {
     return next();
   }
 

@@ -7,6 +7,7 @@ const {
   isClientChange,
   providerChange,
   isProviderChange,
+  isRequestChange,
 } = require("../middleware/lastChange");
 
 // Imports routes
@@ -36,7 +37,7 @@ router.post("/client/sendmessage", withAuth, clientChange, ClientRoutes.sendMess
 
 router.post("/provider/signup", UserRoutes.signupProvider);
 router.get("/provider/get", withAuth, isProviderChange, ProviderRoutes.getAll);
-router.get("/provider/fetchrequest", withAuth, isProviderChange, ProviderRoutes.fetchRequest);
+router.get("/provider/fetchrequest", withAuth, isRequestChange, ProviderRoutes.fetchRequest);
 router.get("/provider/downloadfile", withAuth, ProviderRoutes.downloadFile);
 router.post("/provider/updatedetailes", withAuth, providerChange, ProviderRoutes.updatesDetailes);
 router.post("/provider/filteredrequests", withAuth, ProviderRoutes.getRequests);
