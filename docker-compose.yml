@@ -1,14 +1,13 @@
 version: '3.7'
 services:
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile
+  gse:
+    image: gse-insurance:prod-1
     ports:
-      - "8080:8080"
-    # env_file: ./server/.env # TODO - uncomment this to auto-load your .env file!
+      - "8080:$PORT"
     environment:
+      PORT: $PORT
       NODE_ENV: production
+      SECRET_KEY: $SECRET_KEY
     depends_on:
       - mongo
     networks:
@@ -23,11 +22,11 @@ services:
       - app-network
 
 networks:
-    app-network:
-        driver: bridge
+  app-network:
+      driver: bridge
 
 volumes:
-    data-volume:
-    node_modules:
-    web-root:
-      driver: local
+  data-volume:
+  node_modules:
+  web-root:
+    driver: local

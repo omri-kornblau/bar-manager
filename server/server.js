@@ -9,7 +9,6 @@ const AsyncErrorsHandler = require("./errors/express-async-errors");
 const ErrorsRouter = require("./errors/errors-router");
 
 // Import configurations
-const DbConfig = require("./config/db");
 const ServerConfig = require("./config/server");
 
 // Import models
@@ -31,7 +30,7 @@ AsyncErrorsHandler.patchRouter(ErrorsRouter.route);
 
 // Connect to mongodb
 Mongoose
-  .connect(DbConfig.mongoURI, {
+  .connect(ServerConfig.dbUri, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
@@ -43,7 +42,7 @@ Mongoose
   .catch(err => console.log(err));
 
 Mongoose
-  .createConnection(DbConfig.mongoFSURI, {
+  .createConnection(ServerConfig.fsDbUri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -71,14 +70,14 @@ if (ServerConfig.production) {
   app.use(Logger("dev"));
 }
 
-app.use("/", require("./routes"));
-
 if (ServerConfig.production) {
   app.use(Express.static("../client/build"));
   app.get("*", (req, res) => {
     res.sendFile(Path.resolve(__dirname, "..", "client", "build", "index.html"));
   });
 }
+
+app.use("/", require("./routes"));
 
 app.listen(ServerConfig.port, ServerConfig.address, () =>
   console.log(`Server started on ${ServerConfig.address}:${ServerConfig.port}`)

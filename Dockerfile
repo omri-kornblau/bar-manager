@@ -31,6 +31,5 @@ COPY server/ ./
 
 ENV PORT 8080
 ENV NODE_ENV production
-ENV SECRET_KEY secret
 
 CMD ["npm", "start"]
