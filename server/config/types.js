@@ -17,12 +17,14 @@ exports.NOTIFICATIONS_TYPES = {
   tenderEndWithoutOffers: "Tender Procedure Without Offers",
   statusUpdate: "Status updated",
   offerLose: "Offer lose",
+  offerSet: "Offer set",
 };
 
 exports.CLIENT_NOTIFICATIONS_TYPES = [
   "newMessage",
   "tenderEndWithoutOffers",
   "statusUpdate",
+  "offerSet",
 ];
 
 exports.PROVIDER_NOTIFICATIONS_TYPES = [

@@ -174,6 +174,12 @@ exports.setOffer = async (req, res) => {
     throw Boom.internal(err);
   }
 
+  await createClientNotification({
+    type: NOTIFICATIONS_TYPES.offerSet,
+    from: provider.name,
+    price: price,
+  }, requestId, originalRequest.author)
+
   res.send({...offer, provider: provider.name});
 }
 

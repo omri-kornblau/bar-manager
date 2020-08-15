@@ -14,7 +14,7 @@ const {
 
 const yupNotificationSchema = Yup.object().shape({
   message: Yup.object().shape({
-    type: Yup.mixed.oneOf(_.values(NOTIFICATIONS_TYPES)).required(),
+    type: Yup.mixed().oneOf(_.values(NOTIFICATIONS_TYPES)).required(),
     message: Yup.string().max(MAX_NOTIFICATION_LENGTH),
   }),
   time: Yup.date(),
