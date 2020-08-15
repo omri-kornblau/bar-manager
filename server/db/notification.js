@@ -14,7 +14,7 @@ exports.createNotification = async (message, requestId, ownerId, ownerType) => {
     requestId,
     ownerId,
     ownerType,
-  })
+  });
 
   if (_.isNil(createdNotification)) {
     logger.error(`Failed creating notification for request`, {

@@ -73,6 +73,9 @@ const {
   findProviderById,
   deleteNotificationByIds: deleteProviderNotificationByIds,
 } = require("../db/provider");
+const {
+  NOTIFICATIONS_TYPES,
+} = require("../config/types");
 
 exports.getAll = async (req, res) => {
   const {
@@ -188,7 +191,7 @@ exports.sendMessage = async (req, res) => {
   try {
     request = await addMessageToRequest(requestId, message._id, providerId);
     await createProviderNotification({
-      type: "New Message",
+      type: NOTIFICATIONS_TYPES.newMessage,
       from: client.name
     }, requestId, providerId)
   } catch (err) {

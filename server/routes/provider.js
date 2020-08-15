@@ -63,6 +63,10 @@ const {
   ALLOW_SET_OFFER_STATUSES,
 } = require("../config/consts");
 
+const {
+  NOTIFICATIONS_TYPES,
+} = require("../config/types");
+
 exports.getAll = async (req, res) => {
   const {
     username,
@@ -189,7 +193,7 @@ exports.sendMessage = async (req, res) => {
   try {
     request = await addMessageToRequest(requestId, message._id, provider._id);
     await createClientNotification({
-      type: "New Message",
+      type: NOTIFICATIONS_TYPES.newMessage,
       from: provider.name
     }, requestId, request.author)
   } catch (err) {

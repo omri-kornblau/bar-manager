@@ -37,6 +37,9 @@ const {
   ALLOW_ALL_PROVIDERS_DOWNLOAD_FILE,
 } = require("../config/consts");
 const { CLIENT_FOT_PROVIDER } = require("../config/projections");
+const {
+  smtpTransportConf,
+} = require("../config/email");
 
 const UserModel = Mongoose.model("User");
 const RequestModal = Mongoose.model("Request");
@@ -212,27 +215,14 @@ exports.readFile = (attachment, _id) => {
   })
 }
 
-exports.sendMail = async () => {
-  const transporter = nodemailer.createTransport(
-    smtpTransport({
-      secure: true,
-      service: 'gmail',
-      auth: {
-      user: 'gseinstestnew@gmail.com',
-      pass: 'gse1nsP@55'
-      }
-    }
-   ));
+exports.sendMail = async (to, subject, html) => {
+  const transporter = nodemailer.createTransport(smtpTransport(smtpTransportConf));
 
   const mailOptions = {
-    from: 'gseinstestnew@gmail.com',
-    to: 'ytzury@gmail.com',
-    subject: `Contact name: test`,
-    html:`<h1>Contact details</h1>
-    <h2> name:test </h2><br>
-    <h2> email:test </h2><br>
-    <h2> phonenumber:test </h2><br>
-    <h2> message:test </h2><br>`
+    from: smtpTransportConf.auth.user,
+    to,
+    subject,
+    html
   };
 
   transporter.sendMail(mailOptions, (error, info) => {

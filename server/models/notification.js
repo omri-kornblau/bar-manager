@@ -1,13 +1,22 @@
+const _ = require("lodash");
 const Mongoose = require("mongoose");
 const Yup = require("yup");
 
 const {
   OBJECT_ID_LENGTH,
   USER_TYPES_VALUES, 
+  MAX_NOTIFICATION_LENGTH,
 } = require("../config/consts");
 
+const {
+  NOTIFICATIONS_TYPES,
+} = require("../config/types");
+
 const yupNotificationSchema = Yup.object().shape({
-  message: Yup.object(),
+  message: Yup.object().shape({
+    type: Yup.mixed.oneOf(_.values(NOTIFICATIONS_TYPES)).required(),
+    message: Yup.string().max(MAX_NOTIFICATION_LENGTH),
+  }),
   time: Yup.date(),
   read: Yup.bool(),
   requestId: Yup.string().length(OBJECT_ID_LENGTH),
