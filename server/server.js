@@ -25,8 +25,9 @@ require("./models/notification");
 const { createAttachment  } = require("./models/attachment");
 
 const StatusWorker = require("./workers/requestStatus");
+const { expressWinston } = require("./log/logger");
 
-const lo = require("./log/logger").logger;
+const logger = require("./log/logger").logger;
 
 AsyncErrorsHandler.patchRouter(ErrorsRouter.route);
 
@@ -37,9 +38,9 @@ Mongoose
     useUnifiedTopology: true
   })
   .then(() => {
-    console.log("MongoDB Connected");
+    logger.info("MongoDB Connected");
     StatusWorker.init();
-    console.log("Started request status worker")
+    logger.info("Started request status worker")
   })
   .catch(err => console.log(err));
 
@@ -50,13 +51,15 @@ Mongoose
   })
   .then((gseFSConnection) => {
     createAttachment(gseFSConnection);
-    console.log("MongoDB-GridFS connected")
+    logger.info("MongoDB-GridFS connected")
   })
-  .catch(err => console.log(err));
+  .catch(err => logger.error(err));
 
 
 // Setup express server
 const app = Express();
+
+app.use(expressWinston);
 
 app.use(BodyParser({limit: ServerConfig.requestSizeLimit}));
 app.use(BodyParser.urlencoded({
@@ -65,12 +68,6 @@ app.use(BodyParser.urlencoded({
 
 app.use(BodyParser.json());
 app.use(CookieParser());
-
-if (ServerConfig.production) {
-  app.use(Logger("combined"));
-} else {
-  app.use(Logger("dev"));
-}
 
 if (ServerConfig.production) {
   app.use(Express.static("../client/build"));

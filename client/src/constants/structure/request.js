@@ -115,7 +115,10 @@ export const tableHeaders = {
     endTime: {
       id: "endTime",
       label: labels.endTime,
-      formatter: formatTimeStampDate
+      formatter: formatTimeStampDate,
+      filter: {
+        type: "date"
+      }
     },
     actions: {
       id: "actions",
