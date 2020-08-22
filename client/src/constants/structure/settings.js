@@ -1,3 +1,9 @@
+import _ from "lodash";
+import {
+  clientForm as clientSignupForm,
+  providerForm as providerSignupForm,
+} from "./signup";
+
 export const changePassword =
   [[
     {
@@ -25,23 +31,19 @@ export const changePassword =
   ]
 ];
 
-export const updateAccountDetaild =
-  [[
-    {
-      label: "שם",
-      fullWidth: true,
-      name: "name",
-    },
-  ],
-  [
-    {
-      label: "אימייל",
-      name: "email",
-      type: "email",
-      fullWidth: true,
-    },
-  ],
-];
+const omitForm = originalForm =>
+  originalForm
+    .filter(row => 
+      row[0].type !== "password"
+    ).map(row =>
+      row.filter(column =>
+        column.name !== "username"
+      )
+    );
+
+export const updateProviderDetails = omitForm(providerSignupForm);
+
+export const updateClientDetails = omitForm(clientSignupForm)
 
 export const notificationsTypes = {
   newMessage: {

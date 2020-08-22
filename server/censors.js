@@ -37,3 +37,14 @@ exports.censorMessagesForProvider = (messages, providerId) => {
   }
   return providerMessages;
 }
+
+exports.censorAccountSettings = account => {
+  return _.omit(account, [
+    "_id",
+    "unreadNotifications",
+    "readNotifications",
+    "requests",
+    "createdAt",
+    "updatedAt",
+  ]);
+}

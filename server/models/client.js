@@ -41,6 +41,15 @@ const yupClientSchema = Yup.object().shape({
   }).required(),
 });
 
+const yupUpdateClientSchema = Yup.object().shape({
+  name: Yup.string().min(NAME_MIN_LENGTH).max(NAME_MAX_LENGTH).required(),
+  companyId: Yup.string().length(COMPANY_ID_LENGTH).required(),
+  address: Yup.string().min(ADDRESS_MIN_LENGTH).max(ADDRESS_MAX_LENGTH).required(),
+  phoneNumber: Yup.string().matches(PHONE_REGEX, 'Phone number is not valid').required(),
+  owner: Yup.string().min(OWNER_MIN_LENGTH).max(OWNER_MAX_LENGTH).required(),
+  fieldOfActivity: Yup.string().min(FILED_OF_ACTIVITY_MIN_LENGTH).max(FILED_OF_ACTIVITY_MAX_LENGTH).required(),
+});
+
 const mongoFormat = {
   name: {
     type: String
@@ -92,5 +101,6 @@ clientSchema.pre("save", async function () {
 
 const Client = Mongoose.model("Client", clientSchema)
 Client.yupClientSchema = yupClientSchema;
+Client.yupUpdateClientSchema = yupUpdateClientSchema;
 
 module.exports = Client;

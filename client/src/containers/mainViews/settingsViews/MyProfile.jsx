@@ -10,11 +10,12 @@ import {
 
 import FormBody from "../../../components/Form/FormBody";
 import {
-  updateAccountDetaild as structure
+  updateClientDetails,
+  updateProviderDetails,
 } from "../../../constants/structure/settings"
 import { useState } from "react";
 import { connect } from "react-redux";
-import { getUserData } from "../../../redux/selectors/user";
+import { getUserData, getUserType } from "../../../redux/selectors/user";
 import { useEffect } from "react";
 import { getUpdateUserDetailesErrors } from "../../../redux/selectors/errors";
 import LoadingButton from "../../../components/LoadingButton/LoadingButton";
@@ -26,12 +27,10 @@ const MyProfile = props => {
     userData,
     status,
     updateUserDetails,
+    userType,
   } = props;
 
   const [form, setForm] = useState(userData);
-  useEffect(() => {
-    setForm(userData)
-  }, [userData])
 
   const [isDiff, setIsDiff] = useState(true);
   useEffect(() => {
@@ -60,6 +59,10 @@ const MyProfile = props => {
   const label = isDiff
     ? "עדכן"
     : "הפרטים עודכנו";
+  
+  const structure = userType === "client"
+    ? updateClientDetails
+    : updateProviderDetails;
 
   return (
     <Container>
@@ -94,6 +97,7 @@ const MyProfile = props => {
 const mapStateToProps = state => ({
   userData: getUserData(state),
   status: getUpdateUserDetailesErrors(state),
+  userType: getUserType(state),
 })
 
 const mapDispatchToProps = dispatch => ({

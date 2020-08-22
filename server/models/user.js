@@ -16,12 +16,16 @@ const {
 const hashCompare = promisify(Bcrypt.compare);
 const hash = promisify(Bcrypt.hash);
 
-const yupUserFormat = Yup.object().shape({
+const yupUserSchema = Yup.object().shape({
   email: Yup.string().email().required(),
   username: Yup.string().min(USER_MIN_LENGTH).max(USER_MAX_LENGTH).required(),
   password: Yup.string().min(PASSWORD_MIN_LENGTH).max(PASSWORD_MAX_LENGTH).required(),
   type: Yup.mixed().oneOf(USER_TYPES_VALUES).required(),
   clientId: Yup.string().length(OBJECT_ID_LENGTH).required(),
+});
+
+const yupUpdateUserSchema = Yup.object().shape({
+  email: Yup.string().email().required(),
 });
 
 const mongoFormat = {
@@ -47,7 +51,7 @@ const mongoFormat = {
 const userSchema = new Mongoose.Schema(mongoFormat);
 
 userSchema.pre("save", async function () {
-  await yupUserFormat.validate(this);
+  await yupUserSchema.validate(this);
   this.password = await hash(this.password, SALT_ROUNDS);
 });
 
@@ -56,6 +60,7 @@ userSchema.methods.isCorrectPassword = async function (password) {
 }
 
 const User = Mongoose.model("User", userSchema);
-User.yupUserSchema = yupUserFormat;
+User.yupUserSchema = yupUserSchema;
+User.yupUpdateUserSchema = yupUpdateUserSchema;
 
 module.exports = User;

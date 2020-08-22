@@ -7,7 +7,7 @@ export const getUserLoggedIn = state => {
 }
 
 export const getUserData = state => {
-  return state.app.user.data;
+  return {...state.app[getUserType(state)], ...state.app.user.data};
 }
 
 export const getUserType = state => {

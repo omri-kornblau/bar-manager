@@ -56,7 +56,8 @@ const {
 
 const {
   censorMessagesForProvider,
-  censorOffersForProvider
+  censorOffersForProvider,
+  censorAccountSettings,
 } = require("../censors");
 
 const {
@@ -82,7 +83,7 @@ exports.getAll = async (req, res) => {
     return { ...request._doc, author: client.name }
   }));
 
-  res.send({ requests, notifications, settings: provider.settings });
+  res.send({ ...censorAccountSettings(provider._doc), requests, notifications });
 }
 
 exports.getRequests = async (req, res) => {

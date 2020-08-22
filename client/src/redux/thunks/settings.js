@@ -25,7 +25,8 @@ export const changePassword = outerDispatch => (previosPassword, newPassword) =>
       .catch(err => {
         dispatch(changePasswordFailure(err))
       });
-  })
+  }
+);
 
 export const updateUserDetails = outerDispatch => (isClient, data) =>
   outerDispatch(dispatch => {
@@ -42,4 +43,5 @@ export const updateUserDetails = outerDispatch => (isClient, data) =>
       .catch(err => {
         dispatch(updateUserDetailesFailure(err))
       });
-  })
+  }
+);

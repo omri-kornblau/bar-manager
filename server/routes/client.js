@@ -76,6 +76,9 @@ const {
 const {
   NOTIFICATIONS_TYPES,
 } = require("../config/types");
+const {
+  censorAccountSettings,
+} = require("../censors");
 
 exports.getAll = async (req, res) => {
   const {
@@ -88,7 +91,7 @@ exports.getAll = async (req, res) => {
   const requests = await prepareRequests(await findByIds(RequestModel, client.requests, "Request not found"));
   const notifications = await prepareNotifications(await findByIds(NotificationModel, client.unreadNotifications, "Unread notification not found"));
   
-  res.send({ requests, notifications, settings: client.settings });
+  res.send({ ...censorAccountSettings(client._doc), requests, notifications });
 }
 
 exports.createRequest = async (req, res) => {
@@ -399,10 +402,17 @@ exports.updatesDetailes = async (req, res) => {
 
   const [user, client] = await getClient(username);
 
-  const newClient = _.pick(req.body, ["name"]);
-  await ClientModel.yupClientSchema.validate(newClient);
+  const newClient = _.pick(req.body, [
+    "name",
+    "companyId",
+    "address",
+    "phoneNumber",
+    "owner",
+    "fieldOfActivity",
+  ]);
+  await ClientModel.yupUpdateClientSchema.validate(newClient);
   const newUser = _.pick(req.body, ["email"]);
-  await UserModel.yupUserSchema.validate(newUser);
+  await UserModel.yupUpdateUserSchema.validate(newUser);
 
   await updateClientById(client._id, {$set: newClient});
   await updateUserById(user._id, {$set: newUser});
