@@ -1,18 +1,19 @@
 import {
  statusesMessage, 
 } from "../constants/hebrew/notifications";
+import { notificationsTypes } from "../constants/structure/settings";
 
 export const formatNotificationMessage = message => {
   switch (message.type) {
-    case "Status updated":
+    case notificationsTypes.statusUpdate.name:
       return statusesMessage[message.status]
-    case "New Message":
+    case notificationsTypes.newMessage.name:
       return `התקבלה הודעה חדשה מ${message.from}`;
-    case "Tender Procedure Without Offers":
+    case notificationsTypes.tenderEndWithoutOffers.name:
       return "הבקשה הגיעה לסוף הליך מכרזי בלי אף הצעה";
-    case "Offer lose":
+    case notificationsTypes.offerLose.name:
       return "ההצעה הפסידה בהליך המכרזי";
-    case "Offer set":
+    case notificationsTypes.offerSet.name:
       return `התקבלה הצעה מ${message.from} על סך ${message.price} אלף ש"ח`
     default:
       return "message type not configured";

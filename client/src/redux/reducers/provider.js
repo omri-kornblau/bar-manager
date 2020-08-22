@@ -35,6 +35,7 @@ const providerReducer = (state=initialState, action) => {
       return {
         ...state,
         requests: action.payload.requests,
+        settings: action.payload.settings,
       };
     case POST_FILTERED_REQUESTS_SUCCESS:
       return {

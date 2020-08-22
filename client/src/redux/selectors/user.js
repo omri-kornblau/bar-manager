@@ -14,6 +14,17 @@ export const getUserType = state => {
   return state.app.user.data.type;
 }
 
+export const getClientNotificationsSettings = state => {
+  return state.app.client.settings.emailNotifications;
+}
+
 export const isProvider = state => {
   return getUserType(state) === "provider"
+}
+
+export const getUserNotificationsSettings = state => {
+  const userType = getUserType(state);
+  return userType
+    ? state.app[getUserType(state)].settings.emailNotifications
+    : {};
 }

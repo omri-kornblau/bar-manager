@@ -10,7 +10,27 @@ import {
   TableCell,
 } from "@material-ui/core";
 
-const AboutUs = props => {
+import {
+  notificationsTypes,
+  clientNotificationsTypes,
+  providerNotificationsTypes,
+} from "../../../constants/structure/settings";
+import {
+  getUserNotificationsSettings,
+  getUserType,
+} from "../../../redux/selectors/user";
+import { connect } from "react-redux";
+
+const NotificationSettings = props => {
+  const {
+    settings,
+    userType,
+  } = props;
+
+  const structure = userType === "client"
+    ? clientNotificationsTypes
+    : providerNotificationsTypes;
+
   return (
     <Container>
       <Typography align="center" variant="h5">
@@ -28,18 +48,35 @@ const AboutUs = props => {
           </TableRow>
         </TableHead>
         <TableBody>
-          <TableRow>
-            <TableCell>
-              אירוע כלשהו
-            </TableCell>
-            <TableCell>
-              <input type="checkbox"/>
-            </TableCell>
-          </TableRow>
+          {
+            structure.map(notificationType => 
+              <TableRow>
+                <TableCell>
+                  {notificationsTypes[notificationType].label}
+                </TableCell>
+                <TableCell>
+                  <input
+                    type="checkbox"
+                    name={notificationsTypes[notificationType].name}
+                    checked={settings[notificationsTypes[notificationType].name]}
+                  />
+                </TableCell>
+              </TableRow>
+            )
+          }
         </TableBody>
       </Table>
     </Container>
   );
 }
 
-export default AboutUs;
+const mapStateToProps = state => ({
+  settings: getUserNotificationsSettings(state),
+  userType: getUserType(state),
+})
+
+const mapDispatchToProps = dispatch => ({
+  // updateUserDetails: updateUserDetails(dispatch),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(NotificationSettings);

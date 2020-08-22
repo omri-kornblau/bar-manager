@@ -75,6 +75,9 @@ const mongoFormat = {
   fieldOfActivity: {
     type: String
   },
+  settings: {
+    type: Object
+  }
 };
 
 const mongoOptions = {

@@ -60,6 +60,9 @@ const mongoFormat = {
   contactEmail: {
     type: String
   },
+  settings: {
+    type: Object
+  }
 };
 
 const mongoOptions = {

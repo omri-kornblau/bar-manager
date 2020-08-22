@@ -82,7 +82,7 @@ exports.getAll = async (req, res) => {
     return { ...request._doc, author: client.name }
   }));
 
-  res.send({ requests, notifications });
+  res.send({ requests, notifications, settings: provider.settings });
 }
 
 exports.getRequests = async (req, res) => {

@@ -13,11 +13,11 @@ exports.REQUEST_STATUSES  = [
 exports.INSURENSE_TYPES = ["typeA", "typeB", "typeC"];
 
 exports.NOTIFICATIONS_TYPES = {
-  newMessage: "New Message",
-  tenderEndWithoutOffers: "Tender Procedure Without Offers",
-  statusUpdate: "Status updated",
-  offerLose: "Offer lose",
-  offerSet: "Offer set",
+  newMessage: "NewMessage",
+  tenderEndWithoutOffers: "TenderProcedureWithoutOffers",
+  statusUpdate: "StatusUpdated",
+  offerLose: "OfferLose",
+  offerSet: "OfferSet",
 };
 
 exports.CLIENT_NOTIFICATIONS_TYPES = [

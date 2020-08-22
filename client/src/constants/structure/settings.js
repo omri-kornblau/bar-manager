@@ -42,3 +42,39 @@ export const updateAccountDetaild =
     },
   ],
 ];
+
+export const notificationsTypes = {
+  newMessage: {
+    name: "NewMessage",
+    label: "התקבלה הודעה חדשה",
+  },
+  tenderEndWithoutOffers: {
+    name: "TenderProcedureWithoutOffers",
+    label: "הליך מכרזי נגמר בלי הצעות",
+  },
+  statusUpdate: {
+    name: "StatusUpdated",
+    label: "סטטוס של בקשה השתנה",
+  },
+  offerLose: {
+    name: "OfferLose",
+    label: "הצעה הפסידה",
+  },
+  offerSet: {
+    name: "OfferSet",
+    label: "התקבלה הצעה חדשה",
+  },
+};
+
+export const clientNotificationsTypes = [
+  "newMessage",
+  "tenderEndWithoutOffers",
+  "statusUpdate",
+  "offerSet",
+];
+
+export const providerNotificationsTypes = [
+  "newMessage",
+  "statusUpdate",
+  "offerLose",
+]

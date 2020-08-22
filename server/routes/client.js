@@ -87,8 +87,8 @@ exports.getAll = async (req, res) => {
   // TODO: better logs here
   const requests = await prepareRequests(await findByIds(RequestModel, client.requests, "Request not found"));
   const notifications = await prepareNotifications(await findByIds(NotificationModel, client.unreadNotifications, "Unread notification not found"));
-
-  res.send({ requests, notifications });
+  
+  res.send({ requests, notifications, settings: client.settings });
 }
 
 exports.createRequest = async (req, res) => {
