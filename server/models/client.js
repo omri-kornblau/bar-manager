@@ -22,6 +22,7 @@ const {
 
 const yupClientSchema = Yup.object().shape({
   name: Yup.string().min(NAME_MIN_LENGTH).max(NAME_MAX_LENGTH).required(),
+  email: Yup.string().email().required(),
   unreadNotifications: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   readNotifications: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   requests: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
@@ -43,6 +44,7 @@ const yupClientSchema = Yup.object().shape({
 
 const yupUpdateClientSchema = Yup.object().shape({
   name: Yup.string().min(NAME_MIN_LENGTH).max(NAME_MAX_LENGTH).required(),
+  email: Yup.string().email().required(),
   companyId: Yup.string().length(COMPANY_ID_LENGTH).required(),
   address: Yup.string().min(ADDRESS_MIN_LENGTH).max(ADDRESS_MAX_LENGTH).required(),
   phoneNumber: Yup.string().matches(PHONE_REGEX, 'Phone number is not valid').required(),
@@ -50,8 +52,17 @@ const yupUpdateClientSchema = Yup.object().shape({
   fieldOfActivity: Yup.string().min(FILED_OF_ACTIVITY_MIN_LENGTH).max(FILED_OF_ACTIVITY_MAX_LENGTH).required(),
 });
 
+const yupUpdateClientNotificationSchema = Yup.object().shape(
+  CLIENT_NOTIFICATIONS_TYPES.reduce((prev, cur) => (
+    {...prev, [NOTIFICATIONS_TYPES[cur]]: Yup.bool().required()}
+  ), {})
+).required();
+
 const mongoFormat = {
   name: {
+    type: String
+  },
+  email: {
     type: String
   },
   unreadNotifications: {
@@ -102,5 +113,6 @@ clientSchema.pre("save", async function () {
 const Client = Mongoose.model("Client", clientSchema)
 Client.yupClientSchema = yupClientSchema;
 Client.yupUpdateClientSchema = yupUpdateClientSchema;
+Client.yupUpdateClientNotificationSchema = yupUpdateClientNotificationSchema
 
 module.exports = Client;

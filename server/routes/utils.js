@@ -233,13 +233,20 @@ exports.sendMail = async (to, subject, html) => {
 }
 
 exports.createClientNotification = async (message, requestId, clientId) => {
+  const client = await findClientById(clientId);
   const createdNotification = await createNotification(message, requestId, clientId, "client");
-  await exports.sendMail();
+  if (client.settings.emailNotifications[message.type]) {
+    await exports.sendMail(client.email, message.type, "test");
+  }
   return await addNotificationToClientById(clientId, createdNotification._id);
 }
 
 exports.createProviderNotification = async (message, requestId, providerId) => {
+  const provider = await findProviderById(providerId);
   const createdNotification = await createNotification(message, requestId, providerId, "provider");
+  if (provider.settings.emailNotifications[message.type]) {
+    await exports.sendMail(provider.email, message.type, "test");
+  }
   return await addNotificationToProviderById(providerId, createdNotification._id);
 }
 

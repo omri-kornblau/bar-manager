@@ -15,6 +15,7 @@ const {
 
 const yupProviderSchema = Yup.object().shape({
   name: Yup.string().min(NAME_MIN_LENGTH).max(NAME_MAX_LENGTH).required(),
+  email: Yup.string().email().required(),
   unreadNotifications: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   readNotifications: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   requests: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
@@ -32,8 +33,25 @@ const yupProviderSchema = Yup.object().shape({
   }).required(),
 });
 
+const yupUpdateProviderSchema = Yup.object().shape({
+  name: Yup.string().min(NAME_MIN_LENGTH).max(NAME_MAX_LENGTH).required(),
+  email: Yup.string().email().required(),
+  contactName: Yup.string().min(NAME_MIN_LENGTH).max(NAME_MAX_LENGTH).required(),
+  contactPhone: Yup.string().matches(PHONE_REGEX, 'Phone number is not valid').required(),
+  contactEmail: Yup.string().email().required(),
+});
+
+const yupUpdateProviderNotificationSchema = Yup.object().shape(
+  PROVIDER_NOTIFICATIONS_TYPES.reduce((prev, cur) => (
+    {...prev, [NOTIFICATIONS_TYPES[cur]]: Yup.bool().required()}
+  ), {})
+).required();
+
 const mongoFormat = {
   name: {
+    type: String
+  },
+  email: {
     type: String
   },
   unreadNotifications: {
@@ -77,5 +95,7 @@ providerSchema.pre("save", async function () {
 
 const Provider = Mongoose.model("Provider", providerSchema)
 Provider.yupProviderSchema = yupProviderSchema;
+Provider.yupUpdateProviderSchema = yupUpdateProviderSchema;
+Provider.yupUpdateProviderNotificationSchema = yupUpdateProviderNotificationSchema;
 
 module.exports = Provider;

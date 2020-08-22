@@ -34,6 +34,7 @@ router.post("/client/cancelrequest", withAuth, clientChange, ClientRoutes.cancel
 router.post("/client/deletefile", withAuth, clientChange, ClientRoutes.deleteFile);
 router.post("/client/readnotification", withAuth, clientChange, ClientRoutes.readNotification);
 router.post("/client/sendmessage", withAuth, clientChange, ClientRoutes.sendMessage);
+router.post("/client/updatenotificationsettings", withAuth, clientChange, ClientRoutes.updatesNotificationSettings);
 
 router.post("/provider/signup", UserRoutes.signupProvider);
 router.get("/provider/get", withAuth, isProviderChange, ProviderRoutes.getAll);
@@ -44,5 +45,6 @@ router.post("/provider/filteredrequests", withAuth, ProviderRoutes.getRequests);
 router.post("/provider/setoffer", withAuth, providerChange, ProviderRoutes.setOffer);
 router.post("/provider/sendmessage", withAuth, providerChange, ProviderRoutes.sendMessage);
 router.post("/provider/readnotification", withAuth, providerChange, ProviderRoutes.readNotification);
+router.post("/provider/updatenotificationsettings", withAuth, providerChange, ProviderRoutes.updatesNotificationSettings);
 
 module.exports = router;

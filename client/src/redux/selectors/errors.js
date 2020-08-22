@@ -54,3 +54,6 @@ export const getCheckTokenErrors = state => {
   return state.app.errors.checkToken;
 }
 
+export const getUpdateNotificationSettingsErrors = state => {
+  return state.app.errors.updateNotificationSettings;
+}

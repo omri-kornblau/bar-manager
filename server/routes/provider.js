@@ -65,6 +65,7 @@ const {
 } = require("../config/consts");
 
 const {
+  PROVIDER_NOTIFICATIONS_TYPES,
   NOTIFICATIONS_TYPES,
 } = require("../config/types");
 
@@ -292,12 +293,34 @@ exports.updatesDetailes = async (req, res) => {
 
   const [user, provider] = await getProvider(username);
 
-  const newProvider = _.pick(req.body, ["name"]);
-  await ProviderModel.yupProviderSchema.validate(newProvider);
+  const newProvider = _.pick(req.body, [
+    "name",
+    "email",
+    "contactName",
+    "contactPhone",
+    "contactEmail",
+  ]);
+  await ProviderModel.yupUpdateProviderSchema.validate(newProvider);
   const newUser = _.pick(req.body, ["email"]);
   await UserModel.yupUserSchema.validate(newUser);
 
   await updateProviderById(provider._id, {$set: newProvider});
   await updateUserById(user._id, {$set: newUser});
+  res.sendStatus(204);
+}
+
+exports.updatesNotificationSettings = async (req, res) => {
+  const {
+    username
+  } = req;
+
+  const [user, provider] = await getProvider(username);
+
+  const notificationSettings = _.pick(req.body, PROVIDER_NOTIFICATIONS_TYPES.map(notificationType =>
+    NOTIFICATIONS_TYPES[notificationType]
+  ));
+  await ProviderModel.yupUpdateProviderNotificationSchema.validate(notificationSettings);
+
+  await updateProviderById(provider._id, {$set: {"settings.emailNotifications": notificationSettings}});
   res.sendStatus(204);
 }

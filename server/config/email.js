@@ -3,6 +3,6 @@ exports.smtpTransportConf = {
   service: 'gmail',
   auth: {
     user: 'gseinstestnew@gmail.com',
-    pass: process.env.EMAIL_PASSWORD
+    pass: process.env.EMAIL_PASSWORD 
   }
 };

@@ -10,6 +10,10 @@ const UserModel = Mongoose.model("User");
 const NotificationModel = Mongoose.model("Notification");
 
 const { internals } = require("../models/attachment");
+const {
+  CLIENT_NOTIFICATIONS_TYPES,
+  NOTIFICATIONS_TYPES,
+} = require("../config/types");
 
 const {
   writerFile,
@@ -73,9 +77,6 @@ const {
   findProviderById,
   deleteNotificationByIds: deleteProviderNotificationByIds,
 } = require("../db/provider");
-const {
-  NOTIFICATIONS_TYPES,
-} = require("../config/types");
 const {
   censorAccountSettings,
 } = require("../censors");
@@ -404,6 +405,7 @@ exports.updatesDetailes = async (req, res) => {
 
   const newClient = _.pick(req.body, [
     "name",
+    "email",
     "companyId",
     "address",
     "phoneNumber",
@@ -416,5 +418,21 @@ exports.updatesDetailes = async (req, res) => {
 
   await updateClientById(client._id, {$set: newClient});
   await updateUserById(user._id, {$set: newUser});
+  res.sendStatus(204);
+}
+
+exports.updatesNotificationSettings = async (req, res) => {
+  const {
+    username
+  } = req;
+
+  const [user, client] = await getClient(username);
+
+  const notificationSettings = _.pick(req.body, CLIENT_NOTIFICATIONS_TYPES.map(notificationType =>
+    NOTIFICATIONS_TYPES[notificationType]
+  ));
+  await ClientModel.yupUpdateClientNotificationSchema.validate(notificationSettings);
+
+  await updateClientById(client._id, {$set: {"settings.emailNotifications": notificationSettings}});
   res.sendStatus(204);
 }

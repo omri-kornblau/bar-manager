@@ -31,6 +31,7 @@ exports.signupClient = async (req, res) => {
   try {
     const emptyClient = {
       name,
+      email,
       unreadNotifications: [],
       readNotifications: [],
       requests: [],
@@ -86,6 +87,7 @@ exports.signupProvider = async (req, res) => {
   try {
     const emptyProvider = {
       name,
+      email,
       unreadNotifications: [],
       readNotifications: [],
       requests: [],
