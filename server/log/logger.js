@@ -1,3 +1,4 @@
+const _ = require("lodash");
 const Winston = require("winston");
 const format = Winston.format;
 const ExpressWinston = require("express-winston");
@@ -22,9 +23,11 @@ const options = {
     client,
     transformer: (logData, e) => {
       const { level, message, meta } = logData;
+      const fixedMeta = _.isNil(meta.meta) ? meta : meta.meta;
+
       return {
         "@timestamp": new Date(),
-        ...meta.meta,
+        ...fixedMeta,
         level,
         message
       }
@@ -50,7 +53,8 @@ const expressWinston = ExpressWinston.logger({
   winstonInstance: logger,
   meta: true,
   expressFormat: true,
-  requestWhitelist: ["method", "url"],
+  requestWhitelist: ["username", "method", "url"],
+  responseWhitelist: ["body", "statusCode"],
 })
 
 exports.logger = logger;

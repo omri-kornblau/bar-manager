@@ -2,6 +2,8 @@ const _ = require("lodash");
 const Mongoose = require("mongoose");
 const Boom = require("boom");
 
+const logger = require("../log/logger").logger;
+
 const NotificationModel = Mongoose.model("Notification");
 
 exports.createNotification = async (message, requestId, ownerId, ownerType) => {
@@ -11,11 +13,16 @@ exports.createNotification = async (message, requestId, ownerId, ownerType) => {
     message,
     requestId,
     ownerId,
-    ownerType, 
+    ownerType,
   })
 
   if (_.isNil(createdNotification)) {
-    console.error(`Failed creating notification for request [${requestId}]`)
+    logger.error(`Failed creating notification for request`, {
+      requestId,
+      ownerId,
+      ownerType
+    });
+
     throw Boom.internal(`Failed creating request`);
   }
 

@@ -2,7 +2,6 @@ const Express = require("express");
 const Mongoose = require("mongoose");
 const BodyParser = require("body-parser");
 const CookieParser = require("cookie-parser");
-const Logger = require("morgan");
 const Path = require("path");
 
 const AsyncErrorsHandler = require("./errors/express-async-errors");
@@ -25,9 +24,8 @@ require("./models/notification");
 const { createAttachment  } = require("./models/attachment");
 
 const StatusWorker = require("./workers/requestStatus");
-const { expressWinston } = require("./log/logger");
 
-const logger = require("./log/logger").logger;
+const { logger, expressWinston } = require("./log/logger");
 
 AsyncErrorsHandler.patchRouter(ErrorsRouter.route);
 
@@ -42,7 +40,7 @@ Mongoose
     StatusWorker.init();
     logger.info("Started request status worker")
   })
-  .catch(err => console.log(err));
+  .catch(err => logger.error(err));
 
 Mongoose
   .createConnection(ServerConfig.fsDbUri, {
@@ -59,8 +57,6 @@ Mongoose
 // Setup express server
 const app = Express();
 
-app.use(expressWinston);
-
 app.use(BodyParser({limit: ServerConfig.requestSizeLimit}));
 app.use(BodyParser.urlencoded({
   extended: false
@@ -68,6 +64,8 @@ app.use(BodyParser.urlencoded({
 
 app.use(BodyParser.json());
 app.use(CookieParser());
+
+app.use(expressWinston);
 
 if (ServerConfig.production) {
   app.use(Express.static("../client/build"));
@@ -79,5 +77,5 @@ if (ServerConfig.production) {
 app.use("/", require("./routes"));
 
 app.listen(ServerConfig.port, ServerConfig.address, () =>
-  console.log(`Server started on ${ServerConfig.address}:${ServerConfig.port}`)
+  logger.info(`Server started on ${ServerConfig.address}:${ServerConfig.port}`)
 );
