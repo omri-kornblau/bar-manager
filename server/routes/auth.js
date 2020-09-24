@@ -32,13 +32,14 @@ const {
 
 exports.login = async (req, res) => {
   const {
-    loginId,
+    username: loginId,
     password
   } = req.body;
   const user = await UserModel.findOne({$or: [
-    {loginId},
+    {username: loginId},
     {email: loginId},
   ]});
+
   if (!user) {
     throw Boom.badRequest("Incorrect username or password");
   }
