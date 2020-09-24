@@ -2,6 +2,8 @@ const _ = require("lodash");
 const Mongoose = require("mongoose");
 const Boom = require("boom");
 
+const logger = require("../log/logger").logger;
+
 const RequestModel = Mongoose.model("Request");
 const ClientModel = Mongoose.model("Client");
 const UserModel = Mongoose.model("User");
@@ -125,35 +127,37 @@ exports.createRequest = async (req, res) => {
   try {
     await addRequestToClientById(user.clientId, createdRequest._id);
   } catch (err) {
+    logger.error("Failed creating request", { username, err })
     await deleteRequestById(createdRequest._id);
 
     filesIds.forEach(fileId =>
       Attachment.unlink({ _id: fileId }, err => {
         if (!_.isNil(err)) {
-          console.error("Failed deleting file", fileId, err);
+          logger.error("Failed deleting file", { fileId, username, req })
         }
       })
     )
 
-    console.error("Failed updating client after creating request");
+    logger.error("Failed updating client after creating request", { username });
     throw Boom.internal(err);
   }
 
   try {
     await createSampledFromRequest(createdRequest, user._id)
   } catch (err) {
+    logger.error("Failed creating sampled request", { username, err });
+
     await deleteRequestById(createdRequest._id);
     await removeRequestFromClientById(client._id, createdRequest._id)
 
     filesIds.forEach(fileId =>
       Attachment.unlink({ _id: fileId }, err => {
         if (!_.isNil(err)) {
-          console.error("Failed deleting file", fileId, err);
+          logger.error("Failed deleting file", { fileId, err });
         }
       })
     )
 
-    console.error("Failed updating client after creating request");
     throw Boom.internal(err);
   }
 
@@ -173,7 +177,8 @@ exports.sendMessage = async (req, res) => {
 
   const provider = await findProviderById(providerId);
   if (_.isNil(provider)) {
-    throw Boom.badRequest("No such provider");
+    logger.error("Provider not found", { username, requestId, providerId });
+    throw Boom.badRequest("No such provider", { providerId });
   }
 
   const [user, client] = await getClient(username)
@@ -187,13 +192,14 @@ exports.sendMessage = async (req, res) => {
       from: client.name
     }, requestId, providerId)
   } catch (err) {
+    logger.error("Failed creating message", { from: client.name, requestId })
     try {
       if (!_.isNil(request)) {
         await removeMessageFromRequest(requestId, message._id, providerId);
       }
       await deleteMessage(message._id);
     } catch(err) {
-      console.error(err);
+      logger.error("Failed deleting message", { messageId: message._id, requestId })
     }
 
     throw Boom.internal(err);
@@ -223,10 +229,10 @@ exports.updateRequest = async (req, res) => {
 
   const currentRequest = await findRequestById(_id);
   if (!_.includes(ALLOW_UPDATE_STATUSES, currentRequest.status)) {
-    throw Boom.badRequest("Cannot update request with such status");
+    throw Boom.badRequest("Cannot update request with such status", { requestId: _id });
   }
   if (currentRequest.offers.length > 0) {
-    throw Boom.badRequest("Cannot update request with offers");
+    throw Boom.badRequest("Cannot update request with offers", { requestId: _id });
   }
 
   if (_.isArray(policy) && policy.length > 0) {
@@ -271,7 +277,7 @@ exports.cancelRequest = async (req, res) => {
 
   const currentRequest = await findRequestById(_id);
   if (!_.includes(ALLOW_ACCEPT_CANCEL_STATUSES, currentRequest.status)) {
-    throw Boom.badRequest("Cannot cancel request with such status");
+    throw Boom.badRequest("Cannot cancel request with such status", { requestId: _id });
   }
 
   await Promise.all([
@@ -296,7 +302,7 @@ exports.cancelRequest = async (req, res) => {
   [currentRequest.policy, ...currentRequest.extraFiles].forEach(fileId =>
     Attachment.unlink({_id: fileId}, err => {
       if (!_.isNil(err)) {
-        console.error("Failed deleting file", fileId, err);
+        logger.error("Failed deleting file", { fileId, err });
       }
   }));
 
@@ -330,17 +336,17 @@ exports.deleteFile = async (req, res) => {
   const [user, client] = await getClient(username);
   const request = await findRequestByExtraFileId(fileId);
   if (!client.requests.includes(request._id)) {
-    throw Boom.badRequest("Request not belong to client");
+    throw Boom.unauthorized("Request not belong to client");
   }
 
   if (request.extraFiles.length === 1) {
-    throw Boom.unauthorized("Extra files must include atleast one file");
+    throw Boom.badRequest("Extra files must include atleast one file");
   }
 
   await removeFileFromExtraFiles(request._id, fileId);
   Attachment.unlink({_id: fileId}, err => {
     if (!_.isNil(err)) {
-      console.error("Failed deleting file", fileId, err);
+      logger.error("Failed deleting file", { fileId, err });
     }
   });
 

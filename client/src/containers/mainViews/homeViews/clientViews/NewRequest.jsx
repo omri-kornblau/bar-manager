@@ -36,8 +36,7 @@ const NewRequest = props => {
             <Redirect to={`${match.url}/${view}`}/>
           </Switch>
         </Grid>
-        <Grid item container alignItems="center" justify="center" xs>
-          <DraftsTable/>
+        <Grid item container xs>
         </Grid>
       </Grid>
     </>

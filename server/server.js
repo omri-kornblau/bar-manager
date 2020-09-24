@@ -2,14 +2,12 @@ const Express = require("express");
 const Mongoose = require("mongoose");
 const BodyParser = require("body-parser");
 const CookieParser = require("cookie-parser");
-const Logger = require("morgan");
 const Path = require("path");
 
 const AsyncErrorsHandler = require("./errors/express-async-errors");
 const ErrorsRouter = require("./errors/errors-router");
 
 // Import configurations
-const DbConfig = require("./config/db");
 const ServerConfig = require("./config/server");
 
 // Import models
@@ -27,31 +25,33 @@ const { createAttachment  } = require("./models/attachment");
 
 const StatusWorker = require("./workers/requestStatus");
 
+const { logger, expressWinston } = require("./log/logger");
+
 AsyncErrorsHandler.patchRouter(ErrorsRouter.route);
 
 // Connect to mongodb
 Mongoose
-  .connect(DbConfig.mongoURI, {
+  .connect(ServerConfig.dbUri, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
   .then(() => {
-    console.log("MongoDB Connected");
+    logger.info("MongoDB Connected");
     StatusWorker.init();
-    console.log("Started request status worker")
+    logger.info("Started request status worker")
   })
-  .catch(err => console.log(err));
+  .catch(err => logger.error(err));
 
 Mongoose
-  .createConnection(DbConfig.mongoFSURI, {
+  .createConnection(ServerConfig.fsDbUri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then((gseFSConnection) => {
     createAttachment(gseFSConnection);
-    console.log("MongoDB-GridFS connected")
+    logger.info("MongoDB-GridFS connected")
   })
-  .catch(err => console.log(err));
+  .catch(err => logger.error(err));
 
 
 // Setup express server
@@ -65,18 +65,17 @@ app.use(BodyParser.urlencoded({
 app.use(BodyParser.json());
 app.use(CookieParser());
 
-if (ServerConfig.production) {
-  app.use(Logger("combined"));
-  app.use(Express.static("../client/build"));
-  app.get("*", (req, res) => {
-    res.sendFile(Path.resolve(__dirname, "client", "build", "index.html"));
-  });
-} else {
-  app.use(Logger("dev"));
-}
+app.use(expressWinston);
 
 app.use("/", require("./routes"));
 
+if (ServerConfig.production) {
+  app.use(Express.static("../client/build"));
+  app.get("*", (req, res) => {
+    res.sendFile(Path.resolve(__dirname, "..", "client", "build", "index.html"));
+  });
+}
+
 app.listen(ServerConfig.port, ServerConfig.address, () =>
-  console.log(`Server started on ${ServerConfig.address}:${ServerConfig.port}`)
+  logger.info(`Server started on ${ServerConfig.address}:${ServerConfig.port}`)
 );

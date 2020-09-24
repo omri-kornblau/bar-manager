@@ -2,6 +2,8 @@ const _ = require("lodash");
 const Mongoose = require("mongoose");
 const Boom = require("boom");
 
+const logger = require("../log/logger").logger;
+
 const UserModel = Mongoose.model("User");
 const ProviderModel = Mongoose.model("Provider");
 const RequestModel = Mongoose.model("Request");
@@ -132,10 +134,10 @@ exports.setOffer = async (req, res) => {
   const [user, provider] = await getProvider(username)
   const originalOffer = await unsafeFindOffer(requestId, provider._id);
   if (!_.isNil(originalOffer) && price >= originalOffer.price) {
-    throw Boom.badRequest("Price should be lower then last price")
+    throw Boom.badRequest("Price should be lower then last price", { requestId, price })
   }
   if (price > originalRequest.maxPrice) {
-    throw Boom.badRequest("Price should be lower then max price")
+    throw Boom.badRequest("Price should be lower then max price", { requestId, price })
   }
   const offer = await setOffer(provider._id, requestId, price);
 
@@ -149,6 +151,7 @@ exports.setOffer = async (req, res) => {
       updatedProvider = await addRequestToProvider(provider._id, requestId);
     }
   } catch (err) {
+    logger.error("Failed adding offer to request", { offerId: offer._id, requestId });
     try {
       if (!_.isNil(request)) {
         await removeOfferFromRequest(requestId, offer._id);
@@ -161,7 +164,7 @@ exports.setOffer = async (req, res) => {
         await deleteOffer(offer._id);
       }
     } catch(err) {
-      console.error(err);
+      logger.error("Failed undoing offer set", { offerId: offer._id });
     }
 
     throw Boom.internal(err);
@@ -190,13 +193,14 @@ exports.sendMessage = async (req, res) => {
       from: provider.name
     }, requestId, request.author)
   } catch (err) {
+    logger.error("Failed adding message to request", { requestId });
     try {
       if (!_.isNil(request)) {
         await removeMessageFromRequest(requestId, message._id, provider._id);
       }
       await deleteMessage(message._id);
     } catch(err) {
-      console.error(err);
+      logger.error("Failed deleting message", { requestId, messageId: message._id });
     }
 
     throw Boom.internal(err);

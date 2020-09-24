@@ -2,6 +2,8 @@ const _ = require("lodash");
 const Moment = require("moment");
 const Mongoose = require("mongoose");
 
+const logger = require("../log/logger").logger;
+
 const {
   moveMongoDocument,
 } = require("../utils");
@@ -46,7 +48,7 @@ const findRequestAndDeleteIfMissing = async (requestId, sampledId) => {
     return request
   } catch (err) {
     if (err.message === "Request not found") {
-      console.error(`No request for sampled request [${sampledId}]`)
+      logger.error("Request not found from sampled", { sampledId, requestId });
       return await OftenSampledModel.findByIdAndRemove(sampledId);
     }
     throw err;
@@ -55,7 +57,9 @@ const findRequestAndDeleteIfMissing = async (requestId, sampledId) => {
 
 const updateProjectionById = async (id, updateOp) => {
   const updatedProjection = await OftenSampledModel.findByIdAndUpdate(id, updateOp, { new: true });
-  if (_.isNil(updatedProjection)) return console.error(`Failed updating status of projection [${id}]`);
+  if (_.isNil(updatedProjection)) {
+    return logger.error("Failed updating status of projection", { sampledId: id });
+  }
   return updatedProjection;
 }
 
@@ -73,7 +77,7 @@ const endProcedureWithOffers = async request => {
   const minOffer = _.minBy(offers, "price");
   await Promise.all(offers
     .filter(({ _id }) => _id !== minOffer._id)
-    .map(({ provider }) => 
+    .map(({ provider }) =>
       Promise.all([
         removeRequestFromProviderById(provider, request._id),
         createProviderNotification({
@@ -103,7 +107,7 @@ const sampleRequestsOften = async () => {
 
     if (_.isNil(STATUS_TIMING[status])) {
       await OftenSampledModel.findByIdAndRemove(_id);
-      return console.log(`Removed request [${requestId}] from samplers`);
+      return logger.info("Removed request from samplers", { sampledId: _id, requestId });
     }
 
     const {
@@ -111,17 +115,17 @@ const sampleRequestsOften = async () => {
       targetStatus
     } = STATUS_TIMING[status];
 
-    if (_.isNil(projection[endTimeKey])) console.error(`Time key is missing from request [${_id}]`);
+    if (_.isNil(projection[endTimeKey])) logger.error("Time key is missing from request", { sampledId: _id });
 
     const endTime = Moment(projection[endTimeKey]);
-    console.log(`sampleOften: [${_id}] ${now.diff(endTime)}`);
+    logger.info("Sample often", { sampledId: _id, diff: now.diff(endTime), targetStatus });
 
     if (now.isAfter(endTime)) {
       const request = await findRequestAndDeleteIfMissing(requestId);
 
       if (isProcedureEnd(targetStatus)) {
         if (_.isEmpty(request.offers)) {
-          console.log(`Ended request [${requestId}] procedure with no offers`);
+          logger.info("Ended procedure with no offers", { requestId });
           return await endNoOffersProcedure(request, _id);
         } else {
           await endProcedureWithOffers(request);
@@ -137,10 +141,10 @@ const sampleRequestsOften = async () => {
       if (_.isNil(updatedProjection)) {
         return await updateRequestById(requestId, restoreStatusOp);
       }
-      console.log(`Updated request [${projection.requestId}] status to [${targetStatus}]`);
+      logger.info("Updated request status", { targetStatus, requestId: projection.requestId });
 
       await moveMongoDocument(updatedProjection, OftenSampledModel, SampledModel)
-      console.log(`Moved request [${requestId}] to sampled`);
+      logger.info("Moved request to sampled", { requestId });
 
       await createClientNotification({
         type: "Status updated",
@@ -178,6 +182,7 @@ const sampleRequests = async () => {
 
     const {
       endTimeKey,
+      targetStatus
     } = STATUS_TIMING[status];
 
     if (_.isNil(projection[endTimeKey])) console.error(`Time key [${endTimeKey}] is missing from request [${_id}]`);
@@ -186,11 +191,11 @@ const sampleRequests = async () => {
       .subtract(LONG_SAMPLE_INTERVAL)
       .subtract(SHORT_SAMPLE_INTERVAL);
 
-    console.log(`sample: [${_id}] ${now.diff(endTime)}`);
+    logger.info("Sample", { sampledId: _id, diff: now.diff(endTime), targetStatus });
 
     if (now.isAfter(endTime)) {
       await moveMongoDocument(projection, SampledModel, OftenSampledModel);
-      console.log(`Moved request [${requestId}] to often sampled`);
+      logger.info("Moved request to often sampled", { requestId });
     }
   }));
 }

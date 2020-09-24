@@ -37,8 +37,7 @@ exports.createRequest = async requestData => {
   });
 
   if (_.isNil(createdRequest)) {
-    console.error(`Failed creating request for user ${requestData.author}`)
-    throw Boom.internal(`Failed creating request`);
+    throw Boom.internal(`Failed creating request`, { requestData });
   }
 
   return createdRequest;
@@ -52,7 +51,7 @@ exports.findRequestById = async _id => {
   const request = await RequestModel.findById(_id);
 
   if (_.isNil(request)) {
-    throw Boom.internal("Request not found");
+    throw Boom.internal("Request not found", { requestId: _id });
   }
   return request;
 }
@@ -61,7 +60,7 @@ exports.findRequest = async query => {
   const request = await RequestModel.findOne(query);
 
   if (_.isNil(request)) {
-    throw Boom.internal("Request not found");
+    throw Boom.internal("Request not found", { query });
   }
   return request;
 }
@@ -96,7 +95,7 @@ exports.updateRequestFieldsById = async (_id, data, validate=true) => {
   );
 
   if (_.isNil(updatedRequest)) {
-    throw Boom.internal("Failed updating request");
+    throw Boom.internal("Failed updating request", { requestId: _id, data });
   }
 
   return updatedRequest;
@@ -106,7 +105,7 @@ exports.updateRequestById = async (_id, action, returnNew=false) => {
   const updatedRequest = await RequestModel.findByIdAndUpdate(_id, action, { new: returnNew });
 
   if (_.isNil(updatedRequest)) {
-    throw Boom.internal("Failed updating request");
+    throw Boom.internal("Failed updating request", { requestId: _id, action });
   }
 
   return updatedRequest;

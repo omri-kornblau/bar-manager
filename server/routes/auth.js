@@ -32,26 +32,25 @@ const {
 
 exports.login = async (req, res) => {
   const {
-    username,
+    username: loginId,
     password
   } = req.body;
   const user = await UserModel.findOne({$or: [
-    {username},
-    {email: username},
+    {username: loginId},
+    {email: loginId},
   ]});
+
   if (!user) {
-    throw Boom.badRequest("Incorrect username or password", {
-      appCode: 2100
-    });
+    throw Boom.badRequest("Incorrect username or password");
   }
   const isCorrect = await user.isCorrectPassword(password);
   if (!isCorrect) {
-    throw Boom.badRequest("Incorrect username or password", {
-      appCode: 2200
-    });
+    throw Boom.badRequest("Incorrect username or password");
   }
 
   const tokenPassword = Utils.getRandomPassword(16);
+  const {username} = user
+
   const payload = {
     username,
     tokenPassword
