@@ -67,14 +67,14 @@ app.use(CookieParser());
 
 app.use(expressWinston);
 
+app.use("/", require("./routes"));
+
 if (ServerConfig.production) {
   app.use(Express.static("../client/build"));
   app.get("*", (req, res) => {
     res.sendFile(Path.resolve(__dirname, "..", "client", "build", "index.html"));
   });
 }
-
-app.use("/", require("./routes"));
 
 app.listen(ServerConfig.port, ServerConfig.address, () =>
   logger.info(`Server started on ${ServerConfig.address}:${ServerConfig.port}`)
