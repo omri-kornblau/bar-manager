@@ -20,6 +20,8 @@ const {
 const {
   findUser,
   changePassword,
+  updateUserById,
+  updateLastLogin,
 } = require("../db/user");
 
 const UserModel = Mongoose.model("User");
@@ -81,6 +83,8 @@ exports.login = async (req, res) => {
     expiresIn: "12h"
   };
   const token = Jwt.sign(payload, secretTokenKey, tokenOptions);
+
+  updateLastLogin(user._id);
   return res.cookie("token", token, {
     httpOnly: true
   }).send(censorUserForUser(user._doc));

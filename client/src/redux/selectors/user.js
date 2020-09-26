@@ -2,6 +2,12 @@ export const getUsername = state => {
   return state.app.user.data.name;
 }
 
+export const getUserLastLogin = state => {
+  return state.app.user.data.lastLogin
+    ? new Date(state.app.user.data.lastLogin)
+    : new Date();
+}
+
 export const getUserLoggedIn = state => {
   return state.app.user.isLoggedIn;
 }

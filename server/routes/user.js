@@ -57,6 +57,7 @@ exports.signupClient = async (req, res) => {
       password,
       clientId: createdClient._id,
       type: USER_TYPES.client,
+      lastLogin: new Date(),
     }
 
     createdUser = await UserModel.create(user);
@@ -111,6 +112,7 @@ exports.signupProvider = async (req, res) => {
       password,
       clientId: createdProvider._id,
       type: USER_TYPES.provider,
+      lastLogin: new Date(),
     }
 
     createdUser = await UserModel.create(user);

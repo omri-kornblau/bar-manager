@@ -22,6 +22,7 @@ const yupUserSchema = Yup.object().shape({
   password: Yup.string().min(PASSWORD_MIN_LENGTH).max(PASSWORD_MAX_LENGTH).required(),
   type: Yup.mixed().oneOf(USER_TYPES_VALUES).required(),
   clientId: Yup.string().length(OBJECT_ID_LENGTH).required(),
+  lastLogin: Yup.date(),
 });
 
 const yupUpdateUserSchema = Yup.object().shape({
@@ -45,6 +46,9 @@ const mongoFormat = {
   },
   clientId: {
     type: String
+  },
+  lastLogin: {
+    type: Date
   },
 }
 
