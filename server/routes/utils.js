@@ -39,7 +39,12 @@ const {
 const { CLIENT_FOT_PROVIDER } = require("../config/projections");
 const {
   smtpTransportConf,
+  emailTemplate,
+  emailContent,
+  logoCid,
+  logoBase64,
 } = require("../config/email");
+const { NOTIFICATIONS_TYPES } = require("../config/types");
 
 const UserModel = Mongoose.model("User");
 const RequestModal = Mongoose.model("Request");
@@ -222,7 +227,13 @@ exports.sendMail = async (to, subject, html) => {
     from: smtpTransportConf.auth.user,
     to,
     subject,
-    html
+    html,
+    attachments: {
+        filename: 'logo.png',
+        content: logoBase64,
+        encoding: 'base64',
+        cid: logoCid,
+    }
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
@@ -236,7 +247,10 @@ exports.createClientNotification = async (message, requestId, clientId) => {
   const client = await findClientById(clientId);
   const createdNotification = await createNotification(message, requestId, clientId, "client");
   if (client.settings.emailNotifications[message.type]) {
-    await exports.sendMail(client.email, message.type, "test");
+    const subject = emailContent[message.type].subject;
+    const request = await findRequestById(requestId);
+    const content = emailTemplate(client.name, emailContent[message.type].message({...message, id: request.index}));
+    await exports.sendMail(client.email, subject, content);
   }
   return await addNotificationToClientById(clientId, createdNotification._id);
 }
@@ -245,7 +259,9 @@ exports.createProviderNotification = async (message, requestId, providerId) => {
   const provider = await findProviderById(providerId);
   const createdNotification = await createNotification(message, requestId, providerId, "provider");
   if (provider.settings.emailNotifications[message.type]) {
-    await exports.sendMail(provider.email, message.type, "test");
+    const subject = emailContent[message.type].subject
+    const content = emailTemplate(provider.name, emailContent[message.type].message({...message, id: requestId}));
+    await exports.sendMail(provider.email, subject, content);
   }
   return await addNotificationToProviderById(providerId, createdNotification._id);
 }
