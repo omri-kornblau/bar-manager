@@ -22,6 +22,7 @@ import {
   formatShekel,
   formatMonths,
   formatTimeStampDate,
+  formatLength,
 } from "../../helpers/formats";
 import { postDeleteFile } from "../../api/client";
 
@@ -74,6 +75,14 @@ export const tableHeaders = {
       id: "maxPrice",
       label: labels.maxPrice,
       formatter: formatShekel,
+      filter: {
+        type: "number"
+      }
+    },
+    amountOfOffers: {
+      id: "offers",
+      label: labels.amountOfOffers,
+      formatter: formatLength,
       filter: {
         type: "number"
       }
@@ -167,7 +176,7 @@ export const clientProgressBar = {
   inTenderProcedure: {
     label: "פוליסות בהליך מכרזי",
     description: "",
-    chosenHeaders: ["index", "type", "activeTime", "startDate", "maxPrice"],
+    chosenHeaders: ["index", "type", "activeTime", "startDate", "maxPrice", "amountOfOffers"],
     actions: [
       <ConnectedButton
         label="ערוך"
