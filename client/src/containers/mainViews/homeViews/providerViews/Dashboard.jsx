@@ -32,6 +32,7 @@ import { connect } from "react-redux";
 import { getRequests } from "../../../../redux/selectors/request";
 import { getNotifications } from "../../../../redux/selectors/notification";
 import { readNotification } from "../../../../redux/thunks/provider";
+import { getUserFullName } from "../../../../redux/selectors/user";
 
 const DashboardTable = props => {
   const {
@@ -82,6 +83,7 @@ const ClientDashboardMainView = props => {
     notifications,
     pushUrl,
     readNotification,
+    userFullName,
   } = props;
 
   const sepratedRequests = useMemo(() => {
@@ -121,7 +123,7 @@ const ClientDashboardMainView = props => {
       <Grid container alignItems="flex-end">
         <Typography variant="h4" color="inherit">
           <Box fontWeight="fontWeightBold" marginRight={2}>
-            שלום משתמש 1
+            שלום {userFullName}
           </Box>
         </Typography>
         <Typography variant="h6" color="inherit">
@@ -181,6 +183,7 @@ const ClientDashboardMainView = props => {
 const mapStateToProps = state => ({
   requests: getRequests(state),
   notifications: getNotifications(state),
+  userFullName: getUserFullName(state),
 })
 
 const mapDispatchToProps = dispatch => ({

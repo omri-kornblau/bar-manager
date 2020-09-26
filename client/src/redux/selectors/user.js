@@ -28,3 +28,8 @@ export const getUserNotificationsSettings = state => {
     ? state.app[getUserType(state)].settings.emailNotifications
     : {};
 }
+
+export const getUserFullName = state => {
+  const type = getUserType(state);
+  return type ? state.app[type].name : "";
+}
