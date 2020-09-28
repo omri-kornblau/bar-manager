@@ -26,6 +26,8 @@ import {
 } from "../../helpers/formats";
 import { postDeleteFile } from "../../api/client";
 
+export const minTenderDuration = 7;
+export const maxTenderDuration = 14;
 
 export const tableHeaders = {
     index: {

@@ -1,8 +1,11 @@
 const Mongoose = require("mongoose");
 const Yup = require("yup");
+const Moment = require("moment");
 
 const {
   OBJECT_ID_LENGTH,
+  MIN_DURATION_LENGTH,
+  MAX_DURATION_LENGTH,
 } = require("../config/consts");
 
 const {
@@ -19,6 +22,14 @@ const yupCreateRequestSchema = Yup.object().shape({
   insuranceDuration: Yup.number().positive().integer().required(),
   isCurrentlyInsured: Yup.boolean(),
   maxPrice: Yup.number().positive().required(),
+  tenderFinalDate: Yup.date()
+    .transform((value, originalValue) => {
+      return new Date(originalValue)
+    })
+    // startOf/endOf("day") use because the client side pick the time based on
+    // the form start fill time and not submit time
+    .min(Moment().add(MIN_DURATION_LENGTH, "days").startOf("day"))
+    .max(Moment().add(MAX_DURATION_LENGTH, "days").endOf("day")),
   comments: Yup.string(),
   startDate: Yup.date(),
   activeTime: Yup.date(),
@@ -56,6 +67,9 @@ const mongoFormat = {
   },
   maxPrice: {
     type: Number,
+  },
+  tenderFinalDate: {
+    type: Date,
   },
   comments: {
     type: String,

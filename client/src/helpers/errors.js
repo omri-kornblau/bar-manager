@@ -27,12 +27,16 @@ const yupErrorToText = errData => {
   switch(errData.type) {
     case "min":
       const min = _.isNil(errData.params.more)
-        ? `${errData.params.min} תווים`
+        ? typeof(errData.params.originalValue) === "string"
+          ? `${errData.params.min} תווים`
+          : errData.params.min 
         : errData.params.more;
       return `סעיף ${label} חייב להיות גדול מ${min}`
     case "max":
       const max = _.isNil(errData.params.more)
-        ? `${errData.params.max} תווים`
+        ? typeof(errData.params.originalValue) === "string"
+          ? `${errData.params.max} תווים`
+          : errData.params.max 
         : errData.params.more;
       return `סעיף ${label} חייב להיות קטן מ${max}`
     case "required":

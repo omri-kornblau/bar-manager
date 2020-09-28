@@ -1,3 +1,4 @@
+import _ from "lodash";
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import {
@@ -21,9 +22,17 @@ const DatePickerWrapper = props => {
     format,
     onChange,
     name,
+    minDate,
+    maxDate,
   } = props;
   
-  const [date, setDate] = useState(new Date());
+  const currentDate = new Date();
+  const [date, setDate] = useState(!_.isNil(minDate) && minDate > currentDate
+    ? minDate
+    : !_.isNil(maxDate) && maxDate < currentDate
+      ? maxDate
+      : new Date());
+
   const _onChange =  date => {
     setDate(date);
     return onChange({target: {value: date, name: name}});
@@ -42,6 +51,8 @@ const DatePickerWrapper = props => {
       }}
       onChange={_onChange}
       value={date}
+      minDate={minDate}
+      maxDate={maxDate}
     />
   </MuiPickersUtilsProvider>
 }
