@@ -19,7 +19,7 @@ import { getCreateRequestErrors } from "../../redux/selectors/errors";
 import LoadingButton from "../LoadingButton/LoadingButton";
 import ErrorMessage from "../LoadingButton/ErrorMessage";
 import moment from "moment";
-import { maxTenderDuration, minTenderDuration } from "../../constants/structure/request";
+import { insuranceStartTimeOffest, maxTenderDuration, minTenderDuration } from "../../constants/structure/request";
 
 const structure =
   [[
@@ -77,6 +77,25 @@ const structure =
       minDate: moment().add(minTenderDuration, "days"),
       maxDate: moment().add(maxTenderDuration, "days"),
     },
+    {
+      type: "preview",
+      value: "tenderFinalDate",
+      element: props => {
+        const {
+          value
+        } = props;
+
+        const insuranceTime = moment(value).add(insuranceStartTimeOffest, "days");
+        const dateFormat = new Intl.DateTimeFormat('en-GB').format(insuranceTime);
+        const timeFormat = `${insuranceTime.hours()}:${insuranceTime.minutes()}`;
+        return (
+          <label>
+            תחילת הביטוח: {dateFormat} {timeFormat}
+          </label>
+        )
+      }
+    },
+  ],[
     {
       label: "מבוטח כרגע",
       name: "isCurrentlyInsured",
@@ -154,6 +173,7 @@ const FillDetails = props => {
         margin="dense"
         onChange={onChange}
         error={parsedError}
+        values={form}
       />
       <Box mt={3}/>
       <ErrorMessage

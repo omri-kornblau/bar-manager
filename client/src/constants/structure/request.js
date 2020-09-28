@@ -28,6 +28,7 @@ import { postDeleteFile } from "../../api/client";
 
 export const minTenderDuration = 7;
 export const maxTenderDuration = 14;
+export const insuranceStartTimeOffest = 2;
 
 export const tableHeaders = {
     index: {

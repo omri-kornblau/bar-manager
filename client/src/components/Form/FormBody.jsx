@@ -71,24 +71,28 @@ const FormBody = props => {
 
   return (
     formStructure.map((row, idx) =>
-      <Grid key={idx} container spacing={spacing} direction="row" alignItems="flex-start">
+      <Grid key={idx} container spacing={spacing} direction="row" alignItems="flex-end">
         {row.map(field =>
           <Grid key={field.label} xs item container justify={field.justify || justify}>
-            <Input
-              {...field}
-              variant={field.variant || variant}
-              margin={margin}
-              format={dateFormat}
-              type={field.type}
-              label={field.label}
-              helperText={field.name === error.key ? error.message : ""}
-              fullWidth={field.fullWidth}
-              required={field.required}
-              defaultValue={field.defaultValue}
-              onChange={onChange}
-              error={!_.isNil(error.key) && field.name === error.key}
-              value={values[field.name]}
-            />
+            {
+              field.type === 'preview'
+              ? <field.element value={values[field.value]}/>
+              : <Input
+                  {...field}
+                  variant={field.variant || variant}
+                  margin={margin}
+                  format={dateFormat}
+                  type={field.type}
+                  label={field.label}
+                  helperText={field.name === error.key ? error.message : ""}
+                  fullWidth={field.fullWidth}
+                  required={field.required}
+                  defaultValue={field.defaultValue}
+                  onChange={onChange}
+                  error={!_.isNil(error.key) && field.name === error.key}
+                  value={values[field.name]}
+                />
+            }
           </Grid>
         )}
       </Grid>
