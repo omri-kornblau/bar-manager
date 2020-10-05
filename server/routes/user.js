@@ -5,7 +5,12 @@ const UserModel = Mongoose.model("User");
 const ClientModel = Mongoose.model("Client");
 const ProviderModel = Mongoose.model("Provider");
 
-const { USER_TYPES } = require("../config/types");
+const {
+  USER_TYPES,
+  NOTIFICATIONS_TYPES,
+  CLIENT_NOTIFICATIONS_TYPES,
+  PROVIDER_NOTIFICATIONS_TYPES,
+} = require("../config/types");
 
 exports.signupClient = async (req, res) => {
   const {
@@ -26,9 +31,16 @@ exports.signupClient = async (req, res) => {
   try {
     const emptyClient = {
       name,
+      email,
       unreadNotifications: [],
       readNotifications: [],
       requests: [],
+      settings: {
+        emailNotifications: CLIENT_NOTIFICATIONS_TYPES.reduce(
+          (prev, cur) => {
+            return {...prev, [NOTIFICATIONS_TYPES[cur]]: true}
+          }, {})
+      },
       companyId,
       address,
       phoneNumber,
@@ -45,6 +57,7 @@ exports.signupClient = async (req, res) => {
       password,
       clientId: createdClient._id,
       type: USER_TYPES.client,
+      lastLogin: new Date(),
     }
 
     createdUser = await UserModel.create(user);
@@ -75,9 +88,16 @@ exports.signupProvider = async (req, res) => {
   try {
     const emptyProvider = {
       name,
+      email,
       unreadNotifications: [],
       readNotifications: [],
       requests: [],
+      settings: {
+        emailNotifications: PROVIDER_NOTIFICATIONS_TYPES.reduce(
+          (prev, cur) => {
+            return {...prev, [NOTIFICATIONS_TYPES[cur]]: true}
+          }, {})
+      },
       contactName,
       contactPhone,
       contactEmail
@@ -92,6 +112,7 @@ exports.signupProvider = async (req, res) => {
       password,
       clientId: createdProvider._id,
       type: USER_TYPES.provider,
+      lastLogin: new Date(),
     }
 
     createdUser = await UserModel.create(user);

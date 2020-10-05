@@ -10,6 +10,10 @@ const UserModel = Mongoose.model("User");
 const NotificationModel = Mongoose.model("Notification");
 
 const { internals } = require("../models/attachment");
+const {
+  CLIENT_NOTIFICATIONS_TYPES,
+  NOTIFICATIONS_TYPES,
+} = require("../config/types");
 
 const {
   writerFile,
@@ -73,6 +77,9 @@ const {
   findProviderById,
   deleteNotificationByIds: deleteProviderNotificationByIds,
 } = require("../db/provider");
+const {
+  censorAccountSettings,
+} = require("../censors");
 
 exports.getAll = async (req, res) => {
   const {
@@ -84,8 +91,8 @@ exports.getAll = async (req, res) => {
   // TODO: better logs here
   const requests = await prepareRequests(await findByIds(RequestModel, client.requests, "Request not found"));
   const notifications = await prepareNotifications(await findByIds(NotificationModel, client.unreadNotifications, "Unread notification not found"));
-
-  res.send({ requests, notifications });
+  
+  res.send({ ...censorAccountSettings(client._doc), requests, notifications });
 }
 
 exports.createRequest = async (req, res) => {
@@ -188,7 +195,7 @@ exports.sendMessage = async (req, res) => {
   try {
     request = await addMessageToRequest(requestId, message._id, providerId);
     await createProviderNotification({
-      type: "New Message",
+      type: NOTIFICATIONS_TYPES.newMessage,
       from: client.name
     }, requestId, providerId)
   } catch (err) {
@@ -396,12 +403,36 @@ exports.updatesDetailes = async (req, res) => {
 
   const [user, client] = await getClient(username);
 
-  const newClient = _.pick(req.body, ["name"]);
-  await ClientModel.yupClientSchema.validate(newClient);
+  const newClient = _.pick(req.body, [
+    "name",
+    "email",
+    "companyId",
+    "address",
+    "phoneNumber",
+    "owner",
+    "fieldOfActivity",
+  ]);
+  await ClientModel.yupUpdateClientSchema.validate(newClient);
   const newUser = _.pick(req.body, ["email"]);
-  await UserModel.yupUserSchema.validate(newUser);
+  await UserModel.yupUpdateUserSchema.validate(newUser);
 
   await updateClientById(client._id, {$set: newClient});
   await updateUserById(user._id, {$set: newUser});
+  res.sendStatus(204);
+}
+
+exports.updatesNotificationSettings = async (req, res) => {
+  const {
+    username
+  } = req;
+
+  const [user, client] = await getClient(username);
+
+  const notificationSettings = _.pick(req.body, CLIENT_NOTIFICATIONS_TYPES.map(notificationType =>
+    NOTIFICATIONS_TYPES[notificationType]
+  ));
+  await ClientModel.yupUpdateClientNotificationSchema.validate(notificationSettings);
+
+  await updateClientById(client._id, {$set: {"settings.emailNotifications": notificationSettings}});
   res.sendStatus(204);
 }

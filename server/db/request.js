@@ -16,17 +16,12 @@ const {
 } = require("../config/projections");
 
 exports.createRequest = async requestData => {
-    const now = Moment();
-
   const createdRequest = await RequestModel.create({
-    createdAt: now,
-    startDate: now.clone()
-      .add(STATUS_TIMING.inTenderProcedure.duration),
-    activeTime: now.clone()
-      .add(STATUS_TIMING.inTenderProcedure.duration)
+    createdAt: new Date(),
+    startDate: Moment(requestData.tenderFinalDate),
+    activeTime: Moment(requestData.tenderFinalDate)
       .add(STATUS_TIMING.waitingForSign.duration),
-    endTime: now.clone()
-      .add(STATUS_TIMING.inTenderProcedure.duration)
+    endTime: Moment(requestData.tenderFinalDate)
       .add(STATUS_TIMING.waitingForSign.duration)
       .add(requestData.insuranceDuration, "months"),
     messages: {},

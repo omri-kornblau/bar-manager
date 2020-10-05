@@ -1,3 +1,4 @@
+import _ from "lodash";
 import React, { useState, useCallback } from "react";
 import { connect } from "react-redux";
 import {
@@ -17,6 +18,8 @@ import { parseFormError } from "../../helpers/errors";
 import { getCreateRequestErrors } from "../../redux/selectors/errors";
 import LoadingButton from "../LoadingButton/LoadingButton";
 import ErrorMessage from "../LoadingButton/ErrorMessage";
+import moment from "moment";
+import { insuranceStartTimeOffest, maxTenderDuration, minTenderDuration } from "../../constants/structure/request";
 
 const structure =
   [[
@@ -64,6 +67,36 @@ const structure =
     }
   ],[
     {
+      label: "תאריך סיום המכרז",
+      type: "date",
+      name: "tenderFinalDate",
+      fullWidth: true,
+      justify: "center",
+      required: true,
+      defaultValue: moment().add(minTenderDuration, "days"),
+      minDate: moment().add(minTenderDuration, "days"),
+      maxDate: moment().add(maxTenderDuration, "days"),
+    },
+    {
+      type: "preview",
+      value: "tenderFinalDate",
+      element: props => {
+        const {
+          value
+        } = props;
+
+        const insuranceTime = moment(value).add(insuranceStartTimeOffest, "days");
+        const dateFormat = new Intl.DateTimeFormat('en-GB').format(insuranceTime);
+        const timeFormat = `${insuranceTime.hours()}:${insuranceTime.minutes()}`;
+        return (
+          <label>
+            תחילת הביטוח: {dateFormat} {timeFormat}
+          </label>
+        )
+      }
+    },
+  ],[
+    {
       label: "מבוטח כרגע",
       name: "isCurrentlyInsured",
       type: "checkbox",
@@ -106,7 +139,20 @@ const FillDetails = props => {
     createRequestStatus
   } = props;
 
-  const [form, setForm] = useState({});
+  const [form, setForm] = useState(structure.reduce((pre, currentRow) => {
+    return {
+      ...pre,
+      ...currentRow.reduce((preItem, curItem) => {
+        return _.isNil(curItem.defaultValue)
+          ? preItem
+          : {
+              ...preItem,
+              [curItem.name]: curItem.defaultValue,
+            };
+      }, {})
+    };
+  }, {}));
+
   const parsedError = parseFormError(createRequestStatus.error);
 
   const onChange = useCallback(e => {
@@ -127,6 +173,7 @@ const FillDetails = props => {
         margin="dense"
         onChange={onChange}
         error={parsedError}
+        values={form}
       />
       <Box mt={3}/>
       <ErrorMessage

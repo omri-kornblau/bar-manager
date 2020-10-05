@@ -8,8 +8,14 @@ const {
   PHONE_REGEX,
 } = require("../config/consts");
 
+const {
+  NOTIFICATIONS_TYPES,
+  PROVIDER_NOTIFICATIONS_TYPES,
+} = require("../config/types");
+
 const yupProviderSchema = Yup.object().shape({
   name: Yup.string().min(NAME_MIN_LENGTH).max(NAME_MAX_LENGTH).required(),
+  email: Yup.string().email().required(),
   unreadNotifications: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   readNotifications: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   requests: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
@@ -18,10 +24,34 @@ const yupProviderSchema = Yup.object().shape({
   contactName: Yup.string().min(NAME_MIN_LENGTH).max(NAME_MAX_LENGTH).required(),
   contactPhone: Yup.string().matches(PHONE_REGEX, 'Phone number is not valid').required(),
   contactEmail: Yup.string().email().required(),
+  settings: Yup.object().shape({
+    emailNotifications: Yup.object().shape(PROVIDER_NOTIFICATIONS_TYPES.reduce(
+      (prev, cur) => {
+        return {...prev, [NOTIFICATIONS_TYPES[cur]]: Yup.bool().required()}
+      }, {})
+    ).required(),
+  }).required(),
 });
+
+const yupUpdateProviderSchema = Yup.object().shape({
+  name: Yup.string().min(NAME_MIN_LENGTH).max(NAME_MAX_LENGTH).required(),
+  email: Yup.string().email().required(),
+  contactName: Yup.string().min(NAME_MIN_LENGTH).max(NAME_MAX_LENGTH).required(),
+  contactPhone: Yup.string().matches(PHONE_REGEX, 'Phone number is not valid').required(),
+  contactEmail: Yup.string().email().required(),
+});
+
+const yupUpdateProviderNotificationSchema = Yup.object().shape(
+  PROVIDER_NOTIFICATIONS_TYPES.reduce((prev, cur) => (
+    {...prev, [NOTIFICATIONS_TYPES[cur]]: Yup.bool().required()}
+  ), {})
+).required();
 
 const mongoFormat = {
   name: {
+    type: String
+  },
+  email: {
     type: String
   },
   unreadNotifications: {
@@ -48,6 +78,9 @@ const mongoFormat = {
   contactEmail: {
     type: String
   },
+  settings: {
+    type: Object
+  }
 };
 
 const mongoOptions = {
@@ -62,5 +95,7 @@ providerSchema.pre("save", async function () {
 
 const Provider = Mongoose.model("Provider", providerSchema)
 Provider.yupProviderSchema = yupProviderSchema;
+Provider.yupUpdateProviderSchema = yupUpdateProviderSchema;
+Provider.yupUpdateProviderNotificationSchema = yupUpdateProviderNotificationSchema;
 
 module.exports = Provider;

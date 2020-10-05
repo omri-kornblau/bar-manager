@@ -56,12 +56,18 @@ const {
 
 const {
   censorMessagesForProvider,
-  censorOffersForProvider
+  censorOffersForProvider,
+  censorAccountSettings,
 } = require("../censors");
 
 const {
   ALLOW_SET_OFFER_STATUSES,
 } = require("../config/consts");
+
+const {
+  PROVIDER_NOTIFICATIONS_TYPES,
+  NOTIFICATIONS_TYPES,
+} = require("../config/types");
 
 exports.getAll = async (req, res) => {
   const {
@@ -78,7 +84,7 @@ exports.getAll = async (req, res) => {
     return { ...request._doc, author: client.name }
   }));
 
-  res.send({ requests, notifications });
+  res.send({ ...censorAccountSettings(provider._doc), requests, notifications });
 }
 
 exports.getRequests = async (req, res) => {
@@ -170,6 +176,12 @@ exports.setOffer = async (req, res) => {
     throw Boom.internal(err);
   }
 
+  await createClientNotification({
+    type: NOTIFICATIONS_TYPES.offerSet,
+    from: provider.name,
+    price: price,
+  }, requestId, originalRequest.author)
+
   res.send({...offer, provider: provider.name});
 }
 
@@ -189,7 +201,7 @@ exports.sendMessage = async (req, res) => {
   try {
     request = await addMessageToRequest(requestId, message._id, provider._id);
     await createClientNotification({
-      type: "New Message",
+      type: NOTIFICATIONS_TYPES.newMessage,
       from: provider.name
     }, requestId, request.author)
   } catch (err) {
@@ -281,12 +293,34 @@ exports.updatesDetailes = async (req, res) => {
 
   const [user, provider] = await getProvider(username);
 
-  const newProvider = _.pick(req.body, ["name"]);
-  await ProviderModel.yupProviderSchema.validate(newProvider);
+  const newProvider = _.pick(req.body, [
+    "name",
+    "email",
+    "contactName",
+    "contactPhone",
+    "contactEmail",
+  ]);
+  await ProviderModel.yupUpdateProviderSchema.validate(newProvider);
   const newUser = _.pick(req.body, ["email"]);
   await UserModel.yupUserSchema.validate(newUser);
 
   await updateProviderById(provider._id, {$set: newProvider});
   await updateUserById(user._id, {$set: newUser});
+  res.sendStatus(204);
+}
+
+exports.updatesNotificationSettings = async (req, res) => {
+  const {
+    username
+  } = req;
+
+  const [user, provider] = await getProvider(username);
+
+  const notificationSettings = _.pick(req.body, PROVIDER_NOTIFICATIONS_TYPES.map(notificationType =>
+    NOTIFICATIONS_TYPES[notificationType]
+  ));
+  await ProviderModel.yupUpdateProviderNotificationSchema.validate(notificationSettings);
+
+  await updateProviderById(provider._id, {$set: {"settings.emailNotifications": notificationSettings}});
   res.sendStatus(204);
 }

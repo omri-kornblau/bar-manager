@@ -8,6 +8,8 @@ export const labels = {
   companyDescription: "תיאור החברה",
   insuranceDuration: "משך הביטוח",
   maxPrice: "פרמיה מקסימלית",
+  tenderFinalDate: "תקופת המכרז הרצויה",
+  amountOfOffers: "כמות הצעות",
   comments: "הערות",
   isCurrentlyInsured: "מבוטח כרגע",
   createdAt: "זמן יצירה",

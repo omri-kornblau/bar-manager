@@ -11,3 +11,12 @@ export const postUpdateClientDetailes = async data => {
 export const postUpdateProviderDetailes = async data => {
   return Axios.post("/provider/updatedetailes", data);
 }
+
+export const postUpdateClientNotificationSettings = async data => {
+  return Axios.post("/client/updatenotificationsettings", data);
+}
+
+export const postUpdateProviderNotificationSettings = async data => {
+  return Axios.post("/provider/updatenotificationsettings", data);
+}
+

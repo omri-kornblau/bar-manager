@@ -15,7 +15,8 @@ export const applyFormat = (value, formatter, other) => {
 
 export const formatYesNo = val => val ? "כן" : "לא";
 export const formatAccept = val => val ? <DoneIcon/> : <ClearIcon/>;
-export const formatShekel = val =>  `${val} אלף ש"ח`;
+export const formatShekel = val => `${val} אלף ש"ח`;
+export const formatLength = val => _.isArray(val) ? val.length : 0;
 export const formatMonths = val =>  `${val} חודשים`;
 export const formatTimeStampRTL = time => Moment(time).format("HH:mm:ss DD/MM/YYYY");
 export const formatTimeStampMessageTime = time => Moment(time).format("HH:mm");

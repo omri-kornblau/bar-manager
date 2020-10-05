@@ -16,7 +16,7 @@ const requestReducer = (state=initialState, action) => {
     case GET_CLIENT_SUCCESS:
       return {
         ...state,
-        requests: action.payload.requests,
+        ...action.payload,
       };
     case ACCEPT_REQUEST_SUCCESS:
       return {

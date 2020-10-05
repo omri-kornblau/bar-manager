@@ -6,12 +6,17 @@ import {
   changePasswordFailure,
   tryUpdateUserDetailes,
   updateUserDetailesSuccess,
-  updateUserDetailesFailure, 
+  updateUserDetailesFailure,
+  tryUpdateNotificationSettings,
+  updateNotificationSettingsSuccess,
+  updateNotificationSettingsFailure, 
 } from "../actions/settings";
 import {
   postChangePassword,
   postUpdateClientDetailes,
   postUpdateProviderDetailes,
+  postUpdateProviderNotificationSettings,
+  postUpdateClientNotificationSettings,
 } from "../../api/settings";
 
 export const changePassword = outerDispatch => (previosPassword, newPassword) =>
@@ -25,7 +30,8 @@ export const changePassword = outerDispatch => (previosPassword, newPassword) =>
       .catch(err => {
         dispatch(changePasswordFailure(err))
       });
-  })
+  }
+);
 
 export const updateUserDetails = outerDispatch => (isClient, data) =>
   outerDispatch(dispatch => {
@@ -42,4 +48,23 @@ export const updateUserDetails = outerDispatch => (isClient, data) =>
       .catch(err => {
         dispatch(updateUserDetailesFailure(err))
       });
-  })
+  }
+);
+
+export const updateUserNotificationSettings = outerDispatch => (isClient, data) =>
+  outerDispatch(dispatch => {
+    dispatch(tryUpdateNotificationSettings())
+
+    const updateFunc = isClient
+      ? postUpdateClientNotificationSettings
+      : postUpdateProviderNotificationSettings;
+
+    updateFunc(data)
+      .then(res => {
+        dispatch(updateNotificationSettingsSuccess());
+      })
+      .catch(err => {
+        dispatch(updateNotificationSettingsFailure(err))
+      });
+  }
+);

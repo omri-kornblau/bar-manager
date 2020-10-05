@@ -32,6 +32,7 @@ import { connect } from "react-redux";
 import { getRequests } from "../../../../redux/selectors/request";
 import { getNotifications } from "../../../../redux/selectors/notification";
 import { readNotification } from "../../../../redux/thunks/provider";
+import { getUserFullName, getUserLastLogin } from "../../../../redux/selectors/user";
 
 const DashboardTable = props => {
   const {
@@ -82,6 +83,8 @@ const ClientDashboardMainView = props => {
     notifications,
     pushUrl,
     readNotification,
+    userFullName,
+    userLastLogin,
   } = props;
 
   const sepratedRequests = useMemo(() => {
@@ -121,11 +124,12 @@ const ClientDashboardMainView = props => {
       <Grid container alignItems="flex-end">
         <Typography variant="h4" color="inherit">
           <Box fontWeight="fontWeightBold" marginRight={2}>
-            שלום משתמש 1
+            שלום {userFullName}
           </Box>
         </Typography>
         <Typography variant="h6" color="inherit">
-          ביקורך האחרון היה בתאריך 13/05/2020 בשעה 18:26
+  התחברותך האחרונה הייתה בתאריך {new Intl.DateTimeFormat('en-GB').format(userLastLogin)}
+  בשעה {userLastLogin.getHours().toString().padStart(2, '0')}:{userLastLogin.getMinutes().toString().padStart(2, '0')}
         </Typography>
       </Grid>
       <Box height={2}/>
@@ -181,6 +185,8 @@ const ClientDashboardMainView = props => {
 const mapStateToProps = state => ({
   requests: getRequests(state),
   notifications: getNotifications(state),
+  userFullName: getUserFullName(state),
+  userLastLogin: getUserLastLogin(state),
 })
 
 const mapDispatchToProps = dispatch => ({

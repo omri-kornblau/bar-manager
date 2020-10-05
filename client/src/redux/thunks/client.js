@@ -34,7 +34,7 @@ import {
   postCancelRequest,
   postReadNotification,
   postSendMessage,
-  getMessages
+  getMessages,
 } from "../../api/client";
 import { getCreateRequestLoading } from "../selectors/request";
 import { requestsMutex } from "../store";

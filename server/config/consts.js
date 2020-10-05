@@ -15,6 +15,8 @@ exports.OWNER_MAX_LENGTH = 30;
 exports.FILED_OF_ACTIVITY_MIN_LENGTH = 5;
 exports.FILED_OF_ACTIVITY_MAX_LENGTH = 30;
 exports.PHONE_REGEX = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+exports.MIN_DURATION_LENGTH = 7;
+exports.MAX_DURATION_LENGTH = 14;
 
 // Auth
 exports.USER_MIN_LENGTH = 3;
@@ -47,7 +49,6 @@ exports.SHORT_SAMPLE_INTERVAL = Moment.duration(2, "seconds")
 exports.STATUS_TIMING = {
   inTenderProcedure: {
     endTimeKey: "startDate",
-    duration: Moment.duration(3, "minutes"),
     targetStatus: "waitingForSign"
   },
   waitingForSign: {
@@ -65,3 +66,4 @@ exports.STATUS_TIMING = {
 exports.REQUESTS_POOL_STATUSES = ["inTenderProcedure"];
 
 exports.MAX_MESSAGE_LENGTH = 1000;
+exports.MAX_NOTIFICATION_LENGTH = 100;

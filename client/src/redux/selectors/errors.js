@@ -2,6 +2,14 @@ export const getErrors = state => {
   return state.app.errors
 }
 
+export const getClientErrors = state => {
+  return state.app.errors.getClient;
+}
+
+export const getProviderErrors = state => {
+  return state.app.errors.getProvider;
+}
+
 export const getChangePasswordErrors = state => {
   return state.app.errors.changePassword;
 }
@@ -46,3 +54,6 @@ export const getCheckTokenErrors = state => {
   return state.app.errors.checkToken;
 }
 
+export const getUpdateNotificationSettingsErrors = state => {
+  return state.app.errors.updateNotificationSettings;
+}

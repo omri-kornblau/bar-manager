@@ -10,4 +10,25 @@ exports.REQUEST_STATUSES  = [
   "history",
 ];
 
-exports.INSURENSE_TYPES = ["typeA", "typeB", "typeC"]
+exports.INSURENSE_TYPES = ["typeA", "typeB", "typeC"];
+
+exports.NOTIFICATIONS_TYPES = {
+  newMessage: "NewMessage",
+  tenderEndWithoutOffers: "TenderProcedureWithoutOffers",
+  statusUpdate: "StatusUpdated",
+  offerLose: "OfferLose",
+  offerSet: "OfferSet",
+};
+
+exports.CLIENT_NOTIFICATIONS_TYPES = [
+  "newMessage",
+  "tenderEndWithoutOffers",
+  "statusUpdate",
+  "offerSet",
+];
+
+exports.PROVIDER_NOTIFICATIONS_TYPES = [
+  "newMessage",
+  "statusUpdate",
+  "offerLose",
+]

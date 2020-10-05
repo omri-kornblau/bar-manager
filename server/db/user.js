@@ -25,3 +25,7 @@ exports.updateUserById = async (_id, action, returnNew=false) => {
 exports.changePassword = async(_id, password) => {
   return exports.updateUserById(_id, {$set: {password}}, true);
 }
+
+exports.updateLastLogin = async (_id) => {
+  return exports.updateUserById(_id, {$set: {lastLogin: new Date()}});
+}

@@ -1,3 +1,4 @@
+import _ from "lodash";
 import React from "react";
 import { push } from "connected-react-router";
 import {
@@ -21,9 +22,13 @@ import {
   formatShekel,
   formatMonths,
   formatTimeStampDate,
+  formatLength,
 } from "../../helpers/formats";
 import { postDeleteFile } from "../../api/client";
 
+export const minTenderDuration = 7;
+export const maxTenderDuration = 14;
+export const insuranceStartTimeOffest = 2;
 
 export const tableHeaders = {
     index: {
@@ -73,6 +78,14 @@ export const tableHeaders = {
       id: "maxPrice",
       label: labels.maxPrice,
       formatter: formatShekel,
+      filter: {
+        type: "number"
+      }
+    },
+    amountOfOffers: {
+      id: "offers",
+      label: labels.amountOfOffers,
+      formatter: formatLength,
       filter: {
         type: "number"
       }
@@ -137,8 +150,9 @@ const downloadActions = prefix => [
           הורד פוליסה
         </Grid>
     }
-    action={(_, row) => {
-      window.open(`/${prefix}/downloadfile?fileId=${row.policy}&requestId=${row._id}`, "_self");
+    action={(temp, row) => {
+      const fileId = _.isNil(row.policy._id) ? row.policy : row.policy._id;
+      window.open(`/${prefix}/downloadfile?fileId=${fileId}&requestId=${row._id}`, "_self");
     }}
     color="primary"
   />,
@@ -149,8 +163,9 @@ const downloadActions = prefix => [
             הורד קבצים נוספים
         </Grid>
     }
-    action={(_, row) => {
-      row.extraFiles.forEach((fileId, index)=> {
+    action={(temp, row) => {
+      row.extraFiles.forEach((file, index)=> {
+        const fileId = _.isNil(file._id) ? file : file._id;
         const action = index + 1 === row.extraFiles.length
         ? "_self"
         : "blank";
@@ -164,7 +179,7 @@ export const clientProgressBar = {
   inTenderProcedure: {
     label: "פוליסות בהליך מכרזי",
     description: "",
-    chosenHeaders: ["index", "type", "activeTime", "startDate", "maxPrice"],
+    chosenHeaders: ["index", "type", "activeTime", "startDate", "maxPrice", "amountOfOffers"],
     actions: [
       <ConnectedButton
         label="ערוך"

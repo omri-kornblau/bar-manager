@@ -18,7 +18,8 @@ exports.USER_FOR_USER = {
   username: 1,
   type: 1,
   email: 1,
-  _id: 1
+  _id: 1,
+  lastLogin: 1,
 }
 
 exports.OFFER_FOR_PROVIDER = {
