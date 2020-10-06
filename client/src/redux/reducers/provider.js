@@ -61,7 +61,7 @@ const providerReducer = (state=initialState, action) => {
         requests: [
           ...state.requests,
           {
-            ...state.fetchedRequest,
+            ...{...state.fetchedRequest, author: state.fetchedRequest.author.name},
             offers: createOffersFromOffer(state.fetchedRequest.offers, action.payload.offer)
           }
         ],
