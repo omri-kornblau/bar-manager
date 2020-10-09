@@ -6,17 +6,20 @@ export const postSignup = async data => {
 
 export const getProvider = async (forceRequest=false) => {
   const data = forceRequest ? { force: true } : {};
-  return Axios.get("/provider/get", { params: data });
+  const now = new Date();
+  return Axios.get("/provider/get", { params: {...data, t: now.getTime() }});
 }
 
 export const postFilteredRequests = async (type, filters, skip, limit) => {
-  return Axios.post("/provider/filteredrequests", { type, filters, skip, limit });
+  const now = new Date();
+  return Axios.post("/provider/filteredrequests", { type, filters, skip, limit, t: now.getTime() });
 }
 
 export const getFetchRequest = async (requestId, forceRequest=false) => {
   const data = forceRequest ? { force: true } : {};
+  const now = new Date();
   return Axios.get("/provider/fetchrequest", {
-    params: {requestId, ...data},
+    params: {requestId, ...data, t: now.getTime()},
   });
 }
 

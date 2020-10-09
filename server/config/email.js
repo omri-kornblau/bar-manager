@@ -1,4 +1,5 @@
 const fs = require('fs');
+const Path = require('path');
 
 exports.smtpTransportConf = {
   service: 'gmail',
@@ -9,7 +10,7 @@ exports.smtpTransportConf = {
   }
 };
 
-exports.logoBase64 = fs.readFileSync('..\\client\\src\\assets\\img\\gse-logo-wt.png', {encoding: 'base64'});
+exports.logoBase64 = fs.readFileSync(Path.resolve(__dirname, '..', '..', 'client', 'src', 'assets', 'img', 'gse-logo-wt.png'), {encoding: 'base64'});
 exports.logoCid = 'logo@gse.org';
 
 exports.emailTemplate = (name, message) => `

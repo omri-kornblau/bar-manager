@@ -6,7 +6,8 @@ export const postSignup = async data => {
 
 export const getClient = async (forceRequest=false) => {
   const data = forceRequest ? { force: true } : {};
-  return Axios.get("/client/get", { params: data });
+  const now = new Date();
+  return Axios.get("/client/get", { params: {...data, t: now.getTime() }});
 }
 
 export const postCreateRequest = async request => {
