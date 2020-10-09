@@ -37,7 +37,7 @@ const FileUploadWrapper = props => {
 
   const wrapOnChange = newFiles => {
     onChange({target: {
-      name: name, 
+      name: name,
       value: newFiles,
     }});
   }
@@ -83,6 +83,7 @@ const FileUploadWrapper = props => {
 
   return  (
     <Grid container justify="center" direction="column">
+      <Box mt={1}/>
       <Grid item container justify="center">
         <Button variant="outlined" component="label">
           {label}
@@ -103,19 +104,19 @@ const FileUploadWrapper = props => {
             <Box mt={2}/>
             <Grid item container justify="center">
               {
-                files.map((file, index) => 
+                files.map((file, index) =>
                   <>
                     <Typography>
                       {file.name}
+                      {
+                        enableDelete
+                        && (allowEmptyFiles || files.filter(file => !_.isNil(file.preDefined)).length > 1 || !file.preDefined)
+                        ? <IconButton size="small" onClick={() => onDelete(index)}>
+                            <DeleteOutlineIcon/>
+                          </IconButton>
+                        : <></>
+                      }
                     </Typography>
-                    {
-                      enableDelete
-                      && (allowEmptyFiles || files.filter(file => !_.isNil(file.preDefined)).length > 1 || !file.preDefined)
-                      ? <IconButton size="small" onClick={() => onDelete(index)}>
-                          <DeleteOutlineIcon/>
-                        </IconButton>
-                      : <></>
-                    }
                   </>
                  )
               }

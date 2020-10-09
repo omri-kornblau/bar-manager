@@ -197,7 +197,7 @@ const CustomTable = props => {
   };
 
   return (
-    <Paper elevation={3} className={classes.table}>
+    <Paper elevation={2} className={classes.table}>
       <TableContainer className={`${classes.table} ${rounded ? classes.roundedTable : ""}`}>
         <Table stickyHeader={pagination} className={classes.tableBody} size="small">
           <TableHead>

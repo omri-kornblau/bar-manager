@@ -7,7 +7,7 @@ WORKDIR /usr/app/client/
 COPY client/package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm install --no-package-lock
 
 # copy local files to app folder
 COPY client/ ./
@@ -18,7 +18,7 @@ RUN npm run build
 FROM node:13.12.0-alpine
 
 WORKDIR /usr/src/app/
-COPY --from=client /usr/app/client/build/ ./client/build/
+COPY --from=client /usr/app/client/ ./client/
 RUN ls
 
 WORKDIR /usr/src/app/server/
