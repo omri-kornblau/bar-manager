@@ -10,7 +10,12 @@ import {
   Button,
   AppBar,
   Tabs,
-  Tab
+  Tab,
+  TableContainer,
+  Table,
+  TableCell,
+  TableRow,
+  TableBody
 } from '@material-ui/core';
 
 import { labels } from "../../constants/hebrew/request";
@@ -26,27 +31,33 @@ import ProviderOfferBox from "./ProviderOfferBox";
 import ProviderMessageBox from "./ProviderMessageBox";
 
 const DataList = ({ data }) => (
-  modalChosenHeaders.map(headStruct => {
-    const { id, formatter } = headStruct;
-    const value = data[id];
+  <TableContainer component={Paper} variant="outlined">
+    <Table size="small">
+      <TableBody>
+        { modalChosenHeaders.map(headStruct => {
+          const { id, formatter } = headStruct;
+          const value = data[id];
 
-    if (_.isNil(value)) {
-      return <></>
-    }
+          if (_.isNil(value)) {
+            return <></>
+          }
 
-    return (
-      <Grid container alignItems="center" justify="flex-start">
-        <Typography variant="subtitle1">
-          <Box fontWeight="900" mr={2}>
-            {!!labels[id] ? labels[id] : id}:
-          </Box>
-        </Typography>
-        <Typography align="left" variant="body2">
-          {applyFormat(value, formatter)}
-        </Typography>
-      </Grid>
-    );
-  })
+          return (
+            <TableRow hover>
+              <TableCell component="th" scope="row">
+                <Box fontWeight="900">
+                  {!!labels[id] ? labels[id] : id}:
+                </Box>
+              </TableCell>
+              <TableCell align="center">
+                {applyFormat(value, formatter)}
+              </TableCell>
+            </TableRow>
+          );
+        }) }
+      </TableBody>
+    </Table>
+  </TableContainer>
 )
 
 const NoDataModal = () =>
@@ -125,18 +136,20 @@ const ProviderRequestModal = props => {
                 <Typography align="center" variant="h6">
                   פרטי הבקשה
                 </Typography>
-                <Box mt={2}/>
-                <DataList data={data}/>
-                <Box mt={1}/>
+                <Box m={2}>
+                  <DataList data={data}/>
+                </Box>
               </Grid>
-              <Grid item xs={7}>
+              <Grid item xs={6}>
                 <Typography align="center" variant="h6">
                   פרטי מבקש הביטוח
                 </Typography>
-                <Box mt={2}/>
-                <DataList data={data.author}/>
+                <Box m={2}>
+                  <DataList data={data.author}/>
+                </Box>
               </Grid>
             </Grid>
+            <Box mt={2}/>
             {formatActions(providerProgressBar.active.actions, data)}
           </TabPanel>
           <TabPanel value={selectedTab} index={0}>

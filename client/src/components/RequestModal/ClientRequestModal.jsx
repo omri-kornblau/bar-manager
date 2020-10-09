@@ -9,6 +9,11 @@ import {
   Divider,
   Button,
   IconButton,
+  TableContainer,
+  Table,
+  TableCell,
+  TableRow,
+  TableBody
 } from '@material-ui/core';
 import {
   Refresh as RefreshIcon
@@ -33,27 +38,33 @@ import {
 import {formatActions} from "../../helpers/formats"
 
 const DataList = ({ data }) => (
-  modalChosenHeaders.map(headStruct => {
-    const { id, formatter } = headStruct;
-    const value = data[id];
+  <TableContainer component={Paper} variant="elevated">
+    <Table size="small">
+      <TableBody>
+        { modalChosenHeaders.map(headStruct => {
+          const { id, formatter } = headStruct;
+          const value = data[id];
 
-    if (_.isNil(value)) {
-      return <></>
-    }
+          if (_.isNil(value)) {
+            return <></>
+          }
 
-    return (
-      <Grid container alignItems="center" justify="flex-start">
-        <Typography variant="subtitle1">
-          <Box fontWeight="900" mr={2}>
-            {!!labels[id] ? labels[id] : id}:
-          </Box>
-        </Typography>
-        <Typography align="left" variant="body2">
-          {applyFormat(value, formatter)}
-        </Typography>
-      </Grid>
-    );
-  })
+          return (
+            <TableRow hover>
+              <TableCell component="th" scope="row">
+                <Box fontWeight="900">
+                  {!!labels[id] ? labels[id] : id}:
+                </Box>
+              </TableCell>
+              <TableCell align="center">
+                {applyFormat(value, formatter)}
+              </TableCell>
+            </TableRow>
+          );
+        }) }
+      </TableBody>
+    </Table>
+  </TableContainer>
 )
 
 const EditDataList = props => {
@@ -169,7 +180,6 @@ const RequestModal = props => {
           <Box mt={4}/>
           <Grid container spacing={4}>
             <Grid item xs>
-              <Box mt={2}/>
               {editMode ?
                 <EditDataList
                   onExit={onExitEdit}
@@ -178,21 +188,30 @@ const RequestModal = props => {
                   updateStatus={updateStatus}
                 />
                 : <>
+                    <Typography align="center" variant="h6">
+                      פרטי הבקשה
+                    </Typography>
+                    <Box pt={1}/>
                     <DataList data={data}/>
-                    <Box mt={2}/>
+                    <Box mt={3}/>
                     <Divider/>
                     {
                       !_.isEmpty(data.offers) ?
                         <>
+                          <Box pt={1}/>
                           <Typography align="center" variant="h6">
                             הצעות
                           </Typography>
+                          <Box pt={1}/>
                           <OffersTable offers={data.offers}/>
                         </>
                         :
-                          <Typography align="center" variant="h6">
-                            אין עדיין הצעות לבקשה
-                          </Typography>
+                          <>
+                            <Box pt={2}/>
+                            <Typography align="center" variant="h6">
+                              אין עדיין הצעות לבקשה
+                            </Typography>
+                          </>
                     }
                   </>
               }
@@ -209,7 +228,7 @@ const RequestModal = props => {
             </Grid>
             <Divider orientation="vertical" flexItem/>
             <Grid item xs={7}>
-              <Typography align="center" variant="h5">
+              <Typography align="center" variant="h6">
                 הודעות ממבטחים
                 <IconButton onClick={() => getMessages(data._id)}>
                   <RefreshIcon/>

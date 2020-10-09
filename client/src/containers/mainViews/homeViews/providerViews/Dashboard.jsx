@@ -128,8 +128,7 @@ const ClientDashboardMainView = props => {
           </Box>
         </Typography>
         <Typography variant="h6" color="inherit">
-  התחברותך האחרונה הייתה בתאריך {new Intl.DateTimeFormat('en-GB').format(userLastLogin)}
-  בשעה {userLastLogin.getHours().toString().padStart(2, '0')}:{userLastLogin.getMinutes().toString().padStart(2, '0')}
+  התחברותך האחרונה הייתה בתאריך {new Intl.DateTimeFormat('en-GB').format(userLastLogin)} בשעה {userLastLogin.getHours().toString().padStart(2, '0')}:{userLastLogin.getMinutes().toString().padStart(2, '0')}
         </Typography>
       </Grid>
       <Box height={2}/>

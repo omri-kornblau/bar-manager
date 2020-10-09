@@ -11,40 +11,39 @@ import {
 } from "react-router-dom";
 
 import { getNewRequestView } from "../../../../redux/selectors/newRequest";
+import { getUserData } from "../../../../redux/selectors/user";
 
 import newRequestViews from "./newRequestViews";
-import DraftsTable from "../../../../components/NewRequestForm/Drafts";
 
 const NewRequest = props => {
   const {
     view,
+    clientData
   } = props;
 
   const match = useRouteMatch();
 
   return (
     <>
-      <Grid container direction="row">
-        <Grid item xs/>
-        <Grid item container justify="center" xs={6}>
-          <Switch>
-            {newRequestViews.map(newRequestView =>
-              <Route key={newRequestView.id} path={`${match.url}/${newRequestView.id}`}>
-                <newRequestView.component viewLabel={newRequestView.label} view={newRequestView.id}/>
-              </Route>
-            )}
-            <Redirect to={`${match.url}/${view}`}/>
-          </Switch>
-        </Grid>
-        <Grid item container xs>
-        </Grid>
-      </Grid>
+      <Switch>
+        {newRequestViews.map(newRequestView =>
+          <Route key={newRequestView.id} path={`${match.url}/${newRequestView.id}`}>
+            <newRequestView.component
+              clientData={clientData}
+              viewLabel={newRequestView.label}
+              view={newRequestView.id}
+            />
+          </Route>
+        )}
+        <Redirect to={`${match.url}/${view}`}/>
+      </Switch>
     </>
   );
 }
 
 const mapStateToProps = state => ({
   view: getNewRequestView(state),
+  clientData: getUserData(state)
 })
 
 export default connect(mapStateToProps)(NewRequest);
