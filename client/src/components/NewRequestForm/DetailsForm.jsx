@@ -8,6 +8,7 @@ import {
   InputAdornment,
   Typography,
   CircularProgress,
+  Chip, Tooltip, TextField
 } from "@material-ui/core";
 
 import FormBody from "../Form/FormBody";
@@ -89,9 +90,12 @@ const structure =
         const dateFormat = new Intl.DateTimeFormat('en-GB').format(insuranceTime);
         const timeFormat = `${insuranceTime.hours()}:${insuranceTime.minutes()}`;
         return (
-          <label>
-            תחילת הביטוח: {dateFormat} {timeFormat}
-          </label>
+          <Tooltip title="תאריך זה הינו 2 ימים לאחר סיום המכרז">
+            <TextField
+              label="תאריך העמדת הפוליסה:"
+              value={`${dateFormat} ${timeFormat}`}
+            />
+          </Tooltip>
         )
       }
     },
