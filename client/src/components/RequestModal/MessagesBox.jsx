@@ -34,6 +34,13 @@ const MessagesBox = props => {
 
   const _onSendMessage = () => {
     onSendMessage(newMessage.trim(), selectedProvider);
+    setNewMessage("");
+  }
+  
+  const handleKeyPress = e => {
+    if(e.key === 'Enter' && !e.shiftKey){
+      _onSendMessage();
+    }
   }
 
   return (
@@ -97,6 +104,8 @@ const MessagesBox = props => {
                 style={{ flex: 1 }}
                 onChange={onMessageChange}
                 error={!_.isNil(sendMessageStatus.error)}
+                value={newMessage}
+                onKeyPress={handleKeyPress}
               />
               <Box mr={2}/>
               <LoadingButton
