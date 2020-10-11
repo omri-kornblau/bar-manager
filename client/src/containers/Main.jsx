@@ -23,7 +23,7 @@ import { getLocation } from "connected-react-router";
 import { getIntervals } from "../redux/selectors/interval";
 import { addInterval, removeInterval } from "../redux/thunks/interval";
 import { GET_CLIENT, GET_PROVIDER } from "../constants/intervals";
-import { getCheckTokenErrors } from "../redux/selectors/errors";
+import { getCheckTokenErrors, getClientErrors, getProviderErrors } from "../redux/selectors/errors";
 import { Box, CircularProgress, Grid } from "@material-ui/core";
 import EscapeModal from "../components/ModalEscape/ModalEscape";
 
@@ -41,6 +41,8 @@ const Main = props => {
     addInterval,
     removeInterval,
     checkTokenStatus,
+    getClientStatus,
+    getProviderStatus
   } = props;
 
   const { pathname, search, hash } = location;
@@ -67,7 +69,7 @@ const Main = props => {
         logout={logout}
       />
       {
-        checkTokenStatus.inProgress
+        checkTokenStatus.inProgress || getClientStatus.inProgress || getProviderStatus.inProgress
         ? <EscapeModal open={true}>
             <Grid container alignItems="center" direction="row" style={{height: "100%"}}>
               <Grid container item direction="column" alignItems="center">
@@ -101,6 +103,8 @@ const mapStateToProps = state => ({
   isProvider: isProvider(state),
   intervals: getIntervals(state),
   checkTokenStatus: getCheckTokenErrors(state),
+  getClientStatus: getClientErrors(state),
+  getProviderStatus: getProviderErrors(state)
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -111,5 +115,10 @@ const mapDispatchToProps = dispatch => ({
   removeInterval: isProvider =>
     removeInterval(dispatch)(isProvider ? GET_PROVIDER : GET_CLIENT),
 })
+
+Main.defaultProps = {
+  getClientStatus: { inProgress: false },
+  getProviderStatus: { inProgress: false }
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

@@ -132,16 +132,16 @@ const ClientDashboardMainView = props => {
       </Grid>
       <Box height={2}/>
       <Container maxWidth="xl">
-        <Grid container direction="row" justify="space-evenly" spacing={5}>
+        <Grid container direction="row" justify="space-evenly" spacing={10}>
           <Grid item xs="6">
             <DashboardTable
-              title="התראות חדשות"
-              tooltip= "התראות אשר עדיין לא נקראו"
+              title="עדכונים חדשים"
+              tooltip= "עדכונים אשר עדיין לא נקראו"
               rows={formatedNotifications}
               chosenHeaders={notificationsChosenHeaders}
               tableHeaders={notificationsTableHeaders}
               onRowClick={onOpenNotification}
-              emtpyMessage="אין התראות חדשות"
+              emtpyMessage="אין עדכונים חדשים"
               xs
             />
           </Grid>
@@ -155,6 +155,7 @@ const ClientDashboardMainView = props => {
               onRowClick={onOpenRequest}
               emtpyMessage="אין פוליסות בהליך מכרזי"
             />
+            <Box mt={5}/>
             <DashboardTable
               title="פוליסות פעילות"
               tooltip= "פוליסות שאושרו ונחתמו"
