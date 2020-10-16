@@ -22,7 +22,7 @@ export const labels = {
   name: "שם",
   email: "אימייל",
   username: "שם משתמש",
-  companyId: "מזהה משתמש",
+  companyId: 'ח"פ של החברה',
   address: "כתובת",
   phoneNumber: "מספר פלאפון",
   owner: "בעלים",

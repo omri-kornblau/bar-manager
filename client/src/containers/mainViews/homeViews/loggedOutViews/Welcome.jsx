@@ -21,7 +21,7 @@ const Welcome = props => {
         <Container className={classes.container} maxWidth="xl">
           <Typography className={classes.whiteText} variant="h3" align="center">
             <Box fontWeight={800}>
-              הפלטפורה לניירות ערך מסחריים
+              הפלטפורמה לביטוחים
             </Box>
           </Typography>
           <Typography className={classes.whiteText} variant="h4" align="center">
@@ -30,27 +30,30 @@ const Welcome = props => {
           <Box mt={5}/>
           <Container maxWidth="sm">
             <Typography className={classes.whiteText} paragraph variant="body1" align="center">
-              פלטפורמה מקוונת המהווה נקודת מפגש לחברות ציבוריות ופרטיות איתנות, מדורגות ושאינן מדורגות, המעוניינות בהלוואות או אשראי לזמן קצר ובינוני, לבין משקיעים מוסדיים, בנקים, קרנות נאמנות ומשקיעים כשירים המעוניינים לגוון את מנעד השקעותיהם.
+              פלטפורמה מקוונת לרכישת פוליסות ביטוח לנכסים שונים.
             </Typography>
             <Typography className={classes.whiteText} paragraph variant="body1" align="center">
-              בלב פעילות הפלטפורמה מערכת מאובטחת, שקופה ומהירה אשר מאפשרת למשקיעים לנהל הליך התמחרות אודות שיעור הריבית ו/או עמלת הקצאת מסגרת אשראי, אשר תוצע לחברות הלוות.
+              הפלטפורמה מהווה נקודת מפגש בין חברות ציבורית/פרטיות/ממשלתיות, רשויות מקומיות, ותאגידים אחרים לבין חברות ביטוח מובילות בישראל.
             </Typography>
             <Typography className={classes.whiteText} paragraph variant="body1" align="center">
-              הפלטפורמה תמקסם ערך לחברות ולמשקיעים, הודות לחסכון זמן רב, הוזלת עלויות עסקאות במתכונתן הנוכחית, חשיפה למגוון משקיעים רחב והנגשה קלה בין הצדדים.
+              בלב פעילות הפלטפורמה מערכת מאובטחת, שקופה ומהירה המאפשרת לחברות הביטוח לנהל הליך התמחרות אחר גובה פרמיית הביטוח המבוקשת מהמבוטחים.
+            </Typography>
+            <Typography className={classes.whiteText} paragraph variant="body1" align="center">
+              הפלטפורמה תסייע למבוטחים ולמבטחים בהפקת פוליסות ביטוח, הודות לחסכון זמן רב, הוזלה ניכרת של עלויות, חשיפה למגוון מבטחים רחב והנגשה קלה בין הצדדים.
             </Typography>
             <Box mt={6}/>
             <Grid container justify="space-evenly" direction="row">
                 <Grid container item justify="center" xs>
                   <Link to="/home/login">
                     <Button size="large" color="primary" variant="contained">
-                      התחבר כמבטח
+                      התחברות מבטחים
                     </Button>
                   </Link>
                 </Grid>
                 <Grid container item justify="center" xs>
                   <Link to="/home/login">
                     <Button size="large" color="primary" variant="contained">
-                      התחבר כלקוח
+                      התחברות מבוטחים
                     </Button>
                   </Link>
                 </Grid>

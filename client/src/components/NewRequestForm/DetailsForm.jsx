@@ -30,7 +30,7 @@ const structure =
       fullWidth: true,
       required: true,
       multiline: true,
-      rows: 2,
+      rows: 4,
       placeholder: "הכנס תיאור כאן.."
     },
   ],[
@@ -101,7 +101,7 @@ const structure =
     },
   ],[
     {
-      label: "מבוטח כרגע",
+      label: "האם הנכס מבוטח כרגע?",
       name: "isCurrentlyInsured",
       type: "checkbox",
       fullWidth: false,
