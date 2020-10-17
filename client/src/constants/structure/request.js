@@ -110,7 +110,15 @@ export const tableHeaders = {
         type: "date"
       }
     },
-    startDate: {
+    startDateAbsulote: {
+      id: "startDate",
+      label: labels.startDate,
+      formatter: formatTimeStampRTL,
+      filter: {
+        type: "date"
+      }
+    },
+    startDateRelative: {
       id: "startDate",
       label: labels.startDate,
       formatter: formatTimeDiff,
@@ -118,7 +126,15 @@ export const tableHeaders = {
         type: "date"
       }
     },
-    activeTime: {
+    activeTimeAbsolute: {
+      id: "activeTime",
+      label: labels.activeTime,
+      formatter: formatTimeStampRTL,
+      filter: {
+        type: "date"
+      }
+    },
+    activeTimeRelative: {
       id: "activeTime",
       label: labels.activeTime,
       formatter: formatTimeDiff,
@@ -126,7 +142,15 @@ export const tableHeaders = {
         type: "date"
       }
     },
-    endTime: {
+    endTimeAbsolute: {
+      id: "endTime",
+      label: labels.endTime,
+      formatter: formatTimeStampRTL,
+      filter: {
+        type: "date"
+      }
+    },
+    endTimeRelative: {
       id: "endTime",
       label: labels.endTime,
       formatter: formatTimeDiff,
@@ -180,7 +204,7 @@ export const clientProgressBar = {
   inTenderProcedure: {
     label: "פוליסות בהליך מכרזי",
     description: "",
-    chosenHeaders: ["index", "type", "activeTime", "startDate", "maxPrice", "amountOfOffers"],
+    chosenHeaders: ["index", "type", "startDateRelative", "maxPrice", "amountOfOffers"],
     actions: [
       <ConnectedButton
         label="ערוך"
@@ -206,19 +230,19 @@ export const clientProgressBar = {
   waitingForSign: {
     label: "פוליסות שאושרו ומחכות לחתימה",
     description: "",
-    chosenHeaders: ["type", "startDate", "maxPrice"],
+    chosenHeaders: ["type", "startDateAbsulote", "activeTimeRelative", "maxPrice"],
     actions: downloadActions("client"),
   },
   active: {
     label: "פוליסות פעילות",
     description: "",
-    chosenHeaders: ["type", "startDate", "activeTime", "endTime"],
+    chosenHeaders: ["type", "activeTimeRelative", "endTimeRelative"],
     actions: downloadActions("client"),
   },
   history: {
     label: "היסטוריה",
     description: "",
-    chosenHeaders: ["index", "startDate", "activeTime", "maxPrice"],
+    chosenHeaders: ["index", "activeTimeAbsolute", "maxPrice"],
     actions: downloadActions("client"),
   },
 }
@@ -227,24 +251,24 @@ export const providerProgressBar = {
   inTenderProcedure: {
     label: "פוליסות בהליך מכרזי",
     description: "",
-    chosenHeaders: ["author", "type", "activeTime", "startDate", "maxPrice"],
+    chosenHeaders: ["author", "type", "startDateRelative", "maxPrice"],
   },
   waitingForSign: {
     label: "פוליסות שאושרו ומחכות לחתימה",
     description: "",
-    chosenHeaders: ["author", "type", "startDate", "maxPrice"],
+    chosenHeaders: ["author", "type", "startDateAbsulote", "activeTimeRelative", "maxPrice"],
     actions: downloadActions("provider"),
   },
   active: {
     label: "פוליסות פעילות",
     description: "",
-    chosenHeaders: ["author", "type", "endTime", "activeTime"],
+    chosenHeaders: ["author", "type", "activeTimeRelative", "endTimeRelative"],
     actions: downloadActions("provider"),
   },
   history: {
     label: "היסטוריה",
     description: "",
-    chosenHeaders: ["author", "startDate", "activeTime", "maxPrice"],
+    chosenHeaders: ["author", "activeTimeAbsolute", "maxPrice"],
     actions: downloadActions("provider"),
   },
 }

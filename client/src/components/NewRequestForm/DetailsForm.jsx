@@ -86,7 +86,8 @@ const structure =
           value
         } = props;
 
-        const insuranceTime = moment(value).add(insuranceStartTimeOffest, "days");
+        const currentMoment = _.isNil(value) ? moment() : moment(value);
+        const insuranceTime = currentMoment.add(insuranceStartTimeOffest, "days");
         const dateFormat = new Intl.DateTimeFormat('en-GB').format(insuranceTime);
         const timeFormat = `${insuranceTime.hours()}:${insuranceTime.minutes()}`;
         return (
