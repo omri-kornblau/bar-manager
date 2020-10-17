@@ -23,6 +23,7 @@ import {
   formatMonths,
   formatTimeStampDate,
   formatLength,
+  formatTimeDiff,
 } from "../../helpers/formats";
 import { postDeleteFile } from "../../api/client";
 
@@ -112,7 +113,7 @@ export const tableHeaders = {
     startDate: {
       id: "startDate",
       label: labels.startDate,
-      formatter: formatTimeStampRTL,
+      formatter: formatTimeDiff,
       filter: {
         type: "date"
       }
@@ -120,7 +121,7 @@ export const tableHeaders = {
     activeTime: {
       id: "activeTime",
       label: labels.activeTime,
-      formatter: formatTimeStampDate,
+      formatter: formatTimeDiff,
       filter: {
         type: "date"
       }
@@ -128,7 +129,7 @@ export const tableHeaders = {
     endTime: {
       id: "endTime",
       label: labels.endTime,
-      formatter: formatTimeStampDate,
+      formatter: formatTimeDiff,
       filter: {
         type: "date"
       }
@@ -211,7 +212,7 @@ export const clientProgressBar = {
   active: {
     label: "פוליסות פעילות",
     description: "",
-    chosenHeaders: ["type", "startDate", "activeTime"],
+    chosenHeaders: ["type", "startDate", "activeTime", "endTime"],
     actions: downloadActions("client"),
   },
   history: {

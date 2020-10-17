@@ -269,7 +269,7 @@ const TableHeaderCell = forwardRef((props, ref) => {
             ? <FilterListIcon 
                 onClick={onClick} 
                 className={classes.filterListIcon} 
-                style={{ opacity: (isHover || Boolean(anchorEl)) || options.isActive ? 1 : 0 }}
+                style={{ opacity: (isHover || Boolean(anchorEl)) || (options ? (options.isActive ? 1 : 0) : 0) }}
               />
             : <></>
           }

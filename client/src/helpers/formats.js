@@ -1,6 +1,7 @@
 import _ from "lodash";
 import React, { cloneElement } from "react";
-import Moment from "moment";
+import Moment from 'moment-with-locales-es6';
+
 import {
   Done as DoneIcon,
   Clear as ClearIcon,
@@ -35,4 +36,8 @@ export const formatActions = (actions, row) => {
       }
     </Grid>
   )
+}
+export const formatTimeDiff = time => {
+  Moment.locale('he')
+  return Moment(time).fromNow();
 }
