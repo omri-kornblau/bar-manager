@@ -12,6 +12,7 @@ const errMessageToText = {
   "Price should be lower then max price": "המחיר המוצע לא נמוך מן הפרמיה המקסימלית",
   "Price should be lower then last price": "המחיר החדש לא נמוך מהנוכחי",
   "Price should be bigger then 0": "נא להכניס מספר חיובי",
+  "Price should be a number": "יש להזין מספר",
   "Cannot update request with offers": "לא ניתן לעדכן בקשה אשר קיבלה הצעות ממבטחים"
 }
 
@@ -29,14 +30,14 @@ const yupErrorToText = errData => {
       const min = _.isNil(errData.params.more)
         ? typeof(errData.params.originalValue) === "string"
           ? `${errData.params.min} תווים`
-          : errData.params.min 
+          : errData.params.min
         : errData.params.more;
       return `סעיף ${label} חייב להיות גדול מ${min}`
     case "max":
       const max = _.isNil(errData.params.more)
         ? typeof(errData.params.originalValue) === "string"
           ? `${errData.params.max} תווים`
-          : errData.params.max 
+          : errData.params.max
         : errData.params.more;
       return `סעיף ${label} חייב להיות קטן מ${max}`
     case "required":

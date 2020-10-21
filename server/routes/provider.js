@@ -125,9 +125,14 @@ exports.setOffer = async (req, res) => {
 
   const {
     requestId,
-    price,
+    price: priceRaw,
   } = req.body;
 
+  const price = Number(priceRaw)
+
+  if (_.isNaN(price)) {
+    throw Boom.badRequest("Price should be a number");
+  }
   if (price <= 0) {
     throw Boom.badRequest("Price should be bigger then 0");
   }
