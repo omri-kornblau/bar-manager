@@ -42,8 +42,9 @@ const DataList = ({ data }) => (
     <Table size="small">
       <TableBody>
         { modalChosenHeaders.map(headStruct => {
-          const { id, formatter } = headStruct;
+          const { id, formatter, label: structLabel } = headStruct;
           const value = data[id];
+          const label = !!structLabel ? structLabel : (!!labels[id] ? labels[id] : id)
 
           if (_.isNil(value)) {
             return <></>
@@ -53,7 +54,7 @@ const DataList = ({ data }) => (
             <TableRow hover>
               <TableCell component="th" scope="row">
                 <Box fontWeight="900">
-                  {!!labels[id] ? labels[id] : id}:
+                  {label}:
                 </Box>
               </TableCell>
               <TableCell align="center">

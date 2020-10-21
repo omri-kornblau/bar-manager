@@ -120,7 +120,7 @@ export const tableHeaders = {
     },
     startDateRelative: {
       id: "startDate",
-      label: labels.startDate,
+      label: labels.startDateRelative,
       formatter: formatTimeDiff,
       filter: {
         type: "date"
@@ -136,7 +136,7 @@ export const tableHeaders = {
     },
     activeTimeRelative: {
       id: "activeTime",
-      label: labels.activeTime,
+      label: labels.activeTimeRelative,
       formatter: formatTimeDiff,
       filter: {
         type: "date"
@@ -152,7 +152,7 @@ export const tableHeaders = {
     },
     endTimeRelative: {
       id: "endTime",
-      label: labels.endTime,
+      label: labels.endTimeRelative,
       formatter: formatTimeDiff,
       filter: {
         type: "date"
@@ -280,19 +280,19 @@ export const providerPoolChosenHeaders = {
 
 export const modalChosenHeaders = [
   {
-    id: "type"
-  },
-  {
-    id: "createdAt",
-    formatter: formatTimeStampRTL
-  },
-  {
     id: "startDate",
-    formatter: formatTimeStampRTL
+    label: labels.startDateRelative,
+    formatter: formatTimeDiff
   },
   {
     id: "activeTime",
-    formatter: formatTimeStampRTL
+    label: labels.activeTimeRelative,
+    formatter: formatTimeDiff
+  },
+  {
+    id: "endTime",
+    label: labels.endTimeRelative,
+    formatter: formatTimeDiff
   },
   {
     id: "maxPrice",

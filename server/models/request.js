@@ -18,7 +18,6 @@ const yupCreateRequestSchema = Yup.object().shape({
   author: Yup.string().length(OBJECT_ID_LENGTH),
   status: Yup.mixed().oneOf(REQUEST_STATUSES),
   assetDescription: Yup.string().required(),
-  companyDescription: Yup.string().required(),
   insuranceDuration: Yup.number().positive().integer().required(),
   isCurrentlyInsured: Yup.boolean(),
   maxPrice: Yup.number().positive().required(),
@@ -57,9 +56,6 @@ const mongoFormat = {
     type: String,
   },
   assetDescription: {
-    type: String,
-  },
-  companyDescription: {
     type: String,
   },
   insuranceDuration: {

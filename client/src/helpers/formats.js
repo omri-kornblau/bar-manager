@@ -41,3 +41,9 @@ export const formatTimeDiff = time => {
   Moment.locale('he')
   return Moment(time).fromNow();
 }
+export const formatOtherProviderName = val => {
+  if (!val.includes("#")) {
+    return val
+  }
+  return `מבטח ${val}`
+}

@@ -7,7 +7,6 @@ exports.REQUEST_FOR_PROVIDER_ALL_REQUESTS = {
   activeTime: 1,
   startDate: 1,
   insuranceDuration: 1,
-  companyDescription: 1,
   assetDescription: 1,
   createdAt: 1,
   policy: 1,

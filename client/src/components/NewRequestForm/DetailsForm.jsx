@@ -25,27 +25,17 @@ import { insuranceStartTimeOffest, maxTenderDuration, minTenderDuration } from "
 const structure =
   [[
     {
-      label: "תיאור תמציתי של הנכס",
+      label: "תיאור תמציתי של הנכס (נשוא הביטוח)",
       name: "assetDescription",
       fullWidth: true,
       required: true,
       multiline: true,
-      rows: 4,
+      rows: 3,
       placeholder: "הכנס תיאור כאן.."
     },
   ],[
     {
-      label: "תיאור תמציתי של החברה",
-      name: "companyDescription",
-      fullWidth: true,
-      required: true,
-      multiline: true,
-      rows: 2,
-      placeholder: "הכנס תיאור כאן.."
-    },
-  ],[
-    {
-      label: "תקופת הביטוח הרצויה",
+      label: "תקופת הביטוח המבוקשת",
       type: "number",
       name: "insuranceDuration",
       fullWidth: true,
@@ -56,7 +46,7 @@ const structure =
       }
     },
     {
-      label: "פרמיה מקסימלית רצויה",
+      label: "פרמיה מירבית מבוקשת",
       fullWidth: false,
       name: "maxPrice",
       justify: "center",

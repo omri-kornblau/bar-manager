@@ -24,7 +24,7 @@ import {
 import CustomTable from "../Table/Table";
 import LoadingButton from "../LoadingButton/LoadingButton";
 import { parseOfferBoxError } from "../../helpers/errors";
-import { formatShekel } from "../../helpers/formats";
+import { formatOtherProviderName, formatShekel } from "../../helpers/formats";
 
 const ProviderOfferBox = props => {
   const {
@@ -116,7 +116,7 @@ const ProviderOfferBox = props => {
             <CustomTable
               rows={offers}
               columns={[
-                { id: "provider", label: "חברה" },
+                { id: "provider", label: "חברה", formatter: formatOtherProviderName },
                 { id: "price", label: "מחיר מוצע" },
               ]}
               pagination={false}
