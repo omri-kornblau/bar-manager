@@ -67,7 +67,7 @@ const MyProfile = props => {
   return (
     <Container>
       <Typography align="center" variant="h5">
-        עדכן פרטי חשבון
+        עדכון פרטי חשבון
       </Typography>
       <form onSubmit={onUpdateDetails}>
         <FormBody

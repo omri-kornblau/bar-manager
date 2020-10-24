@@ -70,7 +70,7 @@ const ProviderRequestsPool = props => {
     addInterval,
     removeInterval,
   } = props;
-
+  
   const {
     chosenHeaders,
     actions
@@ -102,7 +102,7 @@ const ProviderRequestsPool = props => {
   const onFilterSelect = id => {
     setActiveFilters({
       ...activeFilters,
-      [id]: { isActive: !activeFilters[id].isActive }
+      [id]: { ...activeFilters[id], isActive: !activeFilters[id].isActive }
     });
   };
 

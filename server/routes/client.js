@@ -124,12 +124,19 @@ exports.createRequest = async (req, res) => {
   req.body.policy = filesIds[0];
   req.body.extraFiles = filesIds.slice(1);
 
-  const createdRequest = await createRequest({
+  var newRequest = {
     author: user._id,
     status: REQUEST_STATUSES[0],
     index: client.requests.length,
+    authorCompanyType: client.companyType,
     ...req.body
-  });
+  };
+
+  if (client.companyType === "private") {
+    newRequest.authorCompanySize = client.companySize;
+  }
+
+  const createdRequest = await createRequest(newRequest);
 
   try {
     await addRequestToClientById(user.clientId, createdRequest._id);
@@ -411,7 +418,11 @@ exports.updatesDetailes = async (req, res) => {
     "phoneNumber",
     "owner",
     "fieldOfActivity",
+    "companyType",
+    "companySize"
   ]);
+
+  // In case company type changed from privae we dont remove the company size
   await ClientModel.yupUpdateClientSchema.validate(newClient);
   const newUser = _.pick(req.body, ["email"]);
   await UserModel.yupUpdateUserSchema.validate(newUser);

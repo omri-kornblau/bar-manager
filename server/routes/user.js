@@ -23,6 +23,8 @@ exports.signupClient = async (req, res) => {
     phoneNumber,
     owner,
     fieldOfActivity,
+    companyType,
+    companySize,
   } = req.body;
 
   let createdClient;
@@ -46,8 +48,10 @@ exports.signupClient = async (req, res) => {
       phoneNumber,
       owner,
       fieldOfActivity,
+      companyType,
+      companySize,
     }
-
+    
     createdClient = await ClientModel.create(emptyClient);
 
     const user = {

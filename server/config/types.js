@@ -32,3 +32,14 @@ exports.PROVIDER_NOTIFICATIONS_TYPES = [
   "statusUpdate",
   "offerLose",
 ]
+
+exports.COMPANY_TYPES = [
+  "govermental",
+  "local",
+  "private",
+]
+
+exports.COMPANY_SIZES = [
+  "small",
+  "big",
+]

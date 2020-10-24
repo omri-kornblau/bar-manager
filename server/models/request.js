@@ -11,6 +11,8 @@ const {
 const {
   REQUEST_STATUSES,
   INSURENSE_TYPES,
+  COMPANY_TYPES,
+  COMPANY_SIZES,
 } = require("../config/types")
 
 const yupCreateRequestSchema = Yup.object().shape({
@@ -39,6 +41,14 @@ const yupCreateRequestSchema = Yup.object().shape({
   offers: Yup.array().of(Yup.string().length(OBJECT_ID_LENGTH)),
   createdAt: Yup.date(),
   updatedAt: Yup.date(),
+  authorCompanyType: Yup.mixed().oneOf(COMPANY_TYPES).required(),
+  authorCompanySize: Yup.mixed().oneOf(COMPANY_SIZES).when(
+    'authorCompanyType',
+    (companyType, companySizeSchema) =>
+      companyType === "private"
+      ? companySizeSchema.required()
+      : companySizeSchema
+    ),
 });
 
 const yupUpdateRequestSchema = Yup.object().shape({
@@ -97,6 +107,12 @@ const mongoFormat = {
   index: {
     type: Number,
   },
+  authorCompanyType: {
+    type: String,
+  },
+  authorCompanySize: {
+    type: String
+  }
 };
 
 const mongoOptions = {
