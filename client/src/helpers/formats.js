@@ -10,6 +10,7 @@ import {
   Box,
   Grid,
 } from "@material-ui/core";
+import { companySizes, companyTypes } from "../constants/hebrew/client";
 export const applyFormat = (value, formatter, other) => {
   return !!formatter ? formatter(value, other) : _.isNil(value) ? "<Blank>" : value;
 }
@@ -23,6 +24,8 @@ export const formatTimeStampRTL = time => Moment(time).format("HH:mm:ss DD/MM/YY
 export const formatTimeStampMessageTime = time => Moment(time).format("HH:mm");
 export const formatTextWithLineEnds = text => text.split(/\n/g).map(part => <>{part}<br/></>);
 export const formatTimeStampDate = time => Moment(time).format("DD/MM/YYYY");
+export const formatCompanyType = value => _.get(companyTypes, value, "");
+export const formatCompanySize = value => _.get(companySizes, value, "");
 export const formatActions = (actions, row) => {
   return (
     <Grid container justify="center">

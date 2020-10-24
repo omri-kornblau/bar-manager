@@ -24,6 +24,8 @@ import {
   formatTimeStampDate,
   formatLength,
   formatTimeDiff,
+  formatCompanyType,
+  formatCompanySize,
 } from "../../helpers/formats";
 import { postDeleteFile } from "../../api/client";
 
@@ -331,6 +333,13 @@ export const modalChosenHeaders = [
   },
   {
     id: "phoneNumber"
+  },
+  {
+    id: "companyType",
+    formatter: formatCompanyType,
+  }, {
+    id: "companySize",
+    formatter: formatCompanySize,
   }
 ]
 

@@ -1,3 +1,5 @@
+import { companySizes } from "./client";
+
 export const labels = {
   index: "מס' פוליסה",
   messages: "הודעות",
@@ -33,5 +35,8 @@ export const labels = {
   contactName: "איש קשר",
   contactPhone: "פלאפון איש קשר",
   contactEmail: "אימייל איש קשר",
-  notifyTime: "זמן התראה"
+  notifyTime: "זמן התראה",
+  companyType: "סוג החברה",
+  companySize: "גודל החברה",
+  rePassword: "אימות סיסמה",
 }

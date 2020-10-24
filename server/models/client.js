@@ -18,6 +18,8 @@ const {
 const {
   NOTIFICATIONS_TYPES,
   CLIENT_NOTIFICATIONS_TYPES,
+  COMPANY_TYPES,
+  COMPANY_SIZES,
 } = require("../config/types");
 
 const yupClientSchema = Yup.object().shape({
@@ -40,6 +42,14 @@ const yupClientSchema = Yup.object().shape({
       }, {})
     ).required(),
   }).required(),
+  companyType: Yup.mixed().oneOf(COMPANY_TYPES).required(),
+  companySize: Yup.mixed().oneOf(COMPANY_SIZES).when(
+    'companyType',
+    (companyType, companySizeSchema) =>
+      companyType === "private"
+      ? companySizeSchema.required()
+      : companySizeSchema
+    ),
 });
 
 const yupUpdateClientSchema = Yup.object().shape({
@@ -50,6 +60,14 @@ const yupUpdateClientSchema = Yup.object().shape({
   phoneNumber: Yup.string().matches(PHONE_REGEX, 'Phone number is not valid').required(),
   owner: Yup.string().min(OWNER_MIN_LENGTH).max(OWNER_MAX_LENGTH).required(),
   fieldOfActivity: Yup.string().min(FILED_OF_ACTIVITY_MIN_LENGTH).max(FILED_OF_ACTIVITY_MAX_LENGTH).required(),
+  companyType: Yup.mixed().oneOf(COMPANY_TYPES).required(),
+  companySize: Yup.mixed().oneOf(COMPANY_SIZES).when(
+    'companyType',
+    (companyType, companySizeSchema) =>
+      companyType === "private"
+      ? companySizeSchema.required()
+      : companySizeSchema
+    ),
 });
 
 const yupUpdateClientNotificationSchema = Yup.object().shape(
@@ -97,6 +115,12 @@ const mongoFormat = {
   },
   settings: {
     type: Object
+  },
+  companySize: {
+    type: String
+  },
+  companyType: {
+    type: String
   }
 };
 

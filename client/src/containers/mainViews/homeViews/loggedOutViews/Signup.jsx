@@ -116,6 +116,7 @@ const Signup = props => {
                 onChange={onChange}
                 margin="dense"
                 error={error}
+                values={form}
               />
               <Box mt={7}/>
               <Grid justify="center" container>

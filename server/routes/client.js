@@ -411,6 +411,8 @@ exports.updatesDetailes = async (req, res) => {
     "phoneNumber",
     "owner",
     "fieldOfActivity",
+    "companyType",
+    "companySize"
   ]);
   await ClientModel.yupUpdateClientSchema.validate(newClient);
   const newUser = _.pick(req.body, ["email"]);
