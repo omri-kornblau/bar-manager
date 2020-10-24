@@ -5,6 +5,6 @@ export const companyTypes = {
 }
 
 export const companySizes = {
-  small: "מעל 100 מיליון ₪",
-  big: "מתחת ל-100 מיליון ₪",
+  big: "מעל 100 מיליון ₪",
+  small: "מתחת ל-100 מיליון ₪",
 }

@@ -68,6 +68,7 @@ const {
   PROVIDER_NOTIFICATIONS_TYPES,
   NOTIFICATIONS_TYPES,
 } = require("../config/types");
+const { request } = require("express");
 
 exports.getAll = async (req, res) => {
   const {
@@ -87,6 +88,13 @@ exports.getAll = async (req, res) => {
   res.send({ ...censorAccountSettings(provider._doc), requests, notifications });
 }
 
+const getCompanyTypesFilter = filters => {
+  return {
+    companyTypes: ["private", ...filters.filter(filter => ["govermental", "local"].includes(filter))],
+    companySizes: filters.filter(filter => ["big", "small"].includes(filter)),
+  };
+}
+
 exports.getRequests = async (req, res) => {
   const {
     username,
@@ -102,7 +110,8 @@ exports.getRequests = async (req, res) => {
   const types = _.flattenDeep([type]);
   const [user, provider] = await getProvider(username);
 
-  const [requests, totalRequests] = await getProviderRequests(types, provider.requests, skip, limit);
+  const companyTypesFilter = getCompanyTypesFilter(filters)
+  const [requests, totalRequests] = await getProviderRequests(types, provider.requests, companyTypesFilter, skip, limit);
   const authors = await Promise.all(requests.map(request => (
     findClientById(request.author)
   )))

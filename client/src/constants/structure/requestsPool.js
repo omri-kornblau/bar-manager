@@ -22,23 +22,23 @@ export const typeButtons = [
 
 export const filterButtons = [
   {
-    id: "smallCompanies",
+    id: "small",
     label: "חברות קטנות",
     isActive: true
   },
   {
-    id: "mediumCompanies",
-    label: "חברות בינוניות",
-    isActive: true
-  },
-  {
-    id: "largeCompanies",
+    id: "big",
     label: "חברות גדולות",
     isActive: true
   },
   {
-    id: "currentlyInsured",
-    label: "נכסים מבוטחים",
+    id: "govermental",
+    label: "חברות ממשלתיות",
+    isActive: true
+  },
+  {
+    id: "local",
+    label: "רשויות מקומיות",
     isActive: true
   }
 ]

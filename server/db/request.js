@@ -182,14 +182,29 @@ exports.removeMessage = async (requestId, messageId, providerId) => {
   )
 }
 
-exports.getProviderRequests = async (types, existsRequests, skip, limit) => {
+exports.getProviderRequests = async (types, existsRequests, filter, skip, limit) => {
   const query = {
     status: { $in: REQUESTS_POOL_STATUSES },
     type: { $in: types },
     _id: {
       $nin: existsRequests
     },
+    authorCompanyType: {
+      $in: filter.companyTypes
+    },
+    $or: [
+      {
+        authorCompanyType: {
+          $ne: "private"
+        }
+      },{
+        authorCompanySize: {
+          $in: filter.companySizes
+        }
+      }
+    ]
   };
+
   return await Promise.all([
     RequestModel
       .find(query, REQUEST_FOR_PROVIDER_ALL_REQUESTS)
