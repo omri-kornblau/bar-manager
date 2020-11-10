@@ -21,7 +21,8 @@ const yupCreateRequestSchema = Yup.object().shape({
   status: Yup.mixed().oneOf(REQUEST_STATUSES),
   assetDescription: Yup.string().required(),
   insuranceDuration: Yup.number().positive().integer().required(),
-  isCurrentlyInsured: Yup.boolean(),
+  wasInsuredOneYearAgo: Yup.boolean(),
+  wasInsuredTwoYearsAgo: Yup.boolean(),
   maxPrice: Yup.number().positive().required(),
   tenderFinalDate: Yup.date()
     .transform((value, originalValue) => {
@@ -101,7 +102,10 @@ const mongoFormat = {
   offers: {
     type: Array,
   },
-  isCurrentlyInsured: {
+  wasInsuredOneYearAgo: {
+    type: Boolean,
+  },
+  wasInsuredTwoYearsAgo: {
     type: Boolean,
   },
   index: {

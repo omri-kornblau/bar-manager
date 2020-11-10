@@ -58,7 +58,7 @@ const ProviderOfferBox = props => {
     <Box>
       <Typography align="center" variant="subtitle1">
         <Box display="inline" mr={1} fontWeight={900}>
-          { allowOffer ? "הצעה נוכחית:" : "מחיר סופי:" }
+          { allowOffer ? "הצעה נוכחית שלי:" : "מחיר סופי:" }
         </Box>
         <Chip
           label={myOffer ? formatShekel(myOffer) : "אין הצעה נוכחית"}
@@ -71,7 +71,7 @@ const ProviderOfferBox = props => {
         <>
           <Typography align="center" variant="body1">
             <Box display="inline" mr={1} fontWeight={900}>
-              פרמיה מקסימלית:
+              פרמיה מקסימלית מבוקשת:
             </Box>
             <Chip
               label={formatShekel(maxPrice)}

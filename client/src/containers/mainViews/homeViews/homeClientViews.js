@@ -9,15 +9,15 @@ import HealingIcon from '@material-ui/icons/Healing';
 import BusinessIcon from '@material-ui/icons/Business';
 
 const ClientViews = {
-  newrequest: {
-    name: "בקשה חדשה",
-    icon: AddCircleRoundedIcon,
-    component: NewRequest
-  },
   dashboard: {
     name: "תצוגה ראשית",
     icon: DashboardIcon,
     component: ClientDashboard
+  },
+  newrequest: {
+    name: "בקשה חדשה",
+    icon: AddCircleRoundedIcon,
+    component: NewRequest
   },
   typeA: {
     name: "ביטוח א'",

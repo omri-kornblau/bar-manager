@@ -97,9 +97,16 @@ export const tableHeaders = {
       id: "comments",
       label: labels.comments,
     },
-    isCurrentlyInsured: {
-      id: "isCurrentlyInsured",
-      label: labels.isCurrentlyInsured,
+    wasInsuredOneYearAgo: {
+      id: "wasInsuredOneYearAgo",
+      label: labels.wasInsuredOneYearAgo,
+      filter: {
+        type: "bool"
+      }
+    },
+    wasInsuredTwoYearsAgo: {
+      id: "wasInsuredTwoYearsAgo",
+      label: labels.wasInsuredTwoYearsAgo,
       filter: {
         type: "bool"
       }
@@ -311,7 +318,7 @@ export const modalChosenHeaders = [
     id: "assetDescription"
   },
   {
-    id: "isCurrentlyInsured",
+    id: "wasInsuredOneYearAgo",
     formatter: formatYesNo
   },
   {

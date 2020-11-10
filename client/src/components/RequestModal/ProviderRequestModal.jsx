@@ -126,7 +126,7 @@ const ProviderRequestModal = props => {
             centered
           >
             <Tab label="פרטים"/>
-            <Tab label="הצעה"/>
+            <Tab label="הגש הצעה"/>
           </Tabs>
           <Divider orientation="horizontal"/>
           <Box mt={2}/>
@@ -171,7 +171,7 @@ const ProviderRequestModal = props => {
               </Grid>
               <Grid item xs>
                 <Typography align="center" variant="h6">
-                  הודעות
+                  הודעות למבוטח
                 </Typography>
                 <Box mt={2}/>
                 <ProviderMessageBox

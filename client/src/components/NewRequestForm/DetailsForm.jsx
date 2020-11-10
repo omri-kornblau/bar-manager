@@ -92,10 +92,16 @@ const structure =
     },
   ],[
     {
-      label: "האם הנכס מבוטח כרגע?",
-      name: "isCurrentlyInsured",
+      label: "האם הנכס היה מבוטח בשנה האחרונה",
+      name: "wasInsuredOneYearAgo",
       type: "checkbox",
-      fullWidth: false,
+      fullWidth: true,
+    },
+    {
+      label: "היה מבוטח בשנתיים האחרונות",
+      name: "wasInsuredTwoYearsAgo",
+      type: "checkbox",
+      fullWidth: true,
     },
   ],[
     {
