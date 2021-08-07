@@ -17,6 +17,6 @@ module.exports = {
   secretTokenKey: SECRET_KEY || "secret",
   maxUserLogins: MAX_USER_LOGINS || 10,
   requestSizeLimit: "100mb",
-  dbUri: `mongodb://${MONGO_DB || "localhost"}/gse`,
-  fsDbUri: `mongodb://${MONGO_DB || "localhost"}/gse-fs`,
+  dbUri: `mongodb://${MONGO_DB || "localhost"}/home_controlelr`,
+  fsDbUri: `mongodb://${MONGO_DB || "localhost"}/home_controller_fs`,
 }

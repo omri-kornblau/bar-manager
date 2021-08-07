@@ -6,13 +6,15 @@
     "@material-ui/core": "^4.9.14",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/pickers": "^3.2.10",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
+    "i18next": "^20.1.0",
     "jss-rtl": "^0.3.0",
     "lodash": "^4.17.15",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
+    "react-i18next": "^11.8.12",
     "react-redux": "^6.0.1",
-    "react-scripts": "2.1.2",
+    "react-scripts": "^4.0.3",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0"
   },
@@ -40,5 +42,5 @@
   "devDependencies": {
     "redux-devtools-extension": "^2.13.8"
   },
-  ""
+  "proxy": "http://localhost:5000"
 }

@@ -1,17 +1,12 @@
 import { createStore, applyMiddleware, compose, combineReducers } from "redux";
-import { connectRouter, routerMiddleware } from "connected-react-router";
 import thunk from "redux-thunk";
-import { createBrowserHistory } from "history";
-import rootReducer from "./reducers/index";
-import RWMutex from "rwmutex";
 
-export const history = createBrowserHistory();
+import Reducers from './ducks';
 
 const initialState = {};
 const enhancers = [];
 const middleware = [
-  thunk,
-  routerMiddleware(history)
+  thunk
 ];
 
 if (process.env.NODE_ENV === "development") {
@@ -28,13 +23,9 @@ const composedEnhancers = compose(
 );
 
 const store = createStore(
-  combineReducers({
-    app: rootReducer,
-    router: connectRouter(history)
-  }),
+  combineReducers(Reducers),
   initialState,
   composedEnhancers
 );
 
-export const requestsMutex = new RWMutex();
 export default store;
