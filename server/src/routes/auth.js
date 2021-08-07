@@ -15,7 +15,7 @@ const {
   PASSWORD_MIN_LENGTH,
   PASSWORD_MAX_LENGTH,
   SALT_ROUNDS,
-} = require("../config/validation")
+} = require("../constants/validation")
 
 const {
   findUser,

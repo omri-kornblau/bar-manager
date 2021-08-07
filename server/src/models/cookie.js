@@ -9,7 +9,7 @@ const {
   USER_MIN_LENGTH,
   USER_MAX_LENGTH,
   SALT_ROUNDS,
-} = require("../config/validation");
+} = require("../constants/validation");
 
 const hashCompare = promisify(Bcrypt.compare);
 const hash = promisify(Bcrypt.hash);

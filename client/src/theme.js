@@ -1,6 +1,8 @@
 import { createMuiTheme } from "@material-ui/core";
 import { blue, orange, grey, common, green, red } from '@material-ui/core/colors';
 
+const lightOrange = "#FF8E53"
+
 const theme = createMuiTheme({
   // direction: 'rtl',
   shape: {
@@ -8,7 +10,7 @@ const theme = createMuiTheme({
   },
   palette: {
     primary: {
-      main: orange[600]
+      main: lightOrange
     },
     success: {
       main: green[600],
@@ -38,7 +40,7 @@ const theme = createMuiTheme({
       'Arial'
     ].join(','),
   },
-  background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
+  background: `linear-gradient(45deg, #FE6B8B 30%, ${lightOrange} 90%)`
 });
 
 export default theme;

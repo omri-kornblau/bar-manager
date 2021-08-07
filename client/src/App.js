@@ -11,13 +11,15 @@ import Main from "./views/Main"
 
 const jss = create({ plugins: [...jssPreset().plugins, rtl()] })
 
+const ApplyDirection = ({ children }) => theme.direction === "rtl" ? <StylesProvider jss={jss}> { children } </StylesProvider> : children
+
 const App = () => {
     return (
       <Provider store={store}>
         <ThemeProvider theme={theme}>
-          <StylesProvider jss={jss}>
+          <ApplyDirection>
             <Main/>
-          </StylesProvider>
+          </ApplyDirection>
         </ThemeProvider>
       </Provider>
     )

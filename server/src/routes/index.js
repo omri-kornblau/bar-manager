@@ -13,6 +13,9 @@ const wrapWithSchemeValidation = (route) => async (req, res) => {
   const schemeKeys = ["body", "query", "params"]
 
   await Promise.all(schemeKeys.map(async (key) => {
+    const scheme = route?.scheme
+    if (_.isNil(scheme)) return
+
     const schemePart = route?.scheme[key]
     if (_.isNil(schemePart)) return
 

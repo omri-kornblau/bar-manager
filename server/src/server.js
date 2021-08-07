@@ -11,15 +11,20 @@ const ErrorsRouter = require("./errors/errors-router")
 // Import configurations
 const ServerConfig = require("./config/server")
 
-// Import models
-require("./models/button")
-
 const { logger } = require("./log/logger")
 
-AsyncErrorsHandler.patchRouter(ErrorsRouter.route)
 
 const init = async () => {
-  // Connect to mongodb
+  AsyncErrorsHandler.patchRouter(ErrorsRouter.route)
+
+  await _connectToDb()
+  await _setupAndStartServer()
+}
+
+const _connectToDb = async () => {
+  // Import models (should be done before routes import)
+  require("./models/button")
+
   try {
     await Mongoose.connect(ServerConfig.dbUri, {
       useNewUrlParser: true,
@@ -28,21 +33,20 @@ const init = async () => {
     logger.info("MongoDB Connected")
   } catch(err) {
     logger.error(err)
+    throw err
   }
+}
 
-  // Setup express server
+const _setupAndStartServer = async () => {
   const app = Express()
+  const routes = require("./routes")
 
-  app.use(BodyParser.urlencoded({
-    extended: false
-  }))
-
+  app.use(BodyParser.urlencoded({ extended: false }))
   app.use(BodyParser.json({ limit: '5mb' }))
   app.use(CookieParser())
-
   app.use(Morgan("dev"))
 
-  app.use("/", require("./routes"))
+  app.use("/", routes)
 
   if (ServerConfig.production) {
     app.use(Express.static("../client/build"))
@@ -54,6 +58,8 @@ const init = async () => {
   await app.listen(ServerConfig.port, ServerConfig.address)
 
   logger.info(`Server started on ${ServerConfig.address}:${ServerConfig.port}`)
+
+  return app
 }
 
 module.exports = {

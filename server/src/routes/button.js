@@ -1,6 +1,9 @@
 const Yup = require("yup");
-
-const ButtonModel = require("../models/button")
+const {
+  insertButton,
+  findAllButtons,
+  removeAllButtons
+} = require("../collections/buttons");
 
 const createRoutes = () => [
   {
@@ -33,30 +36,17 @@ const createRoutes = () => [
 ];
 
 const postAddButton = async (req, res) => {
-  const {
-    name,
-    httpRequest
-  } = req.body
-
-  const newButton = new ButtonModel({
-    name,
-    httpRequest
-  })
-
-  await newButton.save()
-
+  await insertButton(req.body)
   res.send();
 }
 
 const getButtons = async (req, res) => {
-  const buttons = await ButtonModel.find({})
-
+  const buttons = await findAllButtons()
   res.send(buttons)
 }
 
 const postClearButtons = async (req, res) => {
-  await ButtonModel.remove({})
-
+  await removeAllButtons()
   res.send()
 }
 
